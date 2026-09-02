@@ -103,6 +103,16 @@ def compute_review_subject_digest() -> tuple[str,list[str]]:
             h.update(label+b'\0'+value+b'\0')
     return h.hexdigest(),material
 
+def unstaged_material_paths() -> list[str]:
+    """Reject a working tree that differs materially from its reviewed index."""
+    p=run_git('diff','--no-ext-diff','--name-only','-z','--')
+    paths=[]
+    for path_b in p.stdout.split(b'\0'):
+        if not path_b: continue
+        path=canonical_git_path(path_b)
+        if not is_excluded(path): paths.append(path)
+    return paths
+
 def conflict_marker_paths(material: list[str]) -> list[str]:
     bad=[]
     material_set=set(material)
@@ -294,6 +304,9 @@ def validate_merge_boundary(status: str, state: dict[str,Any], active_current: l
         errors.append('MERGE_VERIFICATION_FAILED requires failed POST_MERGE_WORKFLOW evidence for the same resulting merge SHA')
 
 def validate(base: str|None=None) -> tuple[str,list[str]]:
+    unstaged=unstaged_material_paths()
+    if unstaged:
+        raise VerificationError('Unstaged material changes must be staged before verification: '+', '.join(unstaged))
     policy=load_json_yaml(POLICY_PATH); state=load_json_yaml(STATE_PATH)
     matrix=closed_evidence_matrix(policy)
     errors=[]

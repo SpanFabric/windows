@@ -72,6 +72,7 @@ class BridgeTests(unittest.TestCase):
         cases=['src/code.py','tests/verification/test_dummy.py','docs/requirement.md','.github/workflows/verification-gate.yml','.steward/verification-policy.yaml']
         for rel in cases:
             original=(self.root/rel).read_bytes(); (self.root/rel).write_bytes(original+b'\n# material-change\n')
+            with self.assertRaisesRegex(self.v.VerificationError,'Unstaged material changes',msg=rel): self.v.validate()
             git(self.root,'add',rel)
             self.assertNotEqual(base,self.digest(),rel); (self.root/rel).write_bytes(original); git(self.root,'add',rel)
             self.assertEqual(base,self.digest(),rel)
@@ -84,9 +85,9 @@ class BridgeTests(unittest.TestCase):
 
     def test_stale_breaker_digest_rejected(self):
         d=self.digest(); ev=self.builder_evidence(d,role='FRESH_BREAKER',producer='FRESH_BREAKER',etype='BREAKER_VERDICT',verdict='PASS')
-        self.write_state(status='READY_FOR_OWNER_ACCEPTANCE',previous_status='INDEPENDENT_REVIEW_PENDING',transition={'from':'INDEPENDENT_REVIEW_PENDING','to':'READY_FOR_OWNER_ACCEPTANCE','authority':'FRESH_BREAKER'},review_subject_digest=d,evidence=[ev])
+        self.write_state(status='READY_FOR_OWNER_ACCEPTANCE',previous_status='INDEPENDENT_REVIEW_PENDING',transition={'from':'INDEPENDENT_REVIEW_PENDING','to':'READY_FOR_OWNER_ACCEPTANCE','authority':'FRESH_BREAKER'},review_subject_digest=d,review_subject_commit=ev['commit_sha'],evidence=[ev])
         (self.root/'src/code.py').write_text('VALUE = 2\n',encoding='utf-8')
-        with self.assertRaises(self.v.VerificationError): self.v.validate()
+        with self.assertRaisesRegex(self.v.VerificationError,'Unstaged material changes'): self.v.validate()
 
     def test_pass_file_alone_has_no_authority(self):
         (self.root/'verification/reports/PASS').write_text('PASS\n',encoding='utf-8'); git(self.root,'add','verification/reports/PASS')

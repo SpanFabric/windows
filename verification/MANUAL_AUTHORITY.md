@@ -46,7 +46,9 @@ host filesystem paths. The only exclusions are the exact canonical Git path
 `verification/reports/`. A literal Git path containing a backslash is not the
 same path; this bridge rejects it fail-closed rather than allowing it to
 masquerade as excluded metadata. Index object identity, file mode, path and
-blob content are all digest inputs.
+blob content are all digest inputs. A material difference between the working
+tree and that index fails closed; it must be staged before verification so
+stale evidence cannot survive an unstaged local edit.
 
 ## Closed evidence authority matrix
 
