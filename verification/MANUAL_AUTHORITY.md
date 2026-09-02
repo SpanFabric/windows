@@ -22,4 +22,6 @@ report's `commit_sha` to be `INITIAL_BASELINE_BOOTSTRAP_SELF`. The validator
 accepts that token only for a `BUILDER_REPORT` which transitions `BUILDING` to
 `INDEPENDENT_REVIEW_PENDING` while `HEAD` is that root commit. This solves the
 first-commit self-reference without granting an independent or acceptance
-verdict. Every later report must name an existing immutable commit SHA.
+verdict. Once a material change returns the state to `BUILDING`, the inactive
+historical Builder record may retain the token but has no authority; every
+later active report must name an existing immutable commit SHA.

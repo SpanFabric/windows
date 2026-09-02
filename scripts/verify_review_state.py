@@ -123,13 +123,22 @@ def allowed_initial_baseline_self_evidence(policy: dict[str,Any], state: dict[st
     bootstrap=policy.get('initial_baseline_bootstrap',{})
     transition=state.get('transition') or {}
     expected=bootstrap.get('permitted_transition',{})
-    return (
+    common = (
         bootstrap.get('enabled') is True
         and evidence.get('commit_sha') == bootstrap.get('self_commit_token')
         and evidence.get('producer') == 'BUILDER'
         and evidence.get('role') == bootstrap.get('permitted_role') == 'BUILDER'
         and evidence.get('type') == bootstrap.get('permitted_type') == 'BUILDER_REPORT'
-        and state.get('status') == bootstrap.get('permitted_status') == 'INDEPENDENT_REVIEW_PENDING'
+    )
+    if not common:
+        return False
+    # Inactive bootstrap evidence is historical metadata. It cannot satisfy
+    # any current-state role requirement and may remain readable after a later
+    # material change has invalidated it.
+    if not bool(evidence.get('active',True)):
+        return True
+    return (
+        state.get('status') == bootstrap.get('permitted_status') == 'INDEPENDENT_REVIEW_PENDING'
         and transition.get('from') == expected.get('from') == 'BUILDING'
         and transition.get('to') == expected.get('to') == 'INDEPENDENT_REVIEW_PENDING'
         and transition.get('authority') == expected.get('authority') == 'BUILDER'

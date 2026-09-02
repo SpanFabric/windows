@@ -113,9 +113,14 @@ class BridgeTests(unittest.TestCase):
         ev.update({'id':'BOOTSTRAP-BUILDER-REPORT','commit_sha':token,'verdict':'BUILDER_GREEN'})
         self.write_state(status='INDEPENDENT_REVIEW_PENDING',previous_status='BUILDING',transition={'from':'BUILDING','to':'INDEPENDENT_REVIEW_PENDING','authority':'BUILDER'},review_subject_digest=d,review_subject_commit=token,evidence=[ev])
         self.v.validate()
+        ev['active']=False
+        self.write_state(status='BUILDING',previous_status='INDEPENDENT_REVIEW_PENDING',transition={'from':'INDEPENDENT_REVIEW_PENDING','to':'BUILDING','authority':'BUILDER'},review_subject_digest='',review_subject_commit='',evidence=[ev])
         git(self.root,'add','verification/state.yaml')
         git(self.root,'commit','-qm','metadata commit makes HEAD non-root')
         self._load()
+        self.v.validate()
+        ev['active']=True
+        self.write_state(status='INDEPENDENT_REVIEW_PENDING',previous_status='BUILDING',transition={'from':'BUILDING','to':'INDEPENDENT_REVIEW_PENDING','authority':'BUILDER'},review_subject_digest=d,review_subject_commit=token,evidence=[ev])
         with self.assertRaises(self.v.VerificationError): self.v.validate()
 
 if __name__=='__main__': unittest.main(verbosity=2)

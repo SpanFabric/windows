@@ -55,6 +55,13 @@
     },
     {
       "from": "INDEPENDENT_REVIEW_PENDING",
+      "to": "BUILDING",
+      "authorities": [
+        "BUILDER"
+      ]
+    },
+    {
+      "from": "INDEPENDENT_REVIEW_PENDING",
       "to": "BREAKER_FAILED",
       "authorities": [
         "FRESH_BREAKER"
@@ -203,7 +210,7 @@
       "to": "INDEPENDENT_REVIEW_PENDING",
       "authority": "BUILDER"
     },
-    "scope": "The token is valid only when HEAD is the root commit. It solves the otherwise unrepresentable first-commit evidence binding and cannot authorize later work."
+    "scope": "An active token is valid only when HEAD is the root commit. It solves the otherwise unrepresentable first-commit evidence binding and cannot authorize later work; an inactive historical Builder record may retain the token without authority."
   },
   "notes": [
     "verification/state.yaml is excluded because it is self-referential verification metadata and cannot be part of its own review subject.",

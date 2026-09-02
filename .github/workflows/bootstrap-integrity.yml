@@ -12,13 +12,8 @@ jobs:
         shell: bash
         run: |
           test -s AGENTS.md
-          test -s .spangpu/materialization-state.json
-          python - <<'PY'
-          import json, pathlib
-          p=pathlib.Path('.spangpu/materialization-state.json')
-          d=json.loads(p.read_text(encoding='utf-8'))
-          assert d['schema_version']=='1.0'
-          assert d['repository']
-          assert d['builderkit_version']
-          print('bootstrap state valid')
-          PY
+          test -s .steward/verification-policy.yaml
+          test -s verification/state.yaml
+          test -s verification/reports/INITIAL_BASELINE_BOOTSTRAP_BUILDER.json
+          python scripts/verify_review_state.py --check
+          python -m unittest discover -s tests/verification -p 'test_*.py' -v
