@@ -32,3 +32,45 @@ CI validates evidence which may name a parent or earlier material commit while
 the PR head contains excluded report metadata. Workflows therefore must fetch
 full Git history (`fetch-depth: 0`); a shallow checkout cannot establish the
 evidence commit's identity and must fail closed.
+
+Every supplied non-null base SHA must resolve to a commit and be an available
+ancestor of `HEAD`. An unknown base, unrelated history, or a shallow checkout
+is a validation error, never an empty change set. The all-null base is allowed
+only for the active parentless initial-baseline contract described above.
+
+## Git path identity and review-subject exclusions
+
+The review subject is derived from Git index/tree paths, not by normalizing
+host filesystem paths. The only exclusions are the exact canonical Git path
+`verification/state.yaml` and canonical slash-separated paths under
+`verification/reports/`. A literal Git path containing a backslash is not the
+same path; this bridge rejects it fail-closed rather than allowing it to
+masquerade as excluded metadata. Index object identity, file mode, path and
+blob content are all digest inputs.
+
+## Closed evidence authority matrix
+
+`MANUAL_AUTHORITY` documents that the hosting service and humans still verify
+identity. It is not a wildcard. The committed policy and validator enforce the
+following fixed mapping: BUILDER/BUILDER/BUILDER_REPORT or REMEDIATION;
+CI/CI/CI_RESULT; FRESH_BREAKER/FRESH_BREAKER/BREAKER_REPORT or
+BREAKER_VERDICT; SPECIALIST/SPECIALIST/SPECIALIST_VERDICT;
+OWNER/OWNER/ACCEPTANCE; MERGE_HOSTING_GATE/MERGE_HOSTING_GATE/MERGE_STATE;
+and POST_MERGE_WORKFLOW/POST_MERGE_WORKFLOW/POST_MERGE_VERIFICATION. Unknown
+or mismatched producer, role, type or authority fails closed.
+
+## Merge and post-merge boundary
+
+`resulting_merge_commit_sha` is the exact canonical commit SHA created by the
+hosting merge operation. `MERGED` requires active
+MERGE_HOSTING_GATE/MERGE_STATE evidence whose `commit_sha` and
+`merge_commit_sha` both equal that state field. `POST_MERGE_VERIFIED` requires
+that retained merge evidence plus successful POST_MERGE_WORKFLOW evidence
+bound to the same SHA. Failed post-merge evidence may lead only to
+`MERGE_VERIFICATION_FAILED`. Owner acceptance remains a prerequisite to a
+normal merge transition but never substitutes for either boundary.
+
+The future central Project Steward must preserve these field names and binding
+rules when it imports repository-local state. It may add cryptographic identity
+or hosting attestations, but cannot weaken the closed mapping or carry merge
+evidence across a different resulting commit.

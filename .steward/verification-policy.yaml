@@ -13,30 +13,42 @@
     "POST_MERGE_VERIFIED",
     "MERGE_VERIFICATION_FAILED"
   ],
-  "authorities": {
-    "BUILDER": [
-      "BUILDER_REPORT",
-      "REMEDIATION"
-    ],
-    "CI": [
-      "CI_RESULT"
-    ],
-    "FRESH_BREAKER": [
-      "BREAKER_REPORT",
-      "BREAKER_VERDICT"
-    ],
-    "SPECIALIST": [
-      "SPECIALIST_VERDICT"
-    ],
-    "OWNER": [
-      "ACCEPTANCE"
-    ],
-    "MERGE_HOSTING_GATE": [
-      "MERGE_STATE"
-    ],
-    "POST_MERGE_WORKFLOW": [
-      "POST_MERGE_VERIFICATION"
-    ]
+  "evidence_authorization": {
+    "BUILDER": {
+      "role": "BUILDER",
+      "types": ["BUILDER_REPORT", "REMEDIATION"],
+      "authority": "MANUAL_AUTHORITY"
+    },
+    "CI": {
+      "role": "CI",
+      "types": ["CI_RESULT"],
+      "authority": "MANUAL_AUTHORITY"
+    },
+    "FRESH_BREAKER": {
+      "role": "FRESH_BREAKER",
+      "types": ["BREAKER_REPORT", "BREAKER_VERDICT"],
+      "authority": "MANUAL_AUTHORITY"
+    },
+    "SPECIALIST": {
+      "role": "SPECIALIST",
+      "types": ["SPECIALIST_VERDICT"],
+      "authority": "MANUAL_AUTHORITY"
+    },
+    "OWNER": {
+      "role": "OWNER",
+      "types": ["ACCEPTANCE"],
+      "authority": "MANUAL_AUTHORITY"
+    },
+    "MERGE_HOSTING_GATE": {
+      "role": "MERGE_HOSTING_GATE",
+      "types": ["MERGE_STATE"],
+      "authority": "MANUAL_AUTHORITY"
+    },
+    "POST_MERGE_WORKFLOW": {
+      "role": "POST_MERGE_WORKFLOW",
+      "types": ["POST_MERGE_VERIFICATION"],
+      "authority": "MANUAL_AUTHORITY"
+    }
   },
   "transitions": [
     {
@@ -213,9 +225,11 @@
     "scope": "An active token is valid only when HEAD is the root commit. It solves the otherwise unrepresentable first-commit evidence binding and cannot authorize later work; an inactive historical Builder record may retain the token without authority."
   },
   "notes": [
-    "verification/state.yaml is excluded because it is self-referential verification metadata and cannot be part of its own review subject.",
-    "verification/reports/** is excluded as non-executable verification metadata. Policy, validator, tests, workflows, scripts, requirements, schemas and configuration remain material.",
+    "verification/state.yaml is excluded only as that exact canonical Git path because it is self-referential verification metadata and cannot be part of its own review subject.",
+    "verification/reports/** is excluded only for canonical slash-separated Git paths as non-executable verification metadata. Literal-backslash lookalikes and all other paths remain material or fail closed.",
+    "evidence_authorization is a closed fixed producer/role/type/authority matrix; MANUAL_AUTHORITY records a manual identity boundary and never permits role substitution.",
     "A PASS-named file has no authority. Evidence authority is derived only from validated state entries and the policy.",
-    "INITIAL_BASELINE_BOOTSTRAP_SELF is a tightly scoped root-commit Builder-evidence token. It is never an independent, owner, merge, or post-merge authority."
+    "INITIAL_BASELINE_BOOTSTRAP_SELF is a tightly scoped root-commit Builder-evidence token. It is never an independent, owner, merge, or post-merge authority.",
+    "MERGED and post-merge states require evidence carrying the exact canonical resulting_merge_commit_sha; Owner acceptance never substitutes for merge or post-merge evidence."
   ]
 }
