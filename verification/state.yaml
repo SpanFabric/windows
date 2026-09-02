@@ -3,19 +3,19 @@
   "bridge_version": "manual-verification-bridge-v1",
   "repository": "windows",
   "authority_mode": "MANUAL_AUTHORITY",
-  "status": "BUILDING",
-  "previous_status": "INDEPENDENT_REVIEW_PENDING",
+  "status": "INDEPENDENT_REVIEW_PENDING",
+  "previous_status": "BUILDING",
   "transition": {
-    "from": "INDEPENDENT_REVIEW_PENDING",
-    "to": "BUILDING",
+    "from": "BUILDING",
+    "to": "INDEPENDENT_REVIEW_PENDING",
     "authority": "BUILDER"
   },
   "risk": {
     "class": "R2",
     "reason": "Initial governance/CI bootstrap; model may raise but not lower deterministic floor."
   },
-  "review_subject_digest": "",
-  "review_subject_commit": "",
+  "review_subject_digest": "9d4e94faa745912c57c5b0d3d3b25a65473b5fc9d01a7de4fc256d74b9aa931a",
+  "review_subject_commit": "04e1a5b0f003c1b4986b6263e703262ec1772166",
   "evidence": [
     {
       "id": "INITIAL-BASELINE-BOOTSTRAP-BUILDER-20260902",
@@ -28,6 +28,18 @@
       "created_at": "2026-09-02T19:16:15Z",
       "verdict": "BUILDER_GREEN",
       "active": false
+    },
+    {
+      "id": "BOOTSTRAP-BRIDGE-REPAIR-BUILDER-20260902",
+      "type": "BUILDER_REPORT",
+      "producer": "BUILDER",
+      "role": "BUILDER",
+      "authority": "MANUAL_AUTHORITY",
+      "commit_sha": "04e1a5b0f003c1b4986b6263e703262ec1772166",
+      "review_subject_digest": "9d4e94faa745912c57c5b0d3d3b25a65473b5fc9d01a7de4fc256d74b9aa931a",
+      "created_at": "2026-09-02T19:27:12Z",
+      "verdict": "BUILDER_GREEN",
+      "active": true
     }
   ],
   "blockers": [],
@@ -39,6 +51,6 @@
   },
   "notes": [
     "The first main commit contains the Manual Verification Bridge and is the explicit bootstrap baseline.",
-    "A material workflow/bridge correction invalidated the initial Builder evidence; it is retained only as inactive historical metadata."
+    "The current R2 bootstrap-bridge correction has Builder evidence and requires a fresh independent BREAKER."
   ]
 }
