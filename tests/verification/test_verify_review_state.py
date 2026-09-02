@@ -123,4 +123,11 @@ class BridgeTests(unittest.TestCase):
         self.write_state(status='INDEPENDENT_REVIEW_PENDING',previous_status='BUILDING',transition={'from':'BUILDING','to':'INDEPENDENT_REVIEW_PENDING','authority':'BUILDER'},review_subject_digest=d,review_subject_commit=token,evidence=[ev])
         with self.assertRaises(self.v.VerificationError): self.v.validate()
 
+    def test_workflows_fetch_full_history_for_evidence_commits(self):
+        workflow_dir=REPO/'.github'/'workflows'
+        workflows=[workflow_dir/'verification-gate.yml']
+        workflows.extend(p for p in (workflow_dir/'bootstrap-integrity.yml',workflow_dir/'steward-baseline.yml') if p.exists())
+        for workflow in workflows:
+            self.assertIn('fetch-depth: 0',workflow.read_text(encoding='utf-8'),workflow)
+
 if __name__=='__main__': unittest.main(verbosity=2)

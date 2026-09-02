@@ -25,3 +25,10 @@ first-commit self-reference without granting an independent or acceptance
 verdict. Once a material change returns the state to `BUILDING`, the inactive
 historical Builder record may retain the token but has no authority; every
 later active report must name an existing immutable commit SHA.
+
+## CI history boundary
+
+CI validates evidence which may name a parent or earlier material commit while
+the PR head contains excluded report metadata. Workflows therefore must fetch
+full Git history (`fetch-depth: 0`); a shallow checkout cannot establish the
+evidence commit's identity and must fail closed.
