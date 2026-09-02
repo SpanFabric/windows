@@ -1,0 +1,21 @@
+{
+  "id": "INITIAL-BASELINE-BOOTSTRAP-BUILDER-20260902",
+  "type": "BUILDER_REPORT",
+  "producer": "BUILDER",
+  "role": "BUILDER",
+  "authority": "MANUAL_AUTHORITY",
+  "commit_sha": "INITIAL_BASELINE_BOOTSTRAP_SELF",
+  "review_subject_digest": "a05155d030ab9aa916c70da2c6d0528b5d314a7c64c6ad5267c2a84a4710b96b",
+  "created_at": "2026-09-02T19:16:15Z",
+  "verdict": "BUILDER_GREEN",
+  "risk_class": "R2",
+  "bootstrap_kind": "INITIAL_BASELINE_BOOTSTRAP",
+  "tests": [
+    "python -m unittest discover -s tests/verification -p test_*.py -v (11 passed)",
+    "python scripts/verify_review_state.py --check (pass)"
+  ],
+  "limitations": [
+    "MANUAL_AUTHORITY: GitHub branch protection, required reviews, and required status checks remain hosting settings.",
+    "No independent Breaker, Specialist, or Owner acceptance is asserted."
+  ]
+}

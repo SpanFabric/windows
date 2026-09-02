@@ -1,0 +1,214 @@
+{
+  "schema_version": "1.0",
+  "bridge_version": "manual-verification-bridge-v1",
+  "authority_mode": "MANUAL_AUTHORITY",
+  "states": [
+    "PLANNED",
+    "BUILDING",
+    "INDEPENDENT_REVIEW_PENDING",
+    "BREAKER_FAILED",
+    "READY_FOR_OWNER_ACCEPTANCE",
+    "ACCEPTED",
+    "MERGED",
+    "POST_MERGE_VERIFIED",
+    "MERGE_VERIFICATION_FAILED"
+  ],
+  "authorities": {
+    "BUILDER": [
+      "BUILDER_REPORT",
+      "REMEDIATION"
+    ],
+    "CI": [
+      "CI_RESULT"
+    ],
+    "FRESH_BREAKER": [
+      "BREAKER_REPORT",
+      "BREAKER_VERDICT"
+    ],
+    "SPECIALIST": [
+      "SPECIALIST_VERDICT"
+    ],
+    "OWNER": [
+      "ACCEPTANCE"
+    ],
+    "MERGE_HOSTING_GATE": [
+      "MERGE_STATE"
+    ],
+    "POST_MERGE_WORKFLOW": [
+      "POST_MERGE_VERIFICATION"
+    ]
+  },
+  "transitions": [
+    {
+      "from": "PLANNED",
+      "to": "BUILDING",
+      "authorities": [
+        "BUILDER"
+      ]
+    },
+    {
+      "from": "BUILDING",
+      "to": "INDEPENDENT_REVIEW_PENDING",
+      "authorities": [
+        "BUILDER"
+      ]
+    },
+    {
+      "from": "INDEPENDENT_REVIEW_PENDING",
+      "to": "BREAKER_FAILED",
+      "authorities": [
+        "FRESH_BREAKER"
+      ]
+    },
+    {
+      "from": "INDEPENDENT_REVIEW_PENDING",
+      "to": "READY_FOR_OWNER_ACCEPTANCE",
+      "authorities": [
+        "FRESH_BREAKER"
+      ]
+    },
+    {
+      "from": "BREAKER_FAILED",
+      "to": "BUILDING",
+      "authorities": [
+        "BUILDER"
+      ]
+    },
+    {
+      "from": "READY_FOR_OWNER_ACCEPTANCE",
+      "to": "ACCEPTED",
+      "authorities": [
+        "OWNER"
+      ]
+    },
+    {
+      "from": "ACCEPTED",
+      "to": "MERGED",
+      "authorities": [
+        "MERGE_HOSTING_GATE"
+      ]
+    },
+    {
+      "from": "MERGED",
+      "to": "POST_MERGE_VERIFIED",
+      "authorities": [
+        "POST_MERGE_WORKFLOW"
+      ]
+    },
+    {
+      "from": "MERGED",
+      "to": "MERGE_VERIFICATION_FAILED",
+      "authorities": [
+        "POST_MERGE_WORKFLOW"
+      ]
+    },
+    {
+      "from": "MERGE_VERIFICATION_FAILED",
+      "to": "BUILDING",
+      "authorities": [
+        "BUILDER"
+      ]
+    }
+  ],
+  "risk_classes": {
+    "R0": "passive text and formatting",
+    "R1": "isolated internal logic",
+    "R2": "APIs, schemas, packaging, workflows, persistence and governance/CI",
+    "R3": "auth, authorization, secrets, money, data-loss, concurrency, transactions, migration/restore",
+    "R4": "release, production, cutover and irreversible operations"
+  },
+  "risk_floor_path_rules": [
+    {
+      "class": "R4",
+      "patterns": [
+        "release/",
+        "releases/",
+        "production/",
+        "prod/",
+        "cutover/",
+        "deploy/production",
+        ".github/workflows/release"
+      ]
+    },
+    {
+      "class": "R3",
+      "patterns": [
+        "auth/",
+        "authorization/",
+        "secrets/",
+        "security/keys",
+        "transactions/",
+        "restore/",
+        "migration/",
+        "migrations/"
+      ]
+    },
+    {
+      "class": "R2",
+      "patterns": [
+        ".github/",
+        ".steward/",
+        "verification/",
+        "schemas/",
+        "schema/",
+        "packaging/",
+        "persistence/",
+        "scripts/"
+      ]
+    },
+    {
+      "class": "R1",
+      "patterns": [
+        "src/",
+        "lib/",
+        "tests/"
+      ]
+    }
+  ],
+  "material_exclusions": [
+    "verification/state.yaml",
+    "verification/reports/**"
+  ],
+  "evidence_required_fields": [
+    "id",
+    "type",
+    "producer",
+    "role",
+    "authority",
+    "commit_sha",
+    "review_subject_digest",
+    "created_at",
+    "verdict"
+  ],
+  "independent_roles": [
+    "FRESH_BREAKER",
+    "SPECIALIST",
+    "OWNER"
+  ],
+  "builder_forbidden_roles": [
+    "FRESH_BREAKER",
+    "SPECIALIST",
+    "OWNER",
+    "MERGE_HOSTING_GATE",
+    "POST_MERGE_WORKFLOW"
+  ],
+  "initial_baseline_bootstrap": {
+    "enabled": true,
+    "self_commit_token": "INITIAL_BASELINE_BOOTSTRAP_SELF",
+    "permitted_role": "BUILDER",
+    "permitted_type": "BUILDER_REPORT",
+    "permitted_status": "INDEPENDENT_REVIEW_PENDING",
+    "permitted_transition": {
+      "from": "BUILDING",
+      "to": "INDEPENDENT_REVIEW_PENDING",
+      "authority": "BUILDER"
+    },
+    "scope": "The token is valid only when HEAD is the root commit. It solves the otherwise unrepresentable first-commit evidence binding and cannot authorize later work."
+  },
+  "notes": [
+    "verification/state.yaml is excluded because it is self-referential verification metadata and cannot be part of its own review subject.",
+    "verification/reports/** is excluded as non-executable verification metadata. Policy, validator, tests, workflows, scripts, requirements, schemas and configuration remain material.",
+    "A PASS-named file has no authority. Evidence authority is derived only from validated state entries and the policy.",
+    "INITIAL_BASELINE_BOOTSTRAP_SELF is a tightly scoped root-commit Builder-evidence token. It is never an independent, owner, merge, or post-merge authority."
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "schema_version": "1.0",
+  "bridge_version": "manual-verification-bridge-v1",
+  "repository": "windows",
+  "authority_mode": "MANUAL_AUTHORITY",
+  "status": "INDEPENDENT_REVIEW_PENDING",
+  "previous_status": "BUILDING",
+  "transition": {
+    "from": "BUILDING",
+    "to": "INDEPENDENT_REVIEW_PENDING",
+    "authority": "BUILDER"
+  },
+  "risk": {
+    "class": "R2",
+    "reason": "Initial governance/CI bootstrap; model may raise but not lower deterministic floor."
+  },
+  "review_subject_digest": "a05155d030ab9aa916c70da2c6d0528b5d314a7c64c6ad5267c2a84a4710b96b",
+  "review_subject_commit": "INITIAL_BASELINE_BOOTSTRAP_SELF",
+  "evidence": [
+    {
+      "id": "INITIAL-BASELINE-BOOTSTRAP-BUILDER-20260902",
+      "type": "BUILDER_REPORT",
+      "producer": "BUILDER",
+      "role": "BUILDER",
+      "authority": "MANUAL_AUTHORITY",
+      "commit_sha": "INITIAL_BASELINE_BOOTSTRAP_SELF",
+      "review_subject_digest": "a05155d030ab9aa916c70da2c6d0528b5d314a7c64c6ad5267c2a84a4710b96b",
+      "created_at": "2026-09-02T19:16:15Z",
+      "verdict": "BUILDER_GREEN",
+      "active": true
+    }
+  ],
+  "blockers": [],
+  "initial_baseline_bootstrap": {
+    "kind": "INITIAL_BASELINE_BOOTSTRAP",
+    "branch": "main",
+    "self_commit_token": "INITIAL_BASELINE_BOOTSTRAP_SELF",
+    "scope": "first parentless commit only; normal branch and PR policy begins immediately after its push"
+  },
+  "notes": [
+    "The first main commit contains the Manual Verification Bridge and is the explicit bootstrap baseline.",
+    "This Builder result is not a Breaker, Specialist, Owner, or Acceptance verdict."
+  ]
+}
