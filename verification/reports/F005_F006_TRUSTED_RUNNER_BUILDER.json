@@ -1,0 +1,27 @@
+{
+  "id": "F005-F006-TRUSTED-RUNNER-BUILDER-20260903",
+  "type": "BUILDER_REPORT",
+  "producer": "BUILDER",
+  "role": "BUILDER",
+  "authority": "MANUAL_AUTHORITY",
+  "commit_sha": "9d1c94ad9ca46232fdb7aa9e79e81cbebd14b27f",
+  "review_subject_digest": "5cb75656059ff0337572e4db9dfdb2e65335a9c3386f9d6d6133be918819c9a1",
+  "created_at": "2026-09-03T08:28:02Z",
+  "verdict": "BUILDER_GREEN",
+  "risk_class": "R2",
+  "scope": "Remediate F-005 explicit empty-base fail-open and F-006 mutable-validator pre-execution trust failure.",
+  "tests": [
+    "python -m unittest discover -s tests/verification -p test_*.py -v (33 passed)",
+    "trusted pre-execution runner with origin/main base (pass; validator Git object ac52f7c8521d860a57061791dec7a575f09067a4)"
+  ],
+  "fresh_breaker_handoff": [
+    "Review the exact material commit and recompute the digest.",
+    "Attack empty/whitespace/unknown/non-ancestor/shallow/ordinary-child all-zero bases through the real CLI and authoritative runner.",
+    "Replace the worktree validator and runner; verify neither can exit 0 or create a sentinel before the Git preflight rejects it.",
+    "Confirm F-001 through F-004 regressions, workflow use of the materialized runner, and cross-repository shared-component equality."
+  ],
+  "limitations": [
+    "No Fresh BREAKER, Specialist, Owner, merge, or post-merge verdict is asserted.",
+    "A new independent Fresh BREAKER must review the final evidence-only PR head before any acceptance recommendation."
+  ]
+}
