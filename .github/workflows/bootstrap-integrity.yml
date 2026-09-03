@@ -3,6 +3,8 @@ on:
   pull_request:
   push:
     branches: [main]
+permissions:
+  contents: read
 jobs:
   bootstrap-integrity:
     runs-on: ubuntu-latest
@@ -12,10 +14,18 @@ jobs:
           fetch-depth: 0
       - name: Verify bootstrap control files
         shell: bash
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
         run: |
+          set -euo pipefail
           test -s AGENTS.md
           test -s .steward/verification-policy.yaml
           test -s verification/state.yaml
           test -s verification/reports/INITIAL_BASELINE_BOOTSTRAP_BUILDER.json
-          python scripts/verify_review_state.py --check
+          trusted_dir="$(mktemp -d "${RUNNER_TEMP:-/tmp}/spangpu-trusted-runner.XXXXXX")"
+          trap 'rm -rf "$trusted_dir"' EXIT
+          trusted_runner="$trusted_dir/trusted_verify_review_state.sh"
+          git cat-file blob HEAD:scripts/trusted_verify_review_state.sh > "$trusted_runner"
+          chmod 700 "$trusted_runner"
+          "$trusted_runner" --repo-root "$GITHUB_WORKSPACE" --base "$BASE_SHA"
           python -m unittest discover -s tests/verification -p 'test_*.py' -v

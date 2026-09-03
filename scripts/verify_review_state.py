@@ -27,6 +27,22 @@ POST_MERGE_FAILURE_VERDICTS = {'FAIL', 'FAILED', 'ERROR', 'MERGE_VERIFICATION_FA
 class VerificationError(Exception):
     pass
 
+def set_repository_root(repo_root: str|None) -> None:
+    """Bind this validator to an explicit repository when run from a trusted temp copy."""
+    if repo_root is None:
+        return
+    candidate=pathlib.Path(repo_root).expanduser()
+    try:
+        candidate=candidate.resolve(strict=True)
+    except OSError as e:
+        raise VerificationError(f'Unable to resolve --repo-root {repo_root!r}: {e}') from e
+    if not candidate.is_dir():
+        raise VerificationError(f'--repo-root is not a directory: {candidate}')
+    global ROOT, POLICY_PATH, STATE_PATH
+    ROOT=candidate
+    POLICY_PATH=ROOT / '.steward' / 'verification-policy.yaml'
+    STATE_PATH=ROOT / 'verification' / 'state.yaml'
+
 def run_git(*args: str, check: bool=True) -> subprocess.CompletedProcess[bytes]:
     p=subprocess.run(['git',*args], cwd=ROOT, capture_output=True)
     if check and p.returncode != 0:
@@ -197,15 +213,28 @@ def allowed_initial_baseline_null_base(policy: dict[str,Any], state: dict[str,An
     )
 
 def changed_paths(base: str|None, policy: dict[str,Any], state: dict[str,Any]) -> list[str]:
-    if not base: return []
-    if re.fullmatch(r'0+',base):
+    if base is None:
+        # This is intentionally distinct from an explicit CLI value. main()
+        # permits it only for non-authoritative diagnostic output.
+        return []
+    if not isinstance(base,str):
+        raise VerificationError('Supplied base SHA must be a string')
+    if not base.strip():
+        raise VerificationError('Supplied base SHA must not be empty or whitespace')
+    if base != base.strip():
+        raise VerificationError('Supplied base SHA must not contain surrounding whitespace')
+    if base == '0'*40:
         if allowed_initial_baseline_null_base(policy,state): return []
         raise VerificationError('All-null base is permitted only for the active root-bootstrap contract')
+    if not re.fullmatch(r'[0-9a-f]{40}',base):
+        raise VerificationError('Supplied base SHA must be a canonical lowercase 40-hex commit SHA')
     if repository_is_shallow():
         raise VerificationError('Cannot classify risk from a shallow repository history')
     resolved=resolve_commit(base)
     if not resolved:
         raise VerificationError(f'Supplied base SHA does not resolve to a commit: {base}')
+    if base != resolved:
+        raise VerificationError(f'Supplied base SHA must be the exact canonical commit SHA: {base}')
     ancestor=run_git('merge-base','--is-ancestor',resolved,'HEAD',check=False)
     if ancestor.returncode != 0:
         raise VerificationError(f'Supplied base SHA is not an available ancestor of HEAD: {base}')
@@ -401,8 +430,12 @@ def main() -> int:
     ap.add_argument('--check',action='store_true')
     ap.add_argument('--digest',action='store_true')
     ap.add_argument('--base')
+    ap.add_argument('--repo-root',help='repository root when executed from an isolated trusted copy')
     args=ap.parse_args()
     try:
+        set_repository_root(args.repo_root)
+        if args.check and args.base is None:
+            raise VerificationError('Authoritative --check requires an explicit --base SHA; use --digest only for no-base diagnostics')
         digest,material=validate(args.base)
         if args.digest or args.check:
             print(f'REVIEW_SUBJECT_SHA256={digest}')

@@ -27,4 +27,4 @@ Builder green => `INDEPENDENT_REVIEW_PENDING`. Fresh BREAKER required. Blocked t
 - State model: `PLANNED → BUILDING → INDEPENDENT_REVIEW_PENDING → (BREAKER_FAILED | READY_FOR_OWNER_ACCEPTANCE) → ACCEPTED → MERGED → POST_MERGE_VERIFIED`, with `MERGE_VERIFICATION_FAILED` for failed merged-commit verification.
 - Merge, rebase and conflict resolution are verification boundaries. Post-merge verification MUST target the actual merged commit.
 - During this temporary bridge, manually checked independent/owner authority MUST be marked `MANUAL_AUTHORITY`; a `PASS` file or Builder-authored verdict is never independent evidence.
-- Before push/merge, run `python scripts/verify_review_state.py --check` and the repository verification tests. Green Builder/CI results mean at most `INDEPENDENT_REVIEW_PENDING`.
+- Before push/merge, run the canonical trusted pre-execution command in `verification/MANUAL_AUTHORITY.md` with the actual canonical base SHA, then the repository verification tests. Direct `python scripts/verify_review_state.py` execution is non-authoritative defense in depth only. Green Builder/CI results mean at most `INDEPENDENT_REVIEW_PENDING`.

@@ -230,6 +230,8 @@
     "evidence_authorization is a closed fixed producer/role/type/authority matrix; MANUAL_AUTHORITY records a manual identity boundary and never permits role substitution.",
     "A PASS-named file has no authority. Evidence authority is derived only from validated state entries and the policy.",
     "INITIAL_BASELINE_BOOTSTRAP_SELF is a tightly scoped root-commit Builder-evidence token. It is never an independent, owner, merge, or post-merge authority.",
-    "MERGED and post-merge states require evidence carrying the exact canonical resulting_merge_commit_sha; Owner acceptance never substitutes for merge or post-merge evidence."
+    "MERGED and post-merge states require evidence carrying the exact canonical resulting_merge_commit_sha; Owner acceptance never substitutes for merge or post-merge evidence.",
+    "Authoritative local and CI checks materialize scripts/trusted_verify_review_state.sh and scripts/verify_review_state.py from a Git commit object before repository Python runs. Direct working-tree execution of the validator is advisory defense in depth only.",
+    "An omitted base is None and is reserved for non-authoritative digest diagnostics; authoritative --check requires an explicit canonical base SHA. Explicit empty or whitespace base values are invalid."
   ]
 }
