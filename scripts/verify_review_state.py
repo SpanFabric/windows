@@ -44,7 +44,10 @@ def set_repository_root(repo_root: str|None) -> None:
     STATE_PATH=ROOT / 'verification' / 'state.yaml'
 
 def run_git(*args: str, check: bool=True) -> subprocess.CompletedProcess[bytes]:
-    p=subprocess.run(['git',*args], cwd=ROOT, capture_output=True)
+    # The trusted runner may execute this copy as a sandbox identity distinct
+    # from the checkout owner. Trust only the explicit repository root, never
+    # a wildcard, so Git can still inspect its own index and object database.
+    p=subprocess.run(['git','-c',f'safe.directory={ROOT}',*args], cwd=ROOT, capture_output=True)
     if check and p.returncode != 0:
         raise VerificationError(f"git {' '.join(args)} failed: {p.stderr.decode('utf-8','replace').strip()}")
     return p
