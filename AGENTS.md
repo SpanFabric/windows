@@ -25,6 +25,7 @@ Builder green => `INDEPENDENT_REVIEW_PENDING`. Fresh BREAKER required. Blocked t
 - Builder, CI, fresh BREAKER, specialist, owner, merge gate and post-merge workflow authorities are distinct. Builders MUST NOT self-attest independent evidence or acceptance.
 - Any material change to code, tests, requirements/invariants, schemas/migrations, workflows, executable scripts or relevant configuration invalidates prior review evidence by changing the Review-Subject-Digest.
 - State model: `PLANNED → BUILDING → INDEPENDENT_REVIEW_PENDING → (BREAKER_FAILED | READY_FOR_OWNER_ACCEPTANCE) → ACCEPTED → MERGED → POST_MERGE_VERIFIED`, with `MERGE_VERIFICATION_FAILED` for failed merged-commit verification.
+- A material change before Owner Acceptance reopens `READY_FOR_OWNER_ACCEPTANCE → BUILDING` through `BUILDER`; prior Fresh BREAKER evidence remains historical and cannot authorize the new material subject.
 - Merge, rebase and conflict resolution are verification boundaries. Post-merge verification MUST target the actual merged commit.
 - During this temporary bridge, manually checked independent/owner authority MUST be marked `MANUAL_AUTHORITY`; a `PASS` file or Builder-authored verdict is never independent evidence.
 - Before push/merge, run the canonical trusted pre-execution command in `verification/MANUAL_AUTHORITY.md` with the actual canonical base SHA, then the repository verification tests. Direct `python scripts/verify_review_state.py` execution is non-authoritative defense in depth only. Green Builder/CI results mean at most `INDEPENDENT_REVIEW_PENDING`.

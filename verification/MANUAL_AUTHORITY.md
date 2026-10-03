@@ -6,14 +6,40 @@ This repository uses a temporary repository-local verification bridge until the 
 
 Required external settings that committed files cannot prove:
 
-- Protect the default branch and require pull requests for critical changes.
-- Require the `verification-gate` status check before merge once the repository exists.
-- Restrict force-push/deletion of the default branch.
-- Configure required independent reviewers/owners according to SpanFabric governance.
+- Apply the canonical project `hosting_authority` mode to the protected default branch.
+- Require a pull request, the exact `verification-gate` and `bootstrap-integrity` status contexts, force-push prohibition, branch-deletion prohibition, administrator enforcement, and no broad bypass.
 - Treat merge/rebase/conflict resolution as a new verification boundary and rerun required checks on the resulting commit.
 - Run post-merge verification on the actual merged commit before marking `POST_MERGE_VERIFIED`.
 
 Do not claim these settings are active merely because this file lists them.
+
+## Hosting-governance modes
+
+The canonical `hosting_authority` record in `SpanFabric/docs` is the policy source of
+truth. Its current `SOLO_OWNER` mode is an explicit authority model, not a waiver:
+
+- Fresh BREAKER remains required as the independent technical authority for the exact
+  immutable material subject.
+- Owner Acceptance remains required as a separate human authority; the Owner may be
+  the PR author.
+- GitHub required human approvals are `0`; a second human GitHub approval is not
+  required when there is only one human Owner.
+- `0` GitHub approvals does not mean no review: Fresh BREAKER, Owner Acceptance, the
+  exact required checks, protected-default-branch controls, and merge/post-merge
+  evidence remain mandatory.
+- GitHub's strict "branch up to date before merge" setting is `false`. Any base or
+  head change creates a new material subject, invalidates prior exact-subject evidence,
+  and requires Builder validation, exact-head CI, a new Fresh BREAKER, and a new Owner
+  Acceptance boundary.
+
+`MULTI_OWNER` or a future independent-human mode may require GitHub reviewers and
+approvals as explicitly configured by canonical governance. A GitHub approval is never
+Fresh BREAKER evidence, Owner self-approval never establishes technical independence,
+and neither Builder nor CI may produce Fresh BREAKER or Owner evidence.
+
+Before a Hosting Controls Operator claims the external controls are fully established,
+it must inspect organization-level rulesets with sufficient read authority, enumerate
+inherited bypasses, and confirm that no inherited rule undermines the repository policy.
 
 ## Initial baseline bootstrap exception
 

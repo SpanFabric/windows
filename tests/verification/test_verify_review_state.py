@@ -126,6 +126,23 @@ class BridgeTests(unittest.TestCase):
         d=self.digest(); self.write_state(status='MERGED',previous_status='BUILDING',transition={'from':'BUILDING','to':'MERGED','authority':'BUILDER'},review_subject_digest=d,evidence=[])
         with self.assertRaises(self.v.VerificationError): self.v.validate()
 
+    def test_material_change_reopens_ready_state_and_requires_new_breaker(self):
+        old_digest=self.digest()
+        old_breaker=self.evidence(old_digest,'FRESH_BREAKER','FRESH_BREAKER','BREAKER_VERDICT','ACCEPTED')
+        self.write_state(status='READY_FOR_OWNER_ACCEPTANCE',previous_status='INDEPENDENT_REVIEW_PENDING',transition={'from':'INDEPENDENT_REVIEW_PENDING','to':'READY_FOR_OWNER_ACCEPTANCE','authority':'FRESH_BREAKER'},review_subject_digest=old_digest,review_subject_commit=old_breaker['commit_sha'],evidence=[old_breaker])
+        self.v.validate()
+        (self.root/'src/code.py').write_text('VALUE = 2\n',encoding='utf-8'); git(self.root,'add','src/code.py')
+        new_digest=self.digest(); self.assertNotEqual(old_digest,new_digest)
+        old_breaker['active']=False
+        self.write_state(status='BUILDING',previous_status='READY_FOR_OWNER_ACCEPTANCE',transition={'from':'READY_FOR_OWNER_ACCEPTANCE','to':'BUILDING','authority':'BUILDER'},review_subject_digest='',review_subject_commit='',evidence=[old_breaker])
+        self.v.validate()
+        self.write_state(status='ACCEPTED',previous_status='READY_FOR_OWNER_ACCEPTANCE',transition={'from':'READY_FOR_OWNER_ACCEPTANCE','to':'ACCEPTED','authority':'BUILDER'},review_subject_digest=new_digest,review_subject_commit=self.head(),evidence=[old_breaker])
+        with self.assertRaisesRegex(self.v.VerificationError,"Authority 'BUILDER' cannot perform"):
+            self.v.validate()
+        self.write_state(status='READY_FOR_OWNER_ACCEPTANCE',previous_status='INDEPENDENT_REVIEW_PENDING',transition={'from':'INDEPENDENT_REVIEW_PENDING','to':'READY_FOR_OWNER_ACCEPTANCE','authority':'FRESH_BREAKER'},review_subject_digest=new_digest,review_subject_commit=self.head(),evidence=[old_breaker])
+        with self.assertRaisesRegex(self.v.VerificationError,'READY_FOR_OWNER_ACCEPTANCE requires active FRESH_BREAKER'):
+            self.v.validate()
+
     def test_conflict_markers_rejected(self):
         (self.root/'src/code.py').write_text('<<<<<<< ours\na\n=======\nb\n>>>>>>> theirs\n',encoding='utf-8')
         git(self.root,'add','src/code.py')
