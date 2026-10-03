@@ -3,12 +3,12 @@
   "bridge_version": "manual-verification-bridge-v1",
   "repository": "windows",
   "authority_mode": "MANUAL_AUTHORITY",
-  "status": "BREAKER_FAILED",
-  "previous_status": "INDEPENDENT_REVIEW_PENDING",
+  "status": "BUILDING",
+  "previous_status": "BREAKER_FAILED",
   "transition": {
-    "from": "INDEPENDENT_REVIEW_PENDING",
-    "to": "BREAKER_FAILED",
-    "authority": "FRESH_BREAKER"
+    "from": "BREAKER_FAILED",
+    "to": "BUILDING",
+    "authority": "BUILDER"
   },
   "risk": {
     "class": "R2",
