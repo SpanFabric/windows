@@ -3,12 +3,12 @@
   "bridge_version": "manual-verification-bridge-v1",
   "repository": "windows",
   "authority_mode": "MANUAL_AUTHORITY",
-  "status": "INDEPENDENT_REVIEW_PENDING",
-  "previous_status": "BUILDING",
+  "status": "BREAKER_FAILED",
+  "previous_status": "INDEPENDENT_REVIEW_PENDING",
   "transition": {
-    "from": "BUILDING",
-    "to": "INDEPENDENT_REVIEW_PENDING",
-    "authority": "BUILDER"
+    "from": "INDEPENDENT_REVIEW_PENDING",
+    "to": "BREAKER_FAILED",
+    "authority": "FRESH_BREAKER"
   },
   "risk": {
     "class": "R2",
@@ -129,6 +129,19 @@
       "verdict": "BUILDER_GREEN",
       "active": true,
       "report_path": "verification/reports/WINDOWS_TRUSTED_RUNNER_HOST_SELECTION_BUILDER_20261004.json"
+    },
+    {
+      "id": "FRESH-BREAKER-WTR-001-002-003-WINDOWS-20261004",
+      "type": "BREAKER_VERDICT",
+      "producer": "FRESH_BREAKER",
+      "role": "FRESH_BREAKER",
+      "authority": "MANUAL_AUTHORITY",
+      "commit_sha": "ec3989285af71b1e4025b35a937c54c72cf045ee",
+      "review_subject_digest": "f30f3334c9591802b6431e539fa532bdb63ada00499235a5b043004a8349b68d",
+      "created_at": "2026-10-04T01:16:39.4629153+02:00",
+      "verdict": "FINDINGS",
+      "active": true,
+      "report_path": "verification/reports/FRESH_BREAKER_WTR_001_002_003_20261004.json"
     }
   ],
   "remediation_inputs": [
@@ -154,6 +167,33 @@
       "scope": "CROSS_REPOSITORY",
       "report_path": "verification/reports/FRESH_BREAKER_WINDOWS_TRUSTED_RUNNER_HOST_SELECTION_20261003.json",
       "summary": "Builder remediation is bound to material commit ec3989285af71b1e4025b35a937c54c72cf045ee; independent Fresh BREAKER remains required."
+    },
+    {
+      "id": "FBR-WTR-001",
+      "severity": "HIGH",
+      "confirmed": true,
+      "status": "OPEN",
+      "scope": "CROSS_REPOSITORY_TRUST_BOUNDARY",
+      "report_path": "verification/reports/FRESH_BREAKER_WTR_001_002_003_20261004.json",
+      "summary": "WSL-only PATH fallback is accepted"
+    },
+    {
+      "id": "FBR-WTR-002",
+      "severity": "HIGH",
+      "confirmed": true,
+      "status": "OPEN",
+      "scope": "CROSS_REPOSITORY_TRUST_BOUNDARY",
+      "report_path": "verification/reports/FRESH_BREAKER_WTR_001_002_003_20261004.json",
+      "summary": "Public verification-gate is skipped rather than failed after Windows prerequisite failure"
+    },
+    {
+      "id": "FBR-WTR-003",
+      "severity": "MEDIUM",
+      "confirmed": true,
+      "status": "OPEN",
+      "scope": "SHARED_WINDOWS_CONVERSION_BOUNDARY",
+      "report_path": "verification/reports/FRESH_BREAKER_WTR_001_002_003_20261004.json",
+      "summary": "Apostrophe-containing native Windows paths are silently altered"
     }
   ],
   "initial_baseline_bootstrap": {
