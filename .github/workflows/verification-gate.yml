@@ -5,7 +5,61 @@ on:
 permissions:
   contents: read
 jobs:
+  windows-trusted-runner:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+      - name: Locate Git Bash
+        shell: pwsh
+        run: |
+          $candidates = @('C:\Program Files\Git\bin\bash.exe', 'C:\Program Files\Git\usr\bin\bash.exe')
+          $selected = $candidates | Where-Object { Test-Path -LiteralPath $_ -PathType Leaf } | Select-Object -First 1
+          if (-not $selected) { throw 'Git Bash is required for the Windows trusted-runner contract.' }
+          "SPAN_GPU_GIT_BASH=$selected" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          Write-Host "WINDOWS_GIT_BASH_PATH=$selected"
+          & $selected --version
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Materialize and execute trusted runner with Git Bash
+        shell: pwsh
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          $command = @'
+          set -euo pipefail
+          repo_root="$(cygpath -u "$GITHUB_WORKSPACE")"
+          runner_temp="$(cygpath -u "$RUNNER_TEMP")"
+          test -d "$repo_root"
+          test -d "$runner_temp"
+          trusted_dir="$(mktemp -d "$runner_temp/spangpu-trusted-runner.XXXXXX")"
+          trap 'rm -rf "$trusted_dir"' EXIT
+          trusted_runner="$trusted_dir/trusted_verify_review_state.sh"
+          git -C "$repo_root" cat-file blob HEAD:scripts/trusted_verify_review_state.sh > "$trusted_runner"
+          chmod 700 "$trusted_runner"
+          test -f "$trusted_runner"
+          printf 'WINDOWS_GIT_BASH_PATH=%s\\n' "$SPAN_GPU_GIT_BASH"
+          printf 'WINDOWS_REPO_ROOT_POSIX=%s\\n' "$repo_root"
+          printf 'WINDOWS_TRUSTED_RUNNER_POSIX_PATH=%s\\n' "$trusted_runner"
+          if "$trusted_runner" --repo-root "$repo_root" --base "$BASE_SHA"; then
+            printf 'WINDOWS_TRUSTED_RUNNER_EXIT=0\\n'
+          else
+            status=$?
+            printf 'WINDOWS_TRUSTED_RUNNER_EXIT=%s\\n' "$status" >&2
+            exit "$status"
+          fi
+          '@
+          & $env:SPAN_GPU_GIT_BASH --noprofile --norc -lc $command
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Run verification suite natively on Windows
+        shell: pwsh
+        run: |
+          python -m unittest discover -s tests/verification -p 'test_*.py' -v
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          Write-Host 'WINDOWS_VERIFICATION_TESTS=PASS'
   verification-gate:
+    needs: windows-trusted-runner
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

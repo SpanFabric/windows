@@ -54,12 +54,25 @@ class BridgeTests(unittest.TestCase):
     def head(self):
         return git(self.root,'rev-parse','HEAD').stdout.decode().strip()
 
-    def bash(self):
-        candidates=[shutil.which('bash')]
-        if os.name=='nt': candidates.extend([r'C:\Program Files\Git\bin\bash.exe',r'C:\Program Files\Git\usr\bin\bash.exe'])
+    @staticmethod
+    def select_bash(is_windows,path_bash,is_file=None):
+        candidates=[]
+        if is_windows: candidates.extend([r'C:\Program Files\Git\bin\bash.exe',r'C:\Program Files\Git\usr\bin\bash.exe'])
+        candidates.append(path_bash)
         for candidate in candidates:
-            if candidate and pathlib.Path(candidate).is_file(): return candidate
+            if candidate and (is_file(candidate) if is_file else pathlib.Path(candidate).is_file()): return candidate
         raise RuntimeError('Bash is required to exercise the authoritative trusted runner')
+
+    def bash(self):
+        return self.select_bash(os.name=='nt',shutil.which('bash'))
+
+    def bash_path(self,bash,path):
+        native_path=str(path)
+        if os.name!='nt': return native_path
+        converted=subprocess.run([bash,'--noprofile','--norc','-lc','cygpath -u -- "$1"','bash',native_path],capture_output=True,text=True)
+        if converted.returncode or not converted.stdout.strip().startswith('/'):
+            raise RuntimeError('Git Bash failed to convert a trusted-runner path: '+converted.stderr)
+        return converted.stdout.strip()
 
     def trusted_cli(self,*args):
         """Materialize the canonical runner from HEAD, never from the fixture worktree."""
@@ -68,7 +81,8 @@ class BridgeTests(unittest.TestCase):
             runner=pathlib.Path(host_tmp)/'trusted_verify_review_state.sh'
             runner.write_bytes(source)
             runner.chmod(0o700)
-            return subprocess.run([self.bash(),str(runner),'--repo-root',str(self.root),*args],cwd=host_tmp,capture_output=True,text=True)
+            bash=self.bash()
+            return subprocess.run([bash,self.bash_path(bash,runner),'--repo-root',self.bash_path(bash,self.root),*args],cwd=host_tmp,capture_output=True,text=True)
 
     def evidence(self,digest,producer='BUILDER',role='BUILDER',etype='BUILDER_REPORT',verdict='BUILDER_GREEN',commit_sha=None,merge_commit_sha=None):
         sha=commit_sha or git(self.root,'rev-parse','HEAD').stdout.decode().strip()
@@ -261,6 +275,29 @@ class BridgeTests(unittest.TestCase):
         self.assertIn(f'TRUSTED_VALIDATOR_GIT_OBJECT={validator_oid}',p.stdout)
         self.assertIn(f'TRUSTED_VALIDATOR_COPY_OBJECT={validator_oid}',p.stdout)
 
+    def select_bash_for_test(self,is_windows,path_bash,present):
+        present=set(present)
+        return self.select_bash(is_windows,path_bash,lambda candidate: candidate in present)
+
+    def test_windows_bash_prefers_git_bin_before_path(self):
+        self.assertEqual(r'C:\Program Files\Git\bin\bash.exe',self.select_bash_for_test(True,r'C:\Tools\bash.exe',[r'C:\Program Files\Git\bin\bash.exe',r'C:\Tools\bash.exe']))
+
+    def test_windows_bash_uses_usr_bin_when_bin_is_absent(self):
+        self.assertEqual(r'C:\Program Files\Git\usr\bin\bash.exe',self.select_bash_for_test(True,r'C:\Tools\bash.exe',[r'C:\Program Files\Git\usr\bin\bash.exe',r'C:\Tools\bash.exe']))
+
+    def test_windows_bash_falls_back_to_a_non_wsl_path_host(self):
+        self.assertEqual(r'C:\Tools\bash.exe',self.select_bash_for_test(True,r'C:\Tools\bash.exe',[r'C:\Tools\bash.exe']))
+
+    def test_windows_bash_rejects_when_no_candidate_is_suitable(self):
+        with self.assertRaisesRegex(RuntimeError,'Bash is required'):
+            self.select_bash_for_test(True,None,[])
+
+    def test_non_windows_bash_selection_retains_path_behavior(self):
+        self.assertEqual('/usr/bin/bash',self.select_bash_for_test(False,'/usr/bin/bash',['/usr/bin/bash']))
+
+    def test_windows_bash_rejects_historical_wsl_launcher_when_git_bash_exists(self):
+        self.assertEqual(r'C:\Program Files\Git\bin\bash.exe',self.select_bash_for_test(True,r'C:\WINDOWS\system32\bash.exe',[r'C:\Program Files\Git\bin\bash.exe',r'C:\WINDOWS\system32\bash.exe']))
+
     def test_trusted_runner_preserves_explicit_empty_base_to_validator(self):
         p=self.trusted_cli('--base','')
         self.assertEqual(2,p.returncode,p.stderr)
@@ -378,5 +415,13 @@ class BridgeTests(unittest.TestCase):
             self.assertIn('git cat-file blob HEAD:scripts/trusted_verify_review_state.sh',content,workflow)
             self.assertIn('trusted_verify_review_state.sh',content,workflow)
             self.assertNotIn('python scripts/verify_review_state.py',content,workflow)
+        gate=(workflow_dir/'verification-gate.yml').read_text(encoding='utf-8')
+        self.assertIn('windows-trusted-runner:',gate)
+        self.assertIn('needs: windows-trusted-runner',gate)
+        self.assertIn('runs-on: windows-latest',gate)
+        self.assertIn('SPAN_GPU_GIT_BASH',gate)
+        self.assertIn('cygpath -u "$GITHUB_WORKSPACE"',gate)
+        self.assertIn('WINDOWS_TRUSTED_RUNNER_EXIT=0',gate)
+        self.assertNotIn('wsl',gate.lower())
 
 if __name__=='__main__': unittest.main(verbosity=2)
