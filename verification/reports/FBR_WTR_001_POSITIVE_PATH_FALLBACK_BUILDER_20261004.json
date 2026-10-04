@@ -1,0 +1,243 @@
+{
+  "id": "FBR-WTR-001-POSITIVE-PATH-FALLBACK-BUILDER-WINDOWS-20261004",
+  "type": "REMEDIATION",
+  "producer": "BUILDER",
+  "role": "BUILDER",
+  "authority": "MANUAL_AUTHORITY",
+  "commit_sha": "97a6be00818b9d3e78a2715a299f3ffedcf6dd88",
+  "review_subject_digest": "432c193bc52db30687190b05cb9d5c103e30851933367df58eff3f5b1c8a76e6",
+  "created_at": "2026-10-04T07:08:07Z",
+  "verdict": "BUILDER_GREEN",
+  "active": true,
+  "report_path": "verification/reports/FBR_WTR_001_POSITIVE_PATH_FALLBACK_BUILDER_20261004.json",
+  "repository": "SpanFabric/windows",
+  "pr": 1,
+  "branch": "codex/bootstrap-verification-bridge",
+  "base": "main",
+  "canonical_base_sha": "e3fd92a90238da183fc1ff8ff568301fcb18dd1f",
+  "starting_evidence_head": "7849ec71953145fb7f223ad4f52b0a892a20eb58",
+  "building_transition_commit": "79503ad2b5ceaa8e06032f09586e7c4d667b91d1",
+  "material_sha": "97a6be00818b9d3e78a2715a299f3ffedcf6dd88",
+  "material_digest": "432c193bc52db30687190b05cb9d5c103e30851933367df58eff3f5b1c8a76e6",
+  "material_file_count": 11,
+  "lifecycle": "INDEPENDENT_REVIEW_PENDING",
+  "authority_limit": "Builder evidence only. No independent Fresh BREAKER verdict, Owner Acceptance, hosting-control configuration, merge, post-merge verification, PHASE-001 or product/GPU proof.",
+  "plan": "Restore the authorized positive Windows PATH fallback and correct its manual contract across the six existing repositories; preserve FBR-WTR-002 workflow and FBR-WTR-003 runtime behavior.",
+  "global_impact_pass": "Shared test-launcher Bash discovery feeds every immutable trusted-runner fixture and the native Windows/public verification jobs. All six shared helpers, boundary tests and manuals are synchronized. Docs retains its governance, SOLO_OWNER, project-state and F-007/RLINK suites.",
+  "finding_dispositions": [
+    {
+      "id": "FBR-WTR-001_IMPLEMENTATION_DEVIATION",
+      "root_cause": "The prior helper omitted Windows PATH fallback entirely, excluding suitable nonstandard installations regardless of capability.",
+      "direct_fix": "Fixed Git bin first; fixed Git usr/bin second; PATH discovery third only if both fixed hosts are absent. A fallback must exist and pass the positive native suitability probe.",
+      "regression": "Fixed-host priority and no PATH/probe access; valid nonstandard native host acceptance; known WSL rejection even with injected positive result; failed/missing/timeout/unrelated host rejection; non-Windows behavior unchanged.",
+      "status": "REMEDIATED_PENDING_FRESH_BREAKER"
+    },
+    {
+      "id": "MANUAL_AUTHORITY_CONTRACT_MISMATCH",
+      "root_cause": "The manual incorrectly stated that Windows PATH fallback was unsupported.",
+      "direct_fix": "Document the same positive suitability fallback, ordering, failure behavior and local-host trust limit implemented by the test launcher.",
+      "status": "REMEDIATED_PENDING_FRESH_BREAKER"
+    },
+    {
+      "id": "HISTORICAL_BUILDER_EXACT_OUTPUT_TRANSCRIPTION",
+      "root_cause": "The historical CI followup green claim recorded a literal backslash-u0027 sequence, not the observed apostrophe.",
+      "historical_report": "verification/reports/FBR_WTR_001_002_003_REMEDIATION_BUILDER_CI_FOLLOWUP_20261004.json",
+      "historical_report_blob": "32f9fab9de20b9f7f38d2f2167f7b3fb9e8fd022",
+      "historical_json_decoded_excerpt": "/c/path\\u0027name/runner",
+      "new_exact_output": "/c/path'name/runner",
+      "supersedes_only": "The literal exact-output claim and obsolete fixed-only host-selection conclusions; the prior report is immutable, inactive in current state, and is not rewritten.",
+      "status": "CORRECTED_IN_NEW_BUILDER_EVIDENCE"
+    },
+    {
+      "id": "FBR-WTR-002",
+      "disposition": "EXISTING_FIX_PRESERVED_NOT_REDESIGNED",
+      "regression": "Execute the actual first-step workflow assertion. Only exact success proceeds; failure/cancelled/skipped/timeout/unknown/empty/uppercase/whitespace fail. Reject skippable or tolerated assertions."
+    },
+    {
+      "id": "FBR-WTR-003",
+      "disposition": "EXISTING_RUNTIME_FIX_PRESERVED_NOT_REDESIGNED",
+      "regression": "Real native apostrophe/Unicode/metacharacter/same-object/injection/trailing-space/control-character regressions retained and passing."
+    }
+  ],
+  "suitability_contract": {
+    "fixed_hosts": [
+      "C:\\Program Files\\Git\\bin\\bash.exe",
+      "C:\\Program Files\\Git\\usr\\bin\\bash.exe"
+    ],
+    "fallback_conditions": [
+      "Both fixed hosts absent",
+      "PATH-discovered candidate exists",
+      "Known System32/Sysnative WSL launchers rejected before execution",
+      "Candidate starts within 10 seconds",
+      "uname identifies MINGW/MSYS, not Linux/WSL or Cygwin",
+      "Git executes and reports a Git version",
+      "cygpath performs an exact native-to-POSIX-to-native round trip",
+      "Exit 0 and exact complete capability marker"
+    ],
+    "probe_isolation": "Static quoted shell source; data in environment; system-temp working directory; no profile/rc files; startup-script and Git-redirection environment removed; tools resolved from the candidate MSYS runtime rather than inherited PATH.",
+    "trust_limit": "This executes a local PATH candidate and establishes capability, not cryptographic publisher identity or protection against a malicious local runtime. Fixed installations also remain a local OS/user trust assumption.",
+    "restart_retry_concurrency": "Selection is evaluated afresh without persisted suitability or acceptance cache. Probe failure is fail-closed; no automatic retry-until-green. Each runtime alias/fixture is separately owned and retired in system temp."
+  },
+  "native_windows": {
+    "selected_bash": "C:\\Program Files\\Git\\bin\\bash.exe",
+    "nonstandard_probes": [
+      {
+        "candidate": "<SYSTEM_TEMP>\\spangpu-positive-bash-sqwpm68q\\Nonstandard Git installation\\bin\\bash.exe",
+        "suitable": true
+      }
+    ],
+    "alias_retired": true,
+    "conversion": "/c/path'name/runner",
+    "native_output": [
+      "MINGW64_NT-10.0-26200",
+      "git version 2.55.0.windows.3",
+      "cygpath (cygwin) 3.6.9"
+    ],
+    "native_exit": 0,
+    "python": "3.14.7 (tags/v3.14.7:823f032, Aug  5 2026, 10:51:32) [MSC v.1944 64 bit (AMD64)]",
+    "bash_version": "GNU bash 5.3.15(1)-release (x86_64-pc-cygwin)",
+    "selected_host_suitability_probe": true
+  },
+  "native_nonstandard_proof": "Real native Bash is reached through a fresh system-temp junction alias to installed Git. Only fixed-location availability is simulated; fallback suitability, native process startup and path conversion are real. No repository copy or persistent sibling is created; alias retired.",
+  "local_validation": {
+    "command": "python -B -m unittest discover -s tests/verification -v",
+    "executor_run_id": 97929,
+    "tests": 63,
+    "passed": 62,
+    "skipped": 1,
+    "skip_reason": "Linux/Unix native-suitability rejection is exercised on non-Windows hosted CI, not Windows.",
+    "seconds": 207.97,
+    "suite_exit": 0,
+    "canonical_trusted_runner_exit": 0,
+    "direct_defense_in_depth_validator_exit": 0,
+    "git_diff_check_exit": 0,
+    "independent_immutable_tree_digest_recomputation": "MATCH",
+    "docs_governance_and_rlink": "NOT_APPLICABLE"
+  },
+  "observed_validation_failures": {
+    "first_focused_run": {
+      "repository": "SpanFabric/platform",
+      "exit": 1,
+      "observed": "One test fixture mock lacked descriptor binding; corrected using autospec. Two existing prerequisite-matrix subcases produced empty output; later direct nine-case diagnostic and full suites passed. Missing-output cause was not established.",
+      "source_runtime_workflow_changed": false
+    },
+    "first_docs_full_run": {
+      "tests": 109,
+      "exit": 1,
+      "error": "Existing sentinel test raised Git Bash failed to convert a trusted-runner path with empty stderr.",
+      "cause": "NOT_ESTABLISHED",
+      "subsequent_controlled_instrumented_run": {
+        "tests": 109,
+        "exit": 0,
+        "skipped": 1,
+        "conversion_anomalies": [],
+        "source_changed": false,
+        "tests_disabled": false
+      },
+      "next_review": "Fresh Breaker should investigate empty native conversion observations, including under concurrent execution; successful later runs do not erase the original failure."
+    }
+  },
+  "protected_blob_identity": {
+    "trusted_runner": "7309dc1e1d484188d7c7cb3c6cabd92cf4cfd4ac",
+    "validator": "ac52f7c8521d860a57061791dec7a575f09067a4",
+    "policy": "de196978af8f8832d529d2eac17ef497ae51c624",
+    "workflow": "135623c20750417c8fbb51995adc9f73f0aa8117",
+    "unchanged": true,
+    "historical_reports": "IMMUTABLE"
+  },
+  "synchronized_material_blobs": {
+    "tests/verification/test_verify_review_state.py": "6cde006a2a7241c8a750ff6776091665bf92c57d",
+    "tests/verification/test_windows_boundary.py": "6f335b42b4434c734ae6cf69237de9ae327f5467",
+    "verification/MANUAL_AUTHORITY.md": "a6fdfffee4322eeae7b58e2b7db7d217066af926"
+  },
+  "cross_repository_subjects": [
+    {
+      "repository": "SpanFabric/platform",
+      "material_sha": "42f80f11eebc94d3e536596f8f0268cc57503210",
+      "review_subject_digest": "caaa93e1ca2897e4dad9cea96afebc1215cec4b0e640b3b2a78ed2291a9b24a9"
+    },
+    {
+      "repository": "SpanFabric/windows",
+      "material_sha": "97a6be00818b9d3e78a2715a299f3ffedcf6dd88",
+      "review_subject_digest": "432c193bc52db30687190b05cb9d5c103e30851933367df58eff3f5b1c8a76e6"
+    },
+    {
+      "repository": "SpanFabric/host",
+      "material_sha": "573c4596abff78b9b6ca8ab706470999b705154e",
+      "review_subject_digest": "2a5586bef72567a33ec9c599face4a5635fb3ba331185821f3a7f4bc92e9072a"
+    },
+    {
+      "repository": "SpanFabric/evals",
+      "material_sha": "fbba464309d2f3ca9216ecfb8131fe968f906302",
+      "review_subject_digest": "91c848a00407d394d90402a6b56632faa9466595b7e5345ebff37e817fb2ef9b"
+    },
+    {
+      "repository": "SpanFabric/.github",
+      "material_sha": "747df9cca3ae27d14f8587b28c6666d65ff7bdac",
+      "review_subject_digest": "0d7b3c31e71ef0264a8b8fe031085e8adac3626b0f5f84213d1859b2d3f4c524"
+    },
+    {
+      "repository": "SpanFabric/docs",
+      "material_sha": "ae016577aac478deb760fc089fe43b417b25fd89",
+      "review_subject_digest": "eb2ac7289be11267160e374745275b8737d85ed971864090fac657257935231f"
+    }
+  ],
+  "non_regression": "F-001 Git path/digest identity; F-002 invalid base; F-003 authority matrix; F-004 merge/post-merge SHA binding; F-005 empty base; F-006 immutable preflight; Docs F-007/RLINK, F-000-04 quarantine, SOLO_OWNER, mandatory Fresh Breaker, separate Owner, zero GitHub human approvals and still-required hosting controls. No policy/governance material changed.",
+  "builder_assumption_challenge": "Attack zero-exit or incomplete probe output, fake Bash filename, WSL case/dot variants, startup/Git environment pollution, fixed-host override, stale digest/report binding, workflow non-success, path injection/loss and repository divergence. Local hostile-runtime authenticity is not proved; initial empty native conversion observations remain disclosed.",
+  "boundary_audit": [
+    {
+      "edge": "PATH -> candidate -> suitability -> selected Bash",
+      "source_of_truth": "Fixed local installation order then actual native capability observations",
+      "producer_guarantee": "Deferred PATH lookup; existing file; static bounded probe",
+      "consumer_assumption": "Local runtime/OS trust",
+      "validation_owner": "Shared test launcher",
+      "authority_owner": "BUILDER technical evidence only",
+      "failure": "No selection on missing/invalid/failed probe",
+      "recovery": "Explicit fresh observation, no cached approval"
+    },
+    {
+      "edge": "Native path data -> cygpath -> POSIX path",
+      "source_of_truth": "Exact native input and real filesystem object",
+      "producer_guarantee": "Existing environment data channel, static quoted source, UTF-8",
+      "consumer_assumption": "Suitable native runtime",
+      "validation_owner": "Retained real native regressions",
+      "failure": "Invalid controls or failed conversion rejected",
+      "recovery": "New test evidence, no redesign of FBR-WTR-003"
+    },
+    {
+      "edge": "Git object -> immutable runner -> isolated validator",
+      "source_of_truth": "HEAD object IDs and explicit origin/main base",
+      "producer_guarantee": "Unchanged materialize-before-run preflight",
+      "consumer_assumption": "Canonical repository and full history",
+      "validation_owner": "Trusted runner and closed policy validator",
+      "failure": "Reject material deltas/shadows/replacement before side effects",
+      "recovery": "Authorized new commit/subject, never reuse stale evidence"
+    },
+    {
+      "edge": "Windows prerequisite -> public gate",
+      "source_of_truth": "Actual needs.windows-trusted-runner.result",
+      "producer_guarantee": "Existing always() and first-step exact-success assertion",
+      "consumer_assumption": "Hosting executes a terminal job",
+      "validation_owner": "Workflow assertion and exact-head hosted jobs",
+      "failure": "Non-success fails; outage/cancellation cannot supply success",
+      "recovery": "New exact-head successful hosted run, no acceptance from local mocks"
+    },
+    {
+      "edge": "Material tree -> digest -> Builder -> Fresh Breaker -> Owner",
+      "source_of_truth": "Committed mode/path/object/content digest and closed authority matrix",
+      "producer_guarantee": "New subject-specific append-only Builder evidence",
+      "consumer_assumption": "Independent reviewer must reconstruct all six subjects",
+      "validation_owner": "Builder checks then independent Fresh Breaker",
+      "authority_owner": "BUILDER != FRESH_BREAKER != OWNER",
+      "failure": "Material change invalidates previous evidence; findings remain open",
+      "recovery": "Normal append-only continuation; no reset/amend/rebase/force/merge"
+    }
+  ],
+  "future_steward_compatibility": "No schema, authority, lifecycle, SOLO_OWNER or hosting-context changes; the existing explicit ports, digest and evidence mapping remain intact.",
+  "post_push_ci": "PENDING_AT_REPORT_CREATION: require Verification gate plus integrity workflow, native Windows job and public gate successful on the exact final evidence heads. Hosted IDs/conclusions are separate live handoff observations, not independent review authority.",
+  "next_authority": "NEW_INDEPENDENT_FRESH_BREAKER_FOR_ALL_SIX",
+  "owner_acceptance": "NOT_PERFORMED",
+  "hosting_controls": "NOT_CONFIGURED",
+  "merge": "NOT_PERFORMED",
+  "phase_001": "NOT_AUTHORIZED"
+}
