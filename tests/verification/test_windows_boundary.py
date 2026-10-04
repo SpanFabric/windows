@@ -85,7 +85,14 @@ class WindowsBoundaryTests(unittest.TestCase):
     def test_windows_never_looks_up_path_before_host_selection(self):
         with mock.patch.object(bridge.shutil, "which", side_effect=AssertionError("PATH queried")):
             with mock.patch.object(bridge, "os", types.SimpleNamespace(name="nt")):
-                self.helper().bash()
+                # Host discovery tests model installation availability explicitly:
+                # Linux CI has no native Windows Program Files installation.
+                with mock.patch.object(bridge.pathlib.Path, "is_file", return_value=True):
+                    self.assertEqual(r"C:\Program Files\Git\bin\bash.exe",
+                                     self.helper().bash())
+                with mock.patch.object(bridge.pathlib.Path, "is_file", return_value=False):
+                    with self.assertRaises(RuntimeError):
+                        self.helper().bash()
 
     def test_workflow_prerequisite_result_matrix(self):
         workflow = (REPO / ".github/workflows/verification-gate.yml").read_text()
