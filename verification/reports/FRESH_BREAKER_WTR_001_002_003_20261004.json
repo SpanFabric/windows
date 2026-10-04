@@ -1,0 +1,113 @@
+{
+  "id": "FRESH-BREAKER-WTR-001-002-003-WINDOWS-20261004",
+  "type": "BREAKER_VERDICT",
+  "producer": "FRESH_BREAKER",
+  "role": "FRESH_BREAKER",
+  "authority": "MANUAL_AUTHORITY",
+  "commit_sha": "ec3989285af71b1e4025b35a937c54c72cf045ee",
+  "review_subject_digest": "f30f3334c9591802b6431e539fa532bdb63ada00499235a5b043004a8349b68d",
+  "created_at": "2026-10-04T01:16:39.4629153+02:00",
+  "verdict": "FINDINGS",
+  "active": true,
+  "report_path": "verification/reports/FRESH_BREAKER_WTR_001_002_003_20261004.json",
+  "lifecycle_after_persistence": "BREAKER_FAILED",
+  "review_repository": "SpanFabric/windows",
+  "review_pr": 1,
+  "review_head": "d81c37056579c0fff35b3487eb0b161638963efb",
+  "material_subject": {
+    "sha": "ec3989285af71b1e4025b35a937c54c72cf045ee",
+    "review_subject_digest": "f30f3334c9591802b6431e539fa532bdb63ada00499235a5b043004a8349b68d",
+    "reviewed_head": "d81c37056579c0fff35b3487eb0b161638963efb",
+    "canonical_base_sha": "e3fd92a90238da183fc1ff8ff568301fcb18dd1f"
+  },
+  "batch_repositories": [
+    "SpanFabric/platform",
+    "SpanFabric/windows",
+    "SpanFabric/host",
+    "SpanFabric/evals",
+    "SpanFabric/docs",
+    "SpanFabric/.github"
+  ],
+  "authority_limit": "Owner-authorized persistence of the supplied completed Fresh BREAKER verdict only. This task does not perform a new independent review or cryptographically establish reviewer identity. MANUAL_AUTHORITY retains the human identity boundary. No remediation or acceptance authority is exercised.",
+  "source_request": "SPANGPU — PERSIST FBR-WTR-001 / 002 / 003 FINDINGS; Owner supplied request 2026-10-04",
+  "findings": [
+    {
+      "id": "FBR-WTR-001",
+      "severity": "HIGH",
+      "title": "WSL-only PATH fallback is accepted",
+      "scope": "CROSS_REPOSITORY_TRUST_BOUNDARY",
+      "failure_mechanism": "When both fixed Git-for-Windows candidates are unavailable, generic shutil.which(\"bash\") is accepted without rejecting the known Windows WSL launcher.",
+      "supplied_reproduction": {
+        "affected_repositories": [
+          "SpanFabric/platform",
+          "SpanFabric/windows",
+          "SpanFabric/host",
+          "SpanFabric/evals",
+          "SpanFabric/docs",
+          "SpanFabric/.github"
+        ],
+        "accepted_fallback": "C:\\WINDOWS\\system32\\bash.exe"
+      },
+      "violated_invariant": "A WSL launcher must not satisfy the Git-for-Windows trusted-runner host contract.",
+      "required_remediation": [
+        "Reject known WSL launcher fallback.",
+        "Define positive suitability for PATH fallback OR remove fallback.",
+        "Regression: fixed Git Bash absent; PATH resolves to C:\\WINDOWS\\system32\\bash.exe; require deterministic failure."
+      ]
+    },
+    {
+      "id": "FBR-WTR-002",
+      "severity": "HIGH",
+      "title": "Public verification-gate is skipped rather than failed after Windows prerequisite failure",
+      "scope": "CROSS_REPOSITORY_TRUST_BOUNDARY",
+      "workflow_pattern": "verification-gate: needs: windows-trusted-runner",
+      "failure_mechanism": "Without fail-closed downstream execution/result checking, failure, cancellation or skipping of windows-trusted-runner may skip the dependent public verification-gate rather than explicitly failing. This is unsafe for the intended future Required Check boundary; this report does not assert hosting controls are configured.",
+      "violated_invariant": "verification-gate must report failure whenever native Windows validation does not complete successfully.",
+      "required_remediation": [
+        "Run the public gate after the prerequisite terminal result using fail-safe semantics, e.g. always().",
+        "Explicitly require needs.windows-trusted-runner.result == 'success'.",
+        "Make failure, cancellation, skip and timeout fail the public gate.",
+        "Add workflow-level regressions or controlled evidence for those outcomes."
+      ]
+    },
+    {
+      "id": "FBR-WTR-003",
+      "severity": "MEDIUM",
+      "title": "Apostrophe-containing native Windows paths are silently altered",
+      "scope": "SHARED_WINDOWS_CONVERSION_BOUNDARY",
+      "failure_mechanism": "An apostrophe-containing native Windows path is transported incorrectly before/at the Git-Bash conversion boundary.",
+      "supplied_reproduction": {
+        "input": "C:\\path'name\\runner",
+        "altered_equivalent": "C:\\pathname\\runner"
+      },
+      "violated_invariant": "Transport must preserve arbitrary valid Windows path characters without shell injection.",
+      "required_remediation": [
+        "Use transport preserving arbitrary valid Windows path characters.",
+        "Add real/native regression for apostrophe-containing paths.",
+        "Retain existing metacharacter non-injection regressions."
+      ]
+    }
+  ],
+  "transition": {
+    "from": "INDEPENDENT_REVIEW_PENDING",
+    "to": "BREAKER_FAILED",
+    "authority": "FRESH_BREAKER"
+  },
+  "pre_persistence_validation": {
+    "identity": "PASS: canonical root/origin; clean worktree; exact reviewed head; material ancestor; PR #1 OPEN, non-draft, unmerged, base main",
+    "immutable_object_verification": "PASS",
+    "trusted_runner_git_object": "7309dc1e1d484188d7c7cb3c6cabd92cf4cfd4ac",
+    "trusted_validator_git_object": "ac52f7c8521d860a57061791dec7a575f09067a4"
+  },
+  "evidence_invalidation": "Any subsequent material change invalidates applicability of this exact-subject verdict to the new material subject. Historical reports are preserved.",
+  "persistence_scope": [
+    "verification/state.yaml",
+    "verification/reports/FRESH_BREAKER_WTR_001_002_003_20261004.json"
+  ],
+  "ci_limit": "New evidence-head CI validates persistence only and cannot overturn FINDINGS.",
+  "next_action": "Separately authorized Builder remediation of all three findings across the shared six-repository boundary; new exact material subjects/digests, regressions and exact-head CI, then a new independent Fresh BREAKER.",
+  "owner_acceptance": "NOT_PERFORMED",
+  "merge": "NOT_PERFORMED",
+  "post_merge_verification": "NOT_PERFORMED",
+  "phase_001": "NOT_AUTHORIZED"
+}

@@ -1,0 +1,147 @@
+{
+  "id": "FBR-WTR-001-002-003-REMEDIATION-BUILDER-WINDOWS-20261004",
+  "type": "REMEDIATION",
+  "producer": "BUILDER",
+  "role": "BUILDER",
+  "authority": "MANUAL_AUTHORITY",
+  "commit_sha": "d475192e5cc5420d4914a7ac3b612cd8958d44d0",
+  "review_subject_digest": "8442a78a1e19a155b54c69fe28624f40461d55ee2f074e7a8a77be64cf2e95d8",
+  "created_at": "2026-10-04T00:20:16Z",
+  "verdict": "BUILDER_GREEN",
+  "active": true,
+  "report_path": "verification/reports/FBR_WTR_001_002_003_REMEDIATION_BUILDER_20261004.json",
+  "repository": "SpanFabric/windows",
+  "pr": 1,
+  "branch": "codex/bootstrap-verification-bridge",
+  "base": "main",
+  "starting_breaker_evidence_head": "6ac5820884daaf5eba5d11ddf855488b40ffbd71",
+  "building_transition_commit": "b7e5309505e1a84747a19851901e7c87f5a5fcb6",
+  "material_sha": "d475192e5cc5420d4914a7ac3b612cd8958d44d0",
+  "material_digest": "8442a78a1e19a155b54c69fe28624f40461d55ee2f074e7a8a77be64cf2e95d8",
+  "source_breaker_report": "verification/reports/FRESH_BREAKER_WTR_001_002_003_20261004.json",
+  "source_material_sha": "ec3989285af71b1e4025b35a937c54c72cf045ee",
+  "source_material_digest": "f30f3334c9591802b6431e539fa532bdb63ada00499235a5b043004a8349b68d",
+  "lifecycle": "INDEPENDENT_REVIEW_PENDING",
+  "authority_limit": "Builder remediation and validation only; no independent Fresh BREAKER verdict, Owner Acceptance, merge, post-merge authority, hosting-control changes or product/hardware proof.",
+  "cross_repository_change": {
+    "active_phase": "PHASE-000",
+    "repositories": [
+      "SpanFabric/platform",
+      "SpanFabric/windows",
+      "SpanFabric/host",
+      "SpanFabric/evals",
+      "SpanFabric/docs",
+      "SpanFabric/.github"
+    ],
+    "owners": "Each canonical repository; shared Manual Verification Bridge boundary",
+    "boundary": "native Windows host selection / path conversion / public verification-gate",
+    "canonical_schema_change": "NONE; fixed closed authority policy and validator unchanged",
+    "producer_guarantees": "Canonical Git objects supply runner/validator; fixed Git-for-Windows installation supplies native Bash; environment fields carry native paths and observed prerequisite results as data.",
+    "consumer_assumptions": "Controlled local Git-for-Windows installation; no adversarial modification of Program Files or OS-admin trust roots. Exact immutable material subjects and explicit base history remain required.",
+    "sequencing": "Validate baseline; BUILDER state-only BUILDING commit; common material fix and per-repository tests; material commit; Builder evidence-only commit; fast-forward push and new CI; new independent Fresh Breaker.",
+    "rollback": "Git history preserves previous material and reports; any authorized future material reversal requires a new digest and validation boundary.",
+    "fresh_breaker_scope": "All six new material subjects, native host/path boundary and dependency failure/cancel/skip behavior."
+  },
+  "findings": [
+    {
+      "id": "FBR-WTR-001",
+      "source_severity": "HIGH",
+      "builder_disposition": "REMEDIATED_PENDING_FRESH_BREAKER",
+      "red": {
+        "all_six_old_subjects": true,
+        "fixed_git_absent": true,
+        "path_fallback": "C:\\WINDOWS\\system32\\bash.exe",
+        "observed": "ACCEPTED"
+      },
+      "implementation": "Windows PATH fallback removed. Only fixed Git bin Bash then usr/bin Bash can qualify; Windows does not consult shutil.which. Non-Windows PATH semantics retained.",
+      "green": "Known WSL launcher case/alias variants and arbitrary C:\\Tools\\bash.exe, MSYS and Cygwin PATH hosts deterministically rejected; fixed-location ordering accepted; no candidate is executed to establish trust."
+    },
+    {
+      "id": "FBR-WTR-002",
+      "source_severity": "HIGH",
+      "builder_disposition": "REMEDIATED_PENDING_FRESH_BREAKER",
+      "red": "All six old Git workflows had dependency-only execution; non-success could suppress the public gate and no result assertion existed. Permanent workflow regression failed against the old reference.",
+      "implementation": "Job-level always(); first step before checkout consumes needs.windows-trusted-runner.result via environment, prints it and exits 1 unless exactly 'success'.",
+      "green_matrix": {
+        "success": "PROCEED",
+        "failure": "FAIL",
+        "cancelled": "FAIL",
+        "skipped": "FAIL",
+        "timeout": "FAIL",
+        "unknown": "FAIL",
+        "empty": "FAIL",
+        "uppercase_success": "FAIL",
+        "surrounding_whitespace": "FAIL"
+      },
+      "regression": "Structurally extract job, dependency, unconditional condition, first assertion and actual result data source. Execute actual workflow assertion for every result. Reject conditional or continue-on-error assertions; preserve immutable validator and test steps."
+    },
+    {
+      "id": "FBR-WTR-003",
+      "source_severity": "MEDIUM",
+      "builder_disposition": "REMEDIATED_PENDING_FRESH_BREAKER",
+      "red": {
+        "all_six_old_subjects": true,
+        "native_input": "C:\\path'name\\runner",
+        "observed": "/c/pathname/runner"
+      },
+      "implementation": "Native path uses SPAN_GPU_NATIVE_PATH environment data channel with a static quoted Bash cygpath program, explicit UTF-8 decoding, invalid-control rejection and removal of only the output newline. No native path interpolation into shell source.",
+      "green": "Dedicated apostrophe regression returns exact /c/path'name/runner. Real native files round-trip through Bash unchanged and converted paths read the same object.",
+      "native_character_matrix": [
+        "apostrophe",
+        "multiple apostrophes",
+        "space",
+        "ampersand",
+        "parentheses",
+        "dollar",
+        "semicolon",
+        "brackets",
+        "Unicode Latin/CJK",
+        "backtick",
+        "$(touch WTR_SENTINEL)"
+      ],
+      "injection": "Sentinel path remains data; no WTR_SENTINEL side effect. Existing immutable preflight sentinel regressions preserved.",
+      "assumption_challenge": "A targeted probe found strip() removed trailing whitespace; replaced with removesuffix(newline) and added explicit native trailing-space regression. Win32 filesystem normalization and extended-path namespaces are not claimed as a new universal filesystem contract."
+    }
+  ],
+  "local_validation": {
+    "environment": "Native Windows; Python 3.14.7; C:\\Program Files\\Git\\bin\\bash.exe",
+    "command": "python -B -m unittest discover -s tests/verification -p 'test_*.py' -q",
+    "tests": 51,
+    "result": "PASS",
+    "skipped": 0,
+    "red_before_green_reference": "New permanent Windows-boundary suite failed on old reference: apostrophe loss, WSL/arbitrary host acceptance, missing gate assertion; old Git-blob probes reproduced all three across all six.",
+    "git_diff_check": "PASS",
+    "authoritative_runner": "PASS at material commit with canonical origin/main base; materialized immutable runner/validator blob identities checked.",
+    "independent_immutable_tree_digest_recomputation": "PASS"
+  },
+  "common_blobs": {
+    "baseline": {
+      "runner": "7309dc1e1d484188d7c7cb3c6cabd92cf4cfd4ac",
+      "workflow": "4805ead61fa19d8885ec59b69eb28eda50139b48",
+      "tests": "3a8ff111f5d18228cc2a810f43db9fd69f7bea21",
+      "docs_tests": "7cf64938c6008674e9b54e7e509d8461b10e0da3",
+      "policy": "de196978af8f8832d529d2eac17ef497ae51c624",
+      "validator": "ac52f7c8521d860a57061791dec7a575f09067a4"
+    },
+    "final": {
+      "runner": "7309dc1e1d484188d7c7cb3c6cabd92cf4cfd4ac",
+      "workflow": "135623c20750417c8fbb51995adc9f73f0aa8117",
+      "tests": "7ebcf32c3c079da2a0bd33832278757fa12a9d8a",
+      "new_regressions": "7dd1d654880d1f4c76732172f4425fce57c57ec9",
+      "policy": "de196978af8f8832d529d2eac17ef497ae51c624",
+      "validator": "ac52f7c8521d860a57061791dec7a575f09067a4"
+    },
+    "docs_adaptation": "Common helper/order tests integrated with retained native real-host test in all six. docs governance-specific test files preserved; docs total increases from 81 to 97."
+  },
+  "prior_guarantees": "Full-history and explicit-base validation; immutable runner materialization and validator blob identity; no working-tree Python before preflight; material exclusions/lookalike and import-shadow rejection; closed producer/role/type matrix; merge/post-merge SHA binding; idempotence; existing F001-F007 and docs semantics regressions all pass.",
+  "builder_assumption_challenge": {
+    "host": "All Windows PATH candidates, spelling/alias variants and unrelated MSYS/Cygwin are ignored. Fixed installation origin remains an explicit environmental trust assumption.",
+    "gate": "Non-success never permits checkout/validator steps to count as gate validation; unknown values fail. Workflow-wide cancellation or service outage can prevent execution and never supplies success.",
+    "path": "Apostrophes, multiple apostrophes, Unicode and metacharacters are real native tests. No native path is re-stringified into program source. Invalid controls fail; trailing whitespace survives conversion.",
+    "what_are_we_missing_now": "No cryptographic authentication of installed Git, hostile OS administration, live negative GitHub cancellation experiment or product/GPU proof is claimed. Negative dependency semantics are tested with the actual extracted assertion; hosted successful composition is required after push. Independent Fresh Breaker remains required for every new material subject."
+  },
+  "post_push_ci": "Required on the final Builder Evidence Head: windows-trusted-runner, verification-gate and bootstrap-integrity; .github retains Steward baseline integrity. Pending at report creation; results are a separate hosted observation and never independent authority.",
+  "next_authority": "NEW_INDEPENDENT_FRESH_BREAKER",
+  "owner_acceptance": "NOT_PERFORMED",
+  "merge": "NOT_PERFORMED"
+}

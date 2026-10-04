@@ -1,0 +1,22 @@
+{
+  "id": "CI-HISTORY-BUILDER-20260902",
+  "type": "BUILDER_REPORT",
+  "producer": "BUILDER",
+  "role": "BUILDER",
+  "authority": "MANUAL_AUTHORITY",
+  "commit_sha": "a33bf8a3a909ac9e08025836135741753ddb07da",
+  "review_subject_digest": "c95aed115b94c33acf66dc340accd99059c9122f98d2cc894c79d84462d43219",
+  "created_at": "2026-09-02T19:35:28Z",
+  "verdict": "BUILDER_GREEN",
+  "risk_class": "R2",
+  "scope": "Fetch complete Git history in verification workflows so commit-bound Builder evidence and PR base commits are locally verifiable in CI.",
+  "tests": [
+    "git diff --cached --check (pass)",
+    "python -m unittest discover -s tests/verification -p test_*.py -v (12 passed)",
+    "python scripts/verify_review_state.py --check (pass)"
+  ],
+  "limitations": [
+    "No fresh Breaker, Specialist, Owner, merge, or post-merge verdict is asserted.",
+    "GitHub branch-protection and required-review enforcement remain MANUAL_AUTHORITY settings."
+  ]
+}

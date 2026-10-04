@@ -1,0 +1,62 @@
+{
+  "id": "FRESH-BREAKER-WINDOWS-TRUSTED-RUNNER-HOST-SELECTION-WINDOWS-20261003",
+  "type": "BREAKER_VERDICT",
+  "producer": "FRESH_BREAKER",
+  "role": "FRESH_BREAKER",
+  "authority": "MANUAL_AUTHORITY",
+  "commit_sha": "574b270b2e008935bfa217387aa1f8f43e9931e9",
+  "review_subject_digest": "4aaeb5a1e212aebe641dcd739c8efd7575dd76a8c878e0d5fce32ac628352986",
+  "created_at": "2026-10-03T23:17:28.3510389+02:00",
+  "verdict": "FINDINGS",
+  "lifecycle_after_persistence": "BREAKER_FAILED",
+  "authority_limit": "This is a persisted independent Fresh BREAKER finding only. It does not remediate code, alter tests or workflows, configure GitHub, perform Owner Acceptance, merge, rebase, or post-merge verification.",
+  "review_repository": "SpanFabric/windows",
+  "review_pr": 1,
+  "review_head": "bf101e0d45df26efb82cbd08726bc022e8df2d8c",
+  "material_subject": {
+    "sha": "574b270b2e008935bfa217387aa1f8f43e9931e9",
+    "review_subject_digest": "4aaeb5a1e212aebe641dcd739c8efd7575dd76a8c878e0d5fce32ac628352986",
+    "reviewed_head": "bf101e0d45df26efb82cbd08726bc022e8df2d8c"
+  },
+  "finding": {
+    "id": "WINDOWS_TRUSTED_RUNNER_HOST_SELECTION",
+    "severity": "HIGH",
+    "priority": "P1",
+    "repository_disposition": "DIRECTLY_AFFECTED",
+    "failure_mechanism": "The Windows trusted-runner helper resolves shutil.which('bash') before the installed Git Bash candidates. On the reviewed native host, PATH resolves to C:\\WINDOWS\\system32\\bash.exe, the WSL launcher, rather than Git Bash. The intended immutable materialize-then-run verification can therefore cross into WSL with Windows temporary paths and fail before executing the reviewed validator.",
+    "violated_invariant": "On native Windows, the trusted runner must select C:\\Program Files\\Git\\bin\\bash.exe, then C:\\Program Files\\Git\\usr\\bin\\bash.exe, before accepting PATH resolution.",
+    "impact": "The project cannot treat green Linux-hosted checks or a PATH-selected WSL launcher as proof that the Windows trusted-runner boundary executes the reviewed validator in the intended runtime. This blocks independent readiness for the affected repository."
+  },
+  "affected_repositories": [
+    "SpanFabric/platform",
+    "SpanFabric/windows",
+    "SpanFabric/host",
+    "SpanFabric/evals",
+    "SpanFabric/.github"
+  ],
+  "known_good_reference": {
+    "repository": "SpanFabric/docs",
+    "review_head": "273aefde059042d8d745c2d08412f6ea5d726e9b",
+    "disposition": "KNOWN_GOOD_REFERENCE_NOT_DIRECTLY_AFFECTED",
+    "reason": "Its Windows helper enumerates Git Bash locations before appending the PATH result."
+  },
+  "verification_evidence": {
+    "source_review": "Confirmed directly in the reviewed helper ordering: platform/windows/host/evals/.github select PATH bash before Git Bash; docs selects Git Bash before PATH.",
+    "native_host_probe": "Get-Command bash resolved C:\\WINDOWS\\system32\\bash.exe. A platform exact-head unit run produced 26 passed, 7 errors, and 1 failure at the trusted-runner helper boundary.",
+    "hosted_ci": "The exact reviewed head had successful Ubuntu-hosted checks. Those checks do not establish native Windows host selection and are supporting evidence only.",
+    "execution_limit": "A post-review local Git Bash invocation was unavailable because Git Bash failed with NtCreateDirectoryObject status 0xC0000022 and WSL returned Wsl/E_ACCESSDENIED. This environment limitation does not alter the confirmed source-level defect."
+  },
+  "required_remediation": [
+    "Port the docs Git-Bash-first host-selection order to SpanFabric/platform, SpanFabric/windows, SpanFabric/host, SpanFabric/evals, and SpanFabric/.github.",
+    "Add regression proof that native Windows prefers C:\\Program Files\\Git\\bin\\bash.exe, then C:\\Program Files\\Git\\usr\\bin\\bash.exe, before PATH.",
+    "Run a Windows trusted-runner CI or protected equivalent that executes immutable materialize-then-run verification.",
+    "Recompute all changed material subjects and review-subject digests.",
+    "Verify exact-head CI after remediation.",
+    "Obtain a new independent Fresh BREAKER review for the remediated subjects."
+  ],
+  "required_regression_evidence": "Regression coverage must demonstrate the required native Windows candidate order, not merely that a mock or Linux PATH command succeeds.",
+  "fresh_verification_requirement": "Any remediation materially changes the reviewed subjects and invalidates this Fresh BREAKER evidence; it must re-enter BUILDING and receive a newly bound independent Fresh BREAKER verdict.",
+  "owner_acceptance": "NOT_PERFORMED",
+  "merge": "NOT_PERFORMED",
+  "post_merge_verification": "NOT_PERFORMED"
+}
