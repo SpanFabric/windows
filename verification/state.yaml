@@ -3,11 +3,11 @@
   "bridge_version": "manual-verification-bridge-v1",
   "repository": "windows",
   "authority_mode": "MANUAL_AUTHORITY",
-  "status": "INDEPENDENT_REVIEW_PENDING",
-  "previous_status": "BUILDING",
+  "status": "BUILDING",
+  "previous_status": "INDEPENDENT_REVIEW_PENDING",
   "transition": {
-    "from": "BUILDING",
-    "to": "INDEPENDENT_REVIEW_PENDING",
+    "from": "INDEPENDENT_REVIEW_PENDING",
+    "to": "BUILDING",
     "authority": "BUILDER"
   },
   "risk": {
@@ -153,7 +153,7 @@
       "review_subject_digest": "8442a78a1e19a155b54c69fe28624f40461d55ee2f074e7a8a77be64cf2e95d8",
       "created_at": "2026-10-04T00:20:16Z",
       "verdict": "BUILDER_GREEN",
-      "active": true,
+      "active": false,
       "report_path": "verification/reports/FBR_WTR_001_002_003_REMEDIATION_BUILDER_20261004.json"
     }
   ],
@@ -233,6 +233,7 @@
     "The first main commit contains the Manual Verification Bridge and is the explicit bootstrap baseline.",
     "The confirmed external Fresh BREAKER findings F-001 through F-004 remain historical remediation input.",
     "F-005 and F-006 have Builder remediation and technical evidence only; a new independent Fresh BREAKER is required.",
-    "FBR-WTR-001/002/003 have Builder remediation bound to the new material subject. Their historical Breaker report is unchanged and inactive; findings remain OPEN pending a new independent Fresh Breaker."
+    "FBR-WTR-001/002/003 have Builder remediation bound to the new material subject. Their historical Breaker report is unchanged and inactive; findings remain OPEN pending a new independent Fresh Breaker.",
+    "Builder reopened for portable fixed-installation test fixture after Ubuntu CI exposed an environmental assumption; prior Builder report and failed CI remain historical."
   ]
 }
