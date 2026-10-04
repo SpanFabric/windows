@@ -71,7 +71,8 @@ class WindowsBoundaryTests(unittest.TestCase):
         ):
             with self.subTest(value=value):
                 with self.assertRaises(RuntimeError):
-                    self.helper().select_bash(True, value, lambda p: p == value)
+                    self.helper().select_bash(True, value, lambda p: p == value,
+                                              is_suitable=lambda p: False)
 
     def test_fixed_git_order_and_non_windows_path(self):
         helper = self.helper()
@@ -90,9 +91,145 @@ class WindowsBoundaryTests(unittest.TestCase):
                 with mock.patch.object(bridge.pathlib.Path, "is_file", return_value=True):
                     self.assertEqual(r"C:\Program Files\Git\bin\bash.exe",
                                      self.helper().bash())
-                with mock.patch.object(bridge.pathlib.Path, "is_file", return_value=False):
-                    with self.assertRaises(RuntimeError):
-                        self.helper().bash()
+
+    def test_positive_path_fallback_and_failed_suitability(self):
+        helper = self.helper()
+        candidate = r"D:\Native Git\bin\bash.exe"
+        for suitable in (True, False):
+            probe = mock.Mock(return_value=suitable)
+            resolver = mock.Mock(return_value=candidate)
+            if suitable:
+                self.assertEqual(candidate, helper.select_bash(
+                    True, resolver, lambda p: p == candidate, probe))
+            else:
+                with self.assertRaises(RuntimeError):
+                    helper.select_bash(True, resolver, lambda p: p == candidate, probe)
+            resolver.assert_called_once_with()
+            probe.assert_called_once_with(candidate)
+
+    def test_fixed_hosts_prevent_path_lookup_and_probe(self):
+        helper = self.helper()
+        fixed = [r"C:\Program Files\Git\bin\bash.exe",
+                 r"C:\Program Files\Git\usr\bin\bash.exe"]
+        for available in (fixed, fixed[1:]):
+            resolver = mock.Mock(side_effect=AssertionError("PATH must not override fixed host"))
+            probe = mock.Mock(side_effect=AssertionError("fixed host must not use fallback probe"))
+            self.assertEqual(available[0], helper.select_bash(
+                True, resolver, lambda p: p in available, probe))
+            resolver.assert_not_called()
+            probe.assert_not_called()
+
+    def test_missing_fallback_is_not_probed(self):
+        probe = mock.Mock(side_effect=AssertionError("missing executable must not run"))
+        with self.assertRaises(RuntimeError):
+            self.helper().select_bash(True, r"D:\Missing\bash.exe", lambda p: False, probe)
+        probe.assert_not_called()
+
+    def test_known_wsl_is_rejected_even_if_injected_probe_claims_success(self):
+        for candidate in (r"C:\Windows\System32\bash.exe",
+                          r"c:\WINDOWS\system32\..\system32\BASH.EXE",
+                          r"C:\Windows\Sysnative\wsl.exe"):
+            probe = mock.Mock(return_value=True)
+            with self.assertRaises(RuntimeError):
+                self.helper().select_bash(True, candidate, lambda p: p == candidate, probe)
+            probe.assert_not_called()
+
+    def test_non_windows_path_does_not_probe_native_suitability(self):
+        probe = mock.Mock(side_effect=AssertionError("native probe on non-Windows"))
+        self.assertEqual("/opt/bash", self.helper().select_bash(
+            False, "/opt/bash", lambda p: p == "/opt/bash", probe))
+        probe.assert_not_called()
+
+    def test_windows_path_discovery_only_after_both_fixed_hosts_absent(self):
+        candidate = r"D:\Native Git\bin\bash.exe"
+        with mock.patch.object(bridge, "os", types.SimpleNamespace(
+                name="nt", environ=os.environ)):
+            with mock.patch.object(bridge.pathlib.Path, "is_file",
+                                   autospec=True,
+                                   side_effect=lambda p: str(p) == candidate):
+                with mock.patch.object(bridge.shutil, "which", return_value=candidate) as lookup:
+                    with mock.patch.object(bridge.BridgeTests, "windows_bash_suitable",
+                                           return_value=True) as probe:
+                        self.assertEqual(candidate, self.helper().bash())
+                        lookup.assert_called_once_with("bash")
+                        probe.assert_called_once_with(candidate)
+
+    def test_probe_requires_success_and_exact_complete_marker(self):
+        candidate = r"D:\Native Git\bin\bash.exe"
+        for code, output in ((0, "SPAN_GPU_NATIVE_MSYS_BASH_OK\n"),
+                             (1, "SPAN_GPU_NATIVE_MSYS_BASH_OK\n"),
+                             (0, ""), (0, "bash.exe\n"), (0, "Linux\n"),
+                             (0, "SPAN_GPU_NATIVE_MSYS_BASH_OK"),
+                             (0, "noise\nSPAN_GPU_NATIVE_MSYS_BASH_OK\n")):
+            with mock.patch.object(bridge.subprocess, "run",
+                    return_value=types.SimpleNamespace(returncode=code, stdout=output)):
+                self.assertEqual(code == 0 and output == "SPAN_GPU_NATIVE_MSYS_BASH_OK\n",
+                                 self.helper().windows_bash_suitable(candidate))
+
+    def test_real_unrelated_executable_cannot_qualify_as_bash(self):
+        self.assertFalse(self.helper().windows_bash_suitable(bridge.sys.executable))
+
+    @unittest.skipIf(os.name == "nt", "native Linux/Unix rejection is exercised on non-Windows CI")
+    def test_real_non_windows_bash_fails_native_suitability(self):
+        self.assertFalse(self.helper().windows_bash_suitable(self.helper().bash()))
+
+    def test_probe_start_failure_and_timeout_fail_closed(self):
+        candidate = r"D:\Native Git\bin\bash.exe"
+        for error in (OSError("cannot start"),
+                      subprocess.TimeoutExpired(candidate, 10),
+                      UnicodeError("invalid output")):
+            with mock.patch.object(bridge.subprocess, "run", side_effect=error):
+                self.assertFalse(self.helper().windows_bash_suitable(candidate))
+
+    def test_probe_is_static_bounded_and_isolates_startup_and_git_environment(self):
+        candidate = r"D:\Native Git\path'name\bash.exe"
+        with mock.patch.dict(bridge.os.environ, {
+                "BASH_ENV": "hostile-startup", "ENV": "hostile-startup",
+                "GIT_EXEC_PATH": "hostile-git", "GIT_CONFIG_COUNT": "1"}):
+            with mock.patch.object(bridge.subprocess, "run", return_value=types.SimpleNamespace(
+                    returncode=0, stdout="SPAN_GPU_NATIVE_MSYS_BASH_OK\n")) as run:
+                self.assertTrue(self.helper().windows_bash_suitable(candidate))
+                args, kwargs = run.call_args
+                self.assertEqual(candidate, args[0][0])
+                self.assertNotIn(candidate, args[0][-1])
+                for key in ("BASH_ENV", "ENV", "GIT_EXEC_PATH", "GIT_CONFIG_COUNT"):
+                    self.assertNotIn(key, kwargs["env"])
+                self.assertEqual(10, kwargs["timeout"])
+                self.assertEqual(tempfile.gettempdir(), kwargs["cwd"])
+                self.assertIn('MINGW*|MSYS*', args[0][-1])
+                self.assertIn('cygpath -u -- "$SPAN_GPU_BASH_PROBE_NATIVE"', args[0][-1])
+                self.assertIn('git --version', args[0][-1])
+                self.assertIn('[[ "$native" == "$SPAN_GPU_BASH_PROBE_NATIVE" ]]', args[0][-1])
+
+    @unittest.skipUnless(os.name == "nt", "real native Windows nonstandard Git installation path")
+    def test_real_nonstandard_git_path_fallback_passes_positive_probe(self):
+        # System-temp junction aliases the installed runtime, not a repository
+        # copy. Only fixed-candidate availability is simulated; probe and path
+        # conversion execute the real native host with no suitability injection.
+        installed = pathlib.Path(r"C:\Program Files\Git")
+        self.assertTrue((installed / "bin/bash.exe").is_file(),
+                        "native positive proof requires installed Git Bash")
+        with tempfile.TemporaryDirectory(prefix="spangpu-positive-bash-") as tmp:
+            alias = pathlib.Path(tmp) / "Nonstandard Git installation"
+            candidate = str(alias / "bin/bash.exe")
+            try:
+                created = subprocess.run(
+                    ["powershell.exe", "-NoProfile", "-NonInteractive", "-Command",
+                     "$ErrorActionPreference='Stop'; New-Item -ItemType Junction "
+                     "-Path $env:SPAN_GPU_PROBE_ALIAS -Target $env:SPAN_GPU_PROBE_TARGET | Out-Null"],
+                    env=dict(os.environ, SPAN_GPU_PROBE_ALIAS=str(alias),
+                             SPAN_GPU_PROBE_TARGET=str(installed)),
+                    capture_output=True, text=True)
+                self.assertEqual(0, created.returncode, created.stdout + created.stderr)
+                selected = self.helper().select_bash(
+                    True, candidate, lambda p: p == candidate and pathlib.Path(p).is_file())
+                self.assertEqual(candidate, selected)
+                self.assertEqual("/c/path'name/runner",
+                                 self.helper().bash_path(selected, r"C:\path'name\runner"))
+            finally:
+                # Native rmdir unlinks the junction itself, never its target.
+                if os.path.lexists(alias):
+                    os.rmdir(alias)
 
     def test_workflow_prerequisite_result_matrix(self):
         workflow = (REPO / ".github/workflows/verification-gate.yml").read_text()

@@ -165,13 +165,25 @@ evidence across a different resulting commit.
 
 ## Native Windows host, path and public-gate contract
 
-Native Windows accepts only the installed Git-for-Windows hosts at
+Native Windows selects the installed Git-for-Windows host at
 `C:\Program Files\Git\bin\bash.exe`, then
-`C:\Program Files\Git\usr\bin\bash.exe`. Windows PATH fallback is unsupported:
-a WSL launcher, unrelated MSYS/Cygwin installation or executable named
-`bash.exe` cannot qualify. Selection does not probe an untrusted candidate by
-executing it. The fixed installation is an explicit host trust assumption;
-this bridge does not cryptographically authenticate the installed executable.
+`C:\Program Files\Git\usr\bin\bash.exe`. Only when neither fixed host
+exists does the test launcher discover Bash on PATH. A PATH candidate must
+exist and positively pass a bounded, static native suitability probe: it must
+start, identify a MINGW/MSYS runtime (not Linux/WSL or Cygwin), execute Git,
+and perform an exact native/Unix/native path round trip with usable cygpath.
+Known System32/Sysnative WSL launchers are rejected before execution.
+Missing, failed, timed-out, malformed or incomplete probes fail closed.
+A suitable Git/MSYS installation at a nonstandard PATH location is supported;
+a filename alone never establishes suitability. PATH cannot override either
+fixed installation.
+
+The probe uses system temp, disables Bash startup-file processing, removes
+startup-script and Git-redirection environment variables, and resolves tools
+from the candidate runtime rather than inherited PATH. Probing necessarily
+executes the local candidate: suitability establishes runtime capability, not
+cryptographic publisher identity or protection from a malicious local
+installation. Fixed installations remain an explicit host trust assumption.
 Non-Windows Bash selection retains PATH semantics.
 
 The native test launcher transports paths through an explicit environment

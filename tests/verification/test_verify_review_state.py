@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import importlib.util, json, os, pathlib, shutil, subprocess, sys, tempfile, unittest
+import importlib.util, json, ntpath, os, pathlib, shutil, subprocess, sys, tempfile, unittest
 
 sys.dont_write_bytecode=True
 HERE=pathlib.Path(__file__).resolve()
@@ -55,17 +55,70 @@ class BridgeTests(unittest.TestCase):
         return git(self.root,'rev-parse','HEAD').stdout.decode().strip()
 
     @staticmethod
-    def select_bash(is_windows,path_bash,is_file=None):
-        candidates=[]
-        if is_windows: candidates.extend([r'C:\Program Files\Git\bin\bash.exe',r'C:\Program Files\Git\usr\bin\bash.exe'])
-        if not is_windows: candidates.append(path_bash)
-        for candidate in candidates:
-            if candidate and (is_file(candidate) if is_file else pathlib.Path(candidate).is_file()): return candidate
+    def is_wsl_launcher(candidate):
+        # Reject known native WSL entry points before execution; positive MSYS
+        # capability validation below is still required for every other fallback.
+        normalized=ntpath.normcase(ntpath.normpath(str(candidate)))
+        system_root=os.environ.get('SystemRoot', r'C:\Windows')
+        return any(normalized==ntpath.normcase(ntpath.join(root, directory, name))
+                   for root in (r'C:\Windows', system_root)
+                   for directory in ('System32', 'Sysnative')
+                   for name in ('bash.exe', 'wsl.exe'))
+
+    @staticmethod
+    def windows_bash_suitable(candidate):
+        if BridgeTests.is_wsl_launcher(candidate):
+            return False
+        # Execute only static source, in system temp, with no startup-script or
+        # Git redirection environment. Tools must come from this MSYS runtime,
+        # not inherited PATH. This proves capability, not publisher identity.
+        env={key:value for key,value in os.environ.items()
+             if key.upper() not in ('BASH_ENV','ENV','SHELLOPTS','BASHOPTS','CDPATH')
+             and not key.upper().startswith('GIT_')}
+        env['SPAN_GPU_BASH_PROBE_NATIVE']=r"C:\SpanGPU Bash Suitability\path'name"
+        program=r"""set -euo pipefail
+export PATH=/usr/bin:/bin:/mingw64/bin:/mingw32/bin:/ucrt64/bin:/clang64/bin:/cmd
+kernel=$(uname -s)
+case "$kernel" in MINGW*|MSYS*) ;; *) exit 97 ;; esac
+command -v cygpath >/dev/null
+command -v git >/dev/null
+version=$(git --version)
+case "$version" in "git version "*) ;; *) exit 98 ;; esac
+posix=$(cygpath -u -- "$SPAN_GPU_BASH_PROBE_NATIVE")
+case "$posix" in /c/*) ;; *) exit 99 ;; esac
+native=$(cygpath -w -- "$posix")
+[[ "$native" == "$SPAN_GPU_BASH_PROBE_NATIVE" ]]
+printf 'SPAN_GPU_NATIVE_MSYS_BASH_OK\n'
+"""
+        try:
+            result=subprocess.run([candidate,'--noprofile','--norc','-c',program],
+                                  cwd=tempfile.gettempdir(),env=env,capture_output=True,
+                                  encoding='utf-8',timeout=10)
+        except (OSError,subprocess.TimeoutExpired,UnicodeError):
+            return False
+        return result.returncode==0 and result.stdout=='SPAN_GPU_NATIVE_MSYS_BASH_OK\n'
+
+    @staticmethod
+    def select_bash(is_windows,path_bash,is_file=None,is_suitable=None):
+        exists=is_file or (lambda candidate:pathlib.Path(candidate).is_file())
+        if is_windows:
+            for candidate in (r'C:\Program Files\Git\bin\bash.exe',
+                              r'C:\Program Files\Git\usr\bin\bash.exe'):
+                if exists(candidate):
+                    return candidate
+        # A callable keeps PATH discovery strictly after both fixed candidates.
+        candidate=path_bash() if callable(path_bash) else path_bash
+        if candidate and exists(candidate):
+            if not is_windows:
+                return candidate
+            if not BridgeTests.is_wsl_launcher(candidate):
+                suitable=is_suitable or BridgeTests.windows_bash_suitable
+                if suitable(candidate):
+                    return candidate
         raise RuntimeError('Bash is required to exercise the authoritative trusted runner')
 
     def bash(self):
-        # Native Windows never consults PATH: fixed Git installation only.
-        return self.select_bash(os.name=='nt',None if os.name=='nt' else shutil.which('bash'))
+        return self.select_bash(os.name=='nt',lambda:shutil.which('bash'))
 
     def bash_path(self,bash,path):
         native_path=str(path)
@@ -283,7 +336,8 @@ class BridgeTests(unittest.TestCase):
 
     def select_bash_for_test(self,is_windows,path_bash,present):
         present=set(present)
-        return self.select_bash(is_windows,path_bash,lambda candidate: candidate in present)
+        return self.select_bash(is_windows,path_bash,lambda candidate: candidate in present,
+                                is_suitable=lambda candidate:False)
 
     def test_windows_bash_prefers_git_bin_before_path(self):
         self.assertEqual(r'C:\Program Files\Git\bin\bash.exe',self.select_bash_for_test(True,r'C:\Tools\bash.exe',[r'C:\Program Files\Git\bin\bash.exe',r'C:\Tools\bash.exe']))
