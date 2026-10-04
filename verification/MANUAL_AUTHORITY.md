@@ -162,3 +162,30 @@ The future central Project Steward must preserve these field names and binding
 rules when it imports repository-local state. It may add cryptographic identity
 or hosting attestations, but cannot weaken the closed mapping or carry merge
 evidence across a different resulting commit.
+
+## Native Windows host, path and public-gate contract
+
+Native Windows accepts only the installed Git-for-Windows hosts at
+`C:\Program Files\Git\bin\bash.exe`, then
+`C:\Program Files\Git\usr\bin\bash.exe`. Windows PATH fallback is unsupported:
+a WSL launcher, unrelated MSYS/Cygwin installation or executable named
+`bash.exe` cannot qualify. Selection does not probe an untrusted candidate by
+executing it. The fixed installation is an explicit host trust assumption;
+this bridge does not cryptographically authenticate the installed executable.
+Non-Windows Bash selection retains PATH semantics.
+
+The native test launcher transports paths through an explicit environment
+data field consumed by a static, quoted Bash program. Native paths are never
+concatenated into shell source. Conversion decodes UTF-8 explicitly and rejects
+invalid Windows control characters. Regression evidence checks native input
+identity and the converted path against the same real filesystem object,
+including apostrophes, Unicode and shell metacharacters.
+
+The public `verification-gate` uses job-level `always()` after
+`windows-trusted-runner` terminates. Its first step, before checkout, asserts
+that the observed prerequisite result is exactly `success`. Failure,
+cancellation, skipping, timeout and unknown values exit non-zero.
+Workflow-wide cancellation or hosting unavailability can prevent any terminal
+job from executing; such incomplete runs never establish required successful
+verification. Local regressions execute the actual workflow assertion for
+each result and reject conditional or tolerated assertions.

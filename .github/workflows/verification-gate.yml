@@ -60,8 +60,20 @@ jobs:
           Write-Host 'WINDOWS_VERIFICATION_TESTS=PASS'
   verification-gate:
     needs: windows-trusted-runner
+    if: ${{ always() }}
     runs-on: ubuntu-latest
     steps:
+      - name: Assert native Windows prerequisite
+        shell: bash
+        env:
+          WINDOWS_TRUSTED_RUNNER_RESULT: ${{ needs.windows-trusted-runner.result }}
+        run: |
+          set -euo pipefail
+          printf 'WINDOWS_TRUSTED_RUNNER_RESULT=%s\n' "$WINDOWS_TRUSTED_RUNNER_RESULT"
+          if [[ "$WINDOWS_TRUSTED_RUNNER_RESULT" != 'success' ]]; then
+            printf 'Native Windows validation did not succeed.\n' >&2
+            exit 1
+          fi
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
