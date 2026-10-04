@@ -3,11 +3,11 @@
   "bridge_version": "manual-verification-bridge-v1",
   "repository": "windows",
   "authority_mode": "MANUAL_AUTHORITY",
-  "status": "INDEPENDENT_REVIEW_PENDING",
-  "previous_status": "BUILDING",
+  "status": "BUILDING",
+  "previous_status": "INDEPENDENT_REVIEW_PENDING",
   "transition": {
-    "from": "BUILDING",
-    "to": "INDEPENDENT_REVIEW_PENDING",
+    "from": "INDEPENDENT_REVIEW_PENDING",
+    "to": "BUILDING",
     "authority": "BUILDER"
   },
   "risk": {
@@ -166,7 +166,7 @@
       "review_subject_digest": "8cd5cf3caa0b4c265cc9d19af4ab7acad761dac0af66029a09a4abd63577ae94",
       "created_at": "2026-10-04T00:35:20.811Z",
       "verdict": "BUILDER_GREEN",
-      "active": true,
+      "active": false,
       "report_path": "verification/reports/FBR_WTR_001_002_003_REMEDIATION_BUILDER_CI_FOLLOWUP_20261004.json"
     }
   ],
@@ -248,6 +248,7 @@
     "F-005 and F-006 have Builder remediation and technical evidence only; a new independent Fresh BREAKER is required.",
     "FBR-WTR-001/002/003 have Builder remediation bound to the new material subject. Their historical Breaker report is unchanged and inactive; findings remain OPEN pending a new independent Fresh Breaker.",
     "Builder reopened for portable fixed-installation test fixture after Ubuntu CI exposed an environmental assumption; prior Builder report and failed CI remain historical.",
-    "Portable CI-fixture followup validated locally on the new material identity; prior evidence stays inactive, independent Fresh Breaker required."
+    "Portable CI-fixture followup validated locally on the new material identity; prior evidence stays inactive, independent Fresh Breaker required.",
+    "Builder reopened solely to finalize FBR-WTR-001 positive Windows PATH suitability and matching manual text; historical reports remain immutable. No Owner, merge or PHASE-001 authority."
   ]
 }
