@@ -3,12 +3,12 @@
   "bridge_version": "manual-verification-bridge-v1",
   "repository": "windows",
   "authority_mode": "MANUAL_AUTHORITY",
-  "status": "INDEPENDENT_REVIEW_PENDING",
-  "previous_status": "BUILDING",
+  "status": "READY_FOR_OWNER_ACCEPTANCE",
+  "previous_status": "INDEPENDENT_REVIEW_PENDING",
   "transition": {
-    "from": "BUILDING",
-    "to": "INDEPENDENT_REVIEW_PENDING",
-    "authority": "BUILDER"
+    "from": "INDEPENDENT_REVIEW_PENDING",
+    "to": "READY_FOR_OWNER_ACCEPTANCE",
+    "authority": "FRESH_BREAKER"
   },
   "risk": {
     "class": "R2",
@@ -181,6 +181,19 @@
       "verdict": "BUILDER_GREEN",
       "active": true,
       "report_path": "verification/reports/FBR_WTR_001_POSITIVE_PATH_FALLBACK_BUILDER_20261004.json"
+    },
+    {
+      "id": "FRESH-BREAKER-FBR-WTR-001-POSITIVE-PATH-FALLBACK-FINAL-WINDOWS-20261004",
+      "type": "BREAKER_VERDICT",
+      "producer": "FRESH_BREAKER",
+      "role": "FRESH_BREAKER",
+      "authority": "MANUAL_AUTHORITY",
+      "commit_sha": "97a6be00818b9d3e78a2715a299f3ffedcf6dd88",
+      "review_subject_digest": "432c193bc52db30687190b05cb9d5c103e30851933367df58eff3f5b1c8a76e6",
+      "created_at": "2026-10-04T12:54:53Z",
+      "verdict": "ACCEPTED",
+      "active": true,
+      "report_path": "verification/reports/FRESH_BREAKER_FBR_WTR_001_POSITIVE_PATH_FALLBACK_FINAL_20261004.json"
     }
   ],
   "remediation_inputs": [
@@ -210,43 +223,79 @@
       "id": "WINDOWS_TRUSTED_RUNNER_HOST_SELECTION",
       "severity": "HIGH",
       "confirmed": true,
-      "status": "REMEDIATED_PENDING_FRESH_BREAKER",
+      "status": "VERIFIED",
       "scope": "CROSS_REPOSITORY",
       "report_path": "verification/reports/FRESH_BREAKER_WINDOWS_TRUSTED_RUNNER_HOST_SELECTION_20261003.json",
-      "summary": "Builder remediation is bound to material commit ec3989285af71b1e4025b35a937c54c72cf045ee; independent Fresh BREAKER remains required."
+      "summary": "Builder remediation is bound to material commit ec3989285af71b1e4025b35a937c54c72cf045ee; independent Fresh BREAKER remains required.",
+      "verification": {
+        "review_id": "FBR-WTR-001-POSITIVE-PATH-FALLBACK-FINAL-20261004",
+        "evidence_id": "FRESH-BREAKER-FBR-WTR-001-POSITIVE-PATH-FALLBACK-FINAL-WINDOWS-20261004",
+        "report_path": "verification/reports/FRESH_BREAKER_FBR_WTR_001_POSITIVE_PATH_FALLBACK_FINAL_20261004.json",
+        "material_sha": "97a6be00818b9d3e78a2715a299f3ffedcf6dd88",
+        "review_subject_digest": "432c193bc52db30687190b05cb9d5c103e30851933367df58eff3f5b1c8a76e6",
+        "verdict": "ACCEPTED",
+        "authority": "FRESH_BREAKER"
+      }
     },
     {
       "id": "FBR-WTR-001",
       "severity": "HIGH",
       "confirmed": true,
-      "status": "OPEN",
+      "status": "VERIFIED",
       "scope": "CROSS_REPOSITORY_TRUST_BOUNDARY",
       "report_path": "verification/reports/FRESH_BREAKER_WTR_001_002_003_20261004.json",
       "summary": "WSL-only PATH fallback is accepted",
       "builder_disposition": "REMEDIATED_PENDING_FRESH_BREAKER",
-      "builder_report_path": "verification/reports/FBR_WTR_001_POSITIVE_PATH_FALLBACK_BUILDER_20261004.json"
+      "builder_report_path": "verification/reports/FBR_WTR_001_POSITIVE_PATH_FALLBACK_BUILDER_20261004.json",
+      "verification": {
+        "review_id": "FBR-WTR-001-POSITIVE-PATH-FALLBACK-FINAL-20261004",
+        "evidence_id": "FRESH-BREAKER-FBR-WTR-001-POSITIVE-PATH-FALLBACK-FINAL-WINDOWS-20261004",
+        "report_path": "verification/reports/FRESH_BREAKER_FBR_WTR_001_POSITIVE_PATH_FALLBACK_FINAL_20261004.json",
+        "material_sha": "97a6be00818b9d3e78a2715a299f3ffedcf6dd88",
+        "review_subject_digest": "432c193bc52db30687190b05cb9d5c103e30851933367df58eff3f5b1c8a76e6",
+        "verdict": "ACCEPTED",
+        "authority": "FRESH_BREAKER"
+      }
     },
     {
       "id": "FBR-WTR-002",
       "severity": "HIGH",
       "confirmed": true,
-      "status": "OPEN",
+      "status": "VERIFIED",
       "scope": "CROSS_REPOSITORY_TRUST_BOUNDARY",
       "report_path": "verification/reports/FRESH_BREAKER_WTR_001_002_003_20261004.json",
       "summary": "Public verification-gate is skipped rather than failed after Windows prerequisite failure",
       "builder_disposition": "REMEDIATED_PENDING_FRESH_BREAKER",
-      "builder_report_path": "verification/reports/FBR_WTR_001_POSITIVE_PATH_FALLBACK_BUILDER_20261004.json"
+      "builder_report_path": "verification/reports/FBR_WTR_001_POSITIVE_PATH_FALLBACK_BUILDER_20261004.json",
+      "verification": {
+        "review_id": "FBR-WTR-001-POSITIVE-PATH-FALLBACK-FINAL-20261004",
+        "evidence_id": "FRESH-BREAKER-FBR-WTR-001-POSITIVE-PATH-FALLBACK-FINAL-WINDOWS-20261004",
+        "report_path": "verification/reports/FRESH_BREAKER_FBR_WTR_001_POSITIVE_PATH_FALLBACK_FINAL_20261004.json",
+        "material_sha": "97a6be00818b9d3e78a2715a299f3ffedcf6dd88",
+        "review_subject_digest": "432c193bc52db30687190b05cb9d5c103e30851933367df58eff3f5b1c8a76e6",
+        "verdict": "ACCEPTED",
+        "authority": "FRESH_BREAKER"
+      }
     },
     {
       "id": "FBR-WTR-003",
       "severity": "MEDIUM",
       "confirmed": true,
-      "status": "OPEN",
+      "status": "VERIFIED",
       "scope": "SHARED_WINDOWS_CONVERSION_BOUNDARY",
       "report_path": "verification/reports/FRESH_BREAKER_WTR_001_002_003_20261004.json",
       "summary": "Apostrophe-containing native Windows paths are silently altered",
       "builder_disposition": "REMEDIATED_PENDING_FRESH_BREAKER",
-      "builder_report_path": "verification/reports/FBR_WTR_001_POSITIVE_PATH_FALLBACK_BUILDER_20261004.json"
+      "builder_report_path": "verification/reports/FBR_WTR_001_POSITIVE_PATH_FALLBACK_BUILDER_20261004.json",
+      "verification": {
+        "review_id": "FBR-WTR-001-POSITIVE-PATH-FALLBACK-FINAL-20261004",
+        "evidence_id": "FRESH-BREAKER-FBR-WTR-001-POSITIVE-PATH-FALLBACK-FINAL-WINDOWS-20261004",
+        "report_path": "verification/reports/FRESH_BREAKER_FBR_WTR_001_POSITIVE_PATH_FALLBACK_FINAL_20261004.json",
+        "material_sha": "97a6be00818b9d3e78a2715a299f3ffedcf6dd88",
+        "review_subject_digest": "432c193bc52db30687190b05cb9d5c103e30851933367df58eff3f5b1c8a76e6",
+        "verdict": "ACCEPTED",
+        "authority": "FRESH_BREAKER"
+      }
     }
   ],
   "initial_baseline_bootstrap": {
@@ -263,6 +312,7 @@
     "Builder reopened for portable fixed-installation test fixture after Ubuntu CI exposed an environmental assumption; prior Builder report and failed CI remain historical.",
     "Portable CI-fixture followup validated locally on the new material identity; prior evidence stays inactive, independent Fresh Breaker required.",
     "Builder reopened solely to finalize FBR-WTR-001 positive Windows PATH suitability and matching manual text; historical reports remain immutable. No Owner, merge or PHASE-001 authority.",
-    "FBR-WTR-001 positive-suitability Windows PATH fallback and matching manual finalized on the new material subject. FBR-WTR-002 workflow and FBR-WTR-003 runtime preserved. Historical exact-output claim is superseded by new evidence showing /c/path'name/runner, without rewriting old reports. Earlier empty native conversion observations remain disclosed; all six require a new independent Fresh Breaker."
+    "FBR-WTR-001 positive-suitability Windows PATH fallback and matching manual finalized on the new material subject. FBR-WTR-002 workflow and FBR-WTR-003 runtime preserved. Historical exact-output claim is superseded by new evidence showing /c/path'name/runner, without rewriting old reports. Earlier empty native conversion observations remain disclosed; all six require a new independent Fresh Breaker.",
+    "Owner-authorized append-only persistence of FBR-WTR-001-POSITIVE-PATH-FALLBACK-FINAL-20261004: technical ACCEPTED bound to material 97a6be00818b9d3e78a2715a299f3ffedcf6dd88 and digest 432c193bc52db30687190b05cb9d5c103e30851933367df58eff3f5b1c8a76e6. Historical reports remain unchanged and historical failed Fresh BREAKER state evidence remains inactive. READY_FOR_OWNER_ACCEPTANCE is technical readiness only; hosting controls, Owner Acceptance, merge/post-merge, GATE-000 PASS, PHASE-000 completion and PHASE-001 authorization are not performed."
   ]
 }

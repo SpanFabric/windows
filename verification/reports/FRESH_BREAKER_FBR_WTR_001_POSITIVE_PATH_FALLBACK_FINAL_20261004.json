@@ -1,0 +1,230 @@
+{
+  "id": "FRESH-BREAKER-FBR-WTR-001-POSITIVE-PATH-FALLBACK-FINAL-WINDOWS-20261004",
+  "type": "BREAKER_VERDICT",
+  "producer": "FRESH_BREAKER",
+  "role": "FRESH_BREAKER",
+  "authority": "MANUAL_AUTHORITY",
+  "commit_sha": "97a6be00818b9d3e78a2715a299f3ffedcf6dd88",
+  "review_subject_digest": "432c193bc52db30687190b05cb9d5c103e30851933367df58eff3f5b1c8a76e6",
+  "created_at": "2026-10-04T12:54:53Z",
+  "verdict": "ACCEPTED",
+  "active": true,
+  "report_path": "verification/reports/FRESH_BREAKER_FBR_WTR_001_POSITIVE_PATH_FALLBACK_FINAL_20261004.json",
+  "review_id": "FBR-WTR-001-POSITIVE-PATH-FALLBACK-FINAL-20261004",
+  "technical_verdict": "ACCEPTED",
+  "repository": "SpanFabric/windows",
+  "pr": 1,
+  "branch": "codex/bootstrap-verification-bridge",
+  "canonical_base_sha": "e3fd92a90238da183fc1ff8ff568301fcb18dd1f",
+  "reviewed_head": "e84409965faf2014e1aae61075f0ddbe31733e76",
+  "material_sha": "97a6be00818b9d3e78a2715a299f3ffedcf6dd88",
+  "material_subject": {
+    "sha": "97a6be00818b9d3e78a2715a299f3ffedcf6dd88",
+    "review_subject_digest": "432c193bc52db30687190b05cb9d5c103e30851933367df58eff3f5b1c8a76e6",
+    "reviewed_head": "e84409965faf2014e1aae61075f0ddbe31733e76",
+    "canonical_base_sha": "e3fd92a90238da183fc1ff8ff568301fcb18dd1f"
+  },
+  "batch_repositories": [
+    "SpanFabric/platform",
+    "SpanFabric/windows",
+    "SpanFabric/host",
+    "SpanFabric/evals",
+    "SpanFabric/docs",
+    "SpanFabric/.github"
+  ],
+  "lifecycle_after_persistence": "READY_FOR_OWNER_ACCEPTANCE",
+  "authority_limit": "Owner-authorized append-only persistence of the supplied completed Fresh BREAKER technical verdict only. This persistence task does not perform a new independent review or cryptographically establish reviewer identity. MANUAL_AUTHORITY retains the human identity boundary. Technical ACCEPTED is not Owner Acceptance, the ACCEPTED lifecycle state, hosting-control confirmation, merge, post-merge, GATE-000 PASS, PHASE-000 completion or PHASE-001 authorization.",
+  "source_request": "SPANGPU — PERSIST ACCEPTED FINAL WTR FRESH BREAKER VERDICT; Owner supplied attachment f677a15d-1a73-4b12-91a1-b6195b4a25e1, 2026-10-04.",
+  "source_verdict": {
+    "review_id": "FBR-WTR-001-POSITIVE-PATH-FALLBACK-FINAL-20261004",
+    "technical_verdict": "ACCEPTED",
+    "source": "Completed Fresh BREAKER response immediately preceding the Owner persistence authorization; exact six immutable material subjects and reviewed heads.",
+    "persistence_actor_role": "VERDICT_PERSISTENCE_ONLY",
+    "reviewer_identity_boundary": "MANUAL_AUTHORITY_NOT_CRYPTOGRAPHICALLY_ATTESTED"
+  },
+  "blocking_findings": [],
+  "verified_remediated_scope": [
+    "WINDOWS_TRUSTED_RUNNER_HOST_SELECTION",
+    "FBR-WTR-001",
+    "FBR-WTR-001_IMPLEMENTATION_DEVIATION",
+    "MANUAL_AUTHORITY_CONTRACT_MISMATCH",
+    "FBR-WTR-002",
+    "FBR-WTR-003"
+  ],
+  "finding_dispositions": [
+    {
+      "id": "WINDOWS_TRUSTED_RUNNER_HOST_SELECTION",
+      "status": "VERIFIED_FOR_THIS_EXACT_SUBJECT",
+      "material_sha": "97a6be00818b9d3e78a2715a299f3ffedcf6dd88",
+      "review_subject_digest": "432c193bc52db30687190b05cb9d5c103e30851933367df58eff3f5b1c8a76e6"
+    },
+    {
+      "id": "FBR-WTR-001",
+      "status": "VERIFIED_FOR_THIS_EXACT_SUBJECT",
+      "material_sha": "97a6be00818b9d3e78a2715a299f3ffedcf6dd88",
+      "review_subject_digest": "432c193bc52db30687190b05cb9d5c103e30851933367df58eff3f5b1c8a76e6"
+    },
+    {
+      "id": "FBR-WTR-001_IMPLEMENTATION_DEVIATION",
+      "status": "VERIFIED_FOR_THIS_EXACT_SUBJECT",
+      "material_sha": "97a6be00818b9d3e78a2715a299f3ffedcf6dd88",
+      "review_subject_digest": "432c193bc52db30687190b05cb9d5c103e30851933367df58eff3f5b1c8a76e6"
+    },
+    {
+      "id": "MANUAL_AUTHORITY_CONTRACT_MISMATCH",
+      "status": "VERIFIED_FOR_THIS_EXACT_SUBJECT",
+      "material_sha": "97a6be00818b9d3e78a2715a299f3ffedcf6dd88",
+      "review_subject_digest": "432c193bc52db30687190b05cb9d5c103e30851933367df58eff3f5b1c8a76e6"
+    },
+    {
+      "id": "FBR-WTR-002",
+      "status": "VERIFIED_FOR_THIS_EXACT_SUBJECT",
+      "material_sha": "97a6be00818b9d3e78a2715a299f3ffedcf6dd88",
+      "review_subject_digest": "432c193bc52db30687190b05cb9d5c103e30851933367df58eff3f5b1c8a76e6"
+    },
+    {
+      "id": "FBR-WTR-003",
+      "status": "VERIFIED_FOR_THIS_EXACT_SUBJECT",
+      "material_sha": "97a6be00818b9d3e78a2715a299f3ffedcf6dd88",
+      "review_subject_digest": "432c193bc52db30687190b05cb9d5c103e30851933367df58eff3f5b1c8a76e6"
+    }
+  ],
+  "accepted_independent_review_scope": {
+    "positive_path_fallback": "Fixed Git Bash bin first, fixed Git Bash usr/bin second; PATH discovery only after both fixed hosts are absent. Existing PATH candidate must positively pass bounded native MINGW/MSYS, Git execution and exact native/POSIX/native cygpath round-trip checks.",
+    "real_nonstandard_path_proof": "Accepted review executed the real native Git/MSYS host through a system-TEMP nonstandard installation junction alias. Only fixed-location availability was simulated; suitability was not injected and the alias was retired.",
+    "wsl_unsuitable_rejection": "Known System32/Sysnative WSL launchers rejected before execution. Missing, unrelated, failed, timed-out, malformed or incomplete capability probes fail closed; non-Windows PATH semantics retained.",
+    "fbr_wtr_002": "Existing workflow fix preserved without redesign. Public verification-gate uses job-level always(), needs windows-trusted-runner, and a non-skippable/non-tolerated first-step assertion of exact success before checkout. Actual assertion rejected failure/cancelled/skipped/timeout/unknown/empty/uppercase/whitespace cases.",
+    "fbr_wtr_003": "Existing environment-data/static-quoted-shell/UTF-8 path transport preserved without redesign. Real native apostrophe, Unicode, spaces and shell-metacharacter cases preserved path identity and same filesystem objects without injection.",
+    "manual_authority": "Incorrect fixed-only/PATH-unsupported statement removed; manual documents authorized positive suitability and the local-host capability/authenticity limit without changing authority, lifecycle or SOLO_OWNER semantics.",
+    "shared_bridge": "All six shared helpers, boundary tests, manuals, policies, trusted runners, validators and verification workflows consistent; repository-specific legitimate material retained.",
+    "non_regression": "Relevant F-001 through F-007 and Docs RLINK cases passed in accepted review. SOLO_OWNER still requires independent Fresh BREAKER, separate Owner Acceptance and hosting controls; zero additional GitHub human approvals does not waive review. F-000-04 Apply remains quarantined/forbidden."
+  },
+  "historical_exact_output_claim": {
+    "disposition": "SUPERSEDED_WITHOUT_REWRITE",
+    "historical_report": "verification/reports/FBR_WTR_001_002_003_REMEDIATION_BUILDER_CI_FOLLOWUP_20261004.json",
+    "historical_decoded_claim": "/c/path\\u0027name/runner",
+    "freshly_observed_output": "/c/path'name/runner",
+    "supersession_scope": "Only the erroneous literal exact-output transcription; historical report and its failure observations remain immutable."
+  },
+  "supplied_review_evidence": {
+    "native_host": {
+      "selected_bash": "C:\\Program Files\\Git\\bin\\bash.exe",
+      "kernel": "MINGW64_NT-10.0-26200",
+      "git_version": "git version 2.55.0.windows.3"
+    },
+    "local_suite": {
+      "command": "C:\\Python314\\python.exe -B -m unittest discover -s tests/verification -p test_*.py -v",
+      "tests": 63,
+      "passed": 62,
+      "skipped": 1,
+      "skip_reason": "Linux-specific real native-suitability rejection is exercised on non-Windows CI.",
+      "exit": 0,
+      "local_executor_session": 1547
+    },
+    "local_trusted_runner": {
+      "exit": 0,
+      "executor_session": 89148,
+      "runner_object": "7309dc1e1d484188d7c7cb3c6cabd92cf4cfd4ac",
+      "validator_object": "ac52f7c8521d860a57061791dec7a575f09067a4",
+      "validator_copy_object": "ac52f7c8521d860a57061791dec7a575f09067a4"
+    },
+    "bounded_path_stress": {
+      "native_conversions": 144,
+      "parallel_processes": 8,
+      "passed": 144,
+      "anomalies": [],
+      "apostrophe_output": "/c/path'name/runner"
+    },
+    "hosted_exact_reviewed_head": [
+      {
+        "run_id": 37185278053,
+        "name": "Verification gate",
+        "event": "pull_request",
+        "head_sha": "e84409965faf2014e1aae61075f0ddbe31733e76",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/SpanFabric/windows/actions/runs/37185278053",
+        "jobs": [
+          {
+            "id": 111385796581,
+            "name": "windows-trusted-runner",
+            "conclusion": "success",
+            "labels": [
+              "windows-latest"
+            ]
+          },
+          {
+            "id": 111385942740,
+            "name": "verification-gate",
+            "conclusion": "success",
+            "labels": [
+              "ubuntu-latest"
+            ]
+          }
+        ]
+      },
+      {
+        "run_id": 37185278005,
+        "name": "Bootstrap integrity",
+        "event": "pull_request",
+        "head_sha": "e84409965faf2014e1aae61075f0ddbe31733e76",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/SpanFabric/windows/actions/runs/37185278005",
+        "jobs": [
+          {
+            "id": 111385796237,
+            "name": "bootstrap-integrity",
+            "conclusion": "success",
+            "labels": [
+              "ubuntu-latest"
+            ]
+          }
+        ]
+      }
+    ],
+    "boundary": "These references are the supplied completed review evidence on the reviewed pre-persistence heads, not proof of later new evidence commits. New exact-head PR CI is required separately after persistence."
+  },
+  "retained_review_limitations": [
+    "The restricted executor initially denied MSYS NtCreateDirectoryObject; approved native execution succeeded. Classified separately from repository behavior.",
+    "Historical sporadic empty conversion output was not reproduced by the current complete suites or the 144-case eight-process stress run. Historical cause remains unestablished; successful later runs do not erase it.",
+    "Positive suitability establishes runtime capability, not cryptographic publisher authenticity or resistance to a malicious local installation.",
+    "Negative hosted failure/cancellation runs were not artificially triggered; actual committed workflow assertion supplied bounded negative regression evidence, while exact-head hosted jobs supplied positive integration proof.",
+    "Human/hosting verification of reviewer identity and organizational independence remains MANUAL_AUTHORITY."
+  ],
+  "historical_evidence_preservation": {
+    "existing_reports_retained": 13,
+    "existing_report_blobs": "UNCHANGED",
+    "historical_failed_breaker_state_records": "RETAINED_AND_INACTIVE",
+    "historical_reports_rewritten": false
+  },
+  "persistence_validation_contract": {
+    "pre_persistence_trusted_runner_exit": 0,
+    "pre_persistence_digest": "432c193bc52db30687190b05cb9d5c103e30851933367df58eff3f5b1c8a76e6",
+    "allowed_changed_paths": [
+      "verification/state.yaml",
+      "verification/reports/FRESH_BREAKER_FBR_WTR_001_POSITIVE_PATH_FALLBACK_FINAL_20261004.json"
+    ],
+    "required_after_write": [
+      "Fresh BREAKER report/state correspondence",
+      "unchanged material digest",
+      "closed authority matrix",
+      "immutable-object trusted runner",
+      "direct validator defense in depth",
+      "git diff --check",
+      "historical report blob preservation"
+    ],
+    "post_push_exact_head_ci": "REQUIRED_SEPARATE_NEW_EVIDENCE_ENVELOPE_VALIDATION_NOT_OWNER_ACCEPTANCE"
+  },
+  "not_performed": {
+    "material_changes": "NOT_PERFORMED",
+    "hosting_controls": "NOT_PERFORMED",
+    "owner_acceptance": "NOT_PERFORMED",
+    "merge": "NOT_PERFORMED",
+    "post_merge_verification": "NOT_PERFORMED",
+    "gate_000_pass": "NOT_PERFORMED",
+    "phase_000_completion": "NOT_PERFORMED",
+    "phase_001_authorization": "NOT_PERFORMED"
+  },
+  "next_separate_authority_boundary": "SOLO_OWNER_GITHUB_HOSTING_CONTROLS"
+}
