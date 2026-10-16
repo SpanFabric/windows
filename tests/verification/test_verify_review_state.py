@@ -472,6 +472,62 @@ printf 'SPAN_GPU_NATIVE_MSYS_BASH_OK\n'
         self.write_state(**post,evidence=[owner,gate,post_fail])
         with self.assertRaises(self.v.VerificationError): self.v.validate()
 
+    def test_accepted_material_reopen_invalidates_previous_acceptance(self):
+        old_digest=self.digest()
+        owner=self.evidence(old_digest,'OWNER','OWNER','ACCEPTANCE','ACCEPTED')
+        breaker=self.evidence(old_digest,'FRESH_BREAKER','FRESH_BREAKER','BREAKER_VERDICT','ACCEPTED')
+        self.write_state(status='ACCEPTED',previous_status='READY_FOR_OWNER_ACCEPTANCE',transition={'from':'READY_FOR_OWNER_ACCEPTANCE','to':'ACCEPTED','authority':'OWNER'},review_subject_digest=old_digest,review_subject_commit=self.head(),evidence=[owner,breaker])
+        self.v.validate()
+        (self.root/'src/code.py').write_text('VALUE = 2\n',encoding='utf-8')
+        git(self.root,'add','src/code.py')
+        self.assertNotEqual(old_digest,self.digest())
+        owner['active']=False; breaker['active']=False
+        self.write_state(status='BUILDING',previous_status='ACCEPTED',transition={'from':'ACCEPTED','to':'BUILDING','authority':'BUILDER'},review_subject_digest='',review_subject_commit='',evidence=[owner,breaker])
+        self.v.validate()
+
+    def test_accepted_reopen_rejects_every_nonbuilder_authority(self):
+        for role in ('OWNER','FRESH_BREAKER','CI','SPECIALIST','MERGE_HOSTING_GATE','POST_MERGE_WORKFLOW'):
+            with self.subTest(role=role):
+                self.write_state(status='BUILDING',previous_status='ACCEPTED',transition={'from':'ACCEPTED','to':'BUILDING','authority':role},review_subject_digest='',review_subject_commit='',evidence=[])
+                with self.assertRaisesRegex(self.v.VerificationError,"Authority .* cannot perform transition ACCEPTED->BUILDING"):
+                    self.v.validate()
+
+    def test_accepted_reopen_does_not_grant_builder_upward_authority(self):
+        policy=json.loads((self.root/'.steward/verification-policy.yaml').read_text())
+        outgoing=[t for t in policy['transitions'] if t['from']=='ACCEPTED']
+        self.assertCountEqual([
+            {'from':'ACCEPTED','to':'BUILDING','authorities':['BUILDER']},
+            {'from':'ACCEPTED','to':'MERGED','authorities':['MERGE_HOSTING_GATE']},
+        ],outgoing)
+        for status in ('INDEPENDENT_REVIEW_PENDING','READY_FOR_OWNER_ACCEPTANCE','ACCEPTED','MERGED','POST_MERGE_VERIFIED','MERGE_VERIFICATION_FAILED'):
+            with self.subTest(status=status):
+                self.write_state(status=status,previous_status='ACCEPTED',transition={'from':'ACCEPTED','to':status,'authority':'BUILDER'},review_subject_digest=self.digest(),review_subject_commit=self.head(),evidence=[self.builder_evidence(self.digest())])
+                with self.assertRaisesRegex(self.v.VerificationError,'Invalid state transition|Authority .* cannot perform'):
+                    self.v.validate()
+
+    def test_prior_owner_cannot_accept_new_material_digest(self):
+        old_owner=self.evidence(self.digest(),'OWNER','OWNER','ACCEPTANCE','ACCEPTED')
+        (self.root/'src/code.py').write_text('VALUE = 2\n',encoding='utf-8')
+        git(self.root,'add','src/code.py'); new_digest=self.digest()
+        self.assertNotEqual(old_owner['review_subject_digest'],new_digest)
+        for active in (True,False):
+            with self.subTest(active=active):
+                self.write_state(status='ACCEPTED',previous_status='READY_FOR_OWNER_ACCEPTANCE',transition={'from':'READY_FOR_OWNER_ACCEPTANCE','to':'ACCEPTED','authority':'OWNER'},review_subject_digest=new_digest,review_subject_commit=self.head(),evidence=[self.builder_evidence(new_digest),dict(old_owner,active=active)])
+                with self.assertRaisesRegex(self.v.VerificationError,'is stale|ACCEPTED requires active OWNER'):
+                    self.v.validate()
+
+    def test_prior_breaker_cannot_authorize_new_material_digest(self):
+        old_breaker=self.evidence(self.digest(),'FRESH_BREAKER','FRESH_BREAKER','BREAKER_VERDICT','ACCEPTED')
+        (self.root/'src/code.py').write_text('VALUE = 2\n',encoding='utf-8')
+        git(self.root,'add','src/code.py'); new_digest=self.digest()
+        self.assertNotEqual(old_breaker['review_subject_digest'],new_digest)
+        for active in (True,False):
+            with self.subTest(active=active):
+                self.write_state(status='READY_FOR_OWNER_ACCEPTANCE',previous_status='INDEPENDENT_REVIEW_PENDING',transition={'from':'INDEPENDENT_REVIEW_PENDING','to':'READY_FOR_OWNER_ACCEPTANCE','authority':'FRESH_BREAKER'},review_subject_digest=new_digest,review_subject_commit=self.head(),evidence=[self.builder_evidence(new_digest),dict(old_breaker,active=active)])
+                with self.assertRaisesRegex(self.v.VerificationError,'is stale|READY_FOR_OWNER_ACCEPTANCE requires active FRESH_BREAKER'):
+                    self.v.validate()
+
+
     def test_workflows_fetch_full_history_for_evidence_commits(self):
         workflow_dir=REPO/'.github'/'workflows'
         workflows=[workflow_dir/'verification-gate.yml']

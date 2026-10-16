@@ -109,6 +109,13 @@
     },
     {
       "from": "ACCEPTED",
+      "to": "BUILDING",
+      "authorities": [
+        "BUILDER"
+      ]
+    },
+    {
+      "from": "ACCEPTED",
       "to": "MERGED",
       "authorities": [
         "MERGE_HOSTING_GATE"
