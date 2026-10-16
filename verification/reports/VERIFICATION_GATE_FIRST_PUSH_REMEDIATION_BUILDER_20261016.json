@@ -1,0 +1,209 @@
+{
+  "id": "VERIFICATION-GATE-FIRST-PUSH-REMEDIATION-BUILDER-WINDOWS-20261016",
+  "type": "BUILDER_REPORT",
+  "producer": "BUILDER",
+  "role": "BUILDER",
+  "authority": "MANUAL_AUTHORITY",
+  "verdict": "BUILDER_GREEN",
+  "repository": "SpanFabric/windows",
+  "commit_sha": "43e408c501f79612c1865bd7ae03f3141d0f6d65",
+  "material_sha": "43e408c501f79612c1865bd7ae03f3141d0f6d65",
+  "review_subject_digest": "fa7f9004a4f14a0df7f196915a5c04c7c7c178380aaf77a86b71fab6b26b6110",
+  "created_at": "2026-10-16T12:22:47.357277+00:00",
+  "root_cause": "Unfiltered feature-branch push uses all-null github.event.before; trusted validator correctly rejects it; duplicate same-app verification-gate failure blocks merge despite successful pull_request checks.",
+  "historical_failed_push_runs": {
+    "host": {
+      "id": 38892991515,
+      "head_sha": "2570448b5440063acf66d51d99a5a0fb8eb35f4b",
+      "event": "push",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_attempt": 1,
+      "html_url": "https://github.com/SpanFabric/host/actions/runs/38892991515"
+    },
+    "docs": {
+      "id": 38893017657,
+      "head_sha": "3f3c13338c8353e426606ce778fba7779f961b14",
+      "event": "push",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_attempt": 1,
+      "html_url": "https://github.com/SpanFabric/docs/actions/runs/38893017657"
+    },
+    "platform": {
+      "id": 38892966063,
+      "head_sha": "911124ec5802006bdb18809e252dbd889ac3f06b",
+      "event": "push",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_attempt": 1,
+      "html_url": "https://github.com/SpanFabric/platform/actions/runs/38892966063"
+    },
+    "windows": {
+      "id": 38892978263,
+      "head_sha": "8d2493675e8dfe85a42a7d4237afe25bafb75aa1",
+      "event": "push",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_attempt": 1,
+      "html_url": "https://github.com/SpanFabric/windows/actions/runs/38892978263"
+    },
+    "evals": {
+      "id": 38893004332,
+      "head_sha": "da09b56043c6e00d9f0a9901c5b1044845371c56",
+      "event": "push",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_attempt": 1,
+      "html_url": "https://github.com/SpanFabric/evals/actions/runs/38893004332"
+    },
+    ".github": {
+      "id": 38893032186,
+      "head_sha": "691bdfb00c97f9d99bee4d6f86c5b30cfceca328",
+      "event": "push",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_attempt": 1,
+      "html_url": "https://github.com/SpanFabric/.github/actions/runs/38893032186"
+    }
+  },
+  "repair": {
+    "workflow": "Unfiltered pull_request retained; push restricted to main; job bodies, BASE_SHA expression, trusted runner and validator unchanged.",
+    "lifecycle": "Only ACCEPTED -> BUILDING by BUILDER added; historical acceptance does not authorize new digest."
+  },
+  "authorized_reopen": {
+    "from_status": "ACCEPTED",
+    "to_status": "BUILDING",
+    "authority": "BUILDER",
+    "old_subject": "2ab28d03fa057920856500b69a2a2dc885f44385",
+    "old_digest": "432c193bc52db30687190b05cb9d5c103e30851933367df58eff3f5b1c8a76e6",
+    "recorded_at": "2026-10-16T12:16:34.955538+00:00"
+  },
+  "changed_material_paths": [
+    ".github/workflows/verification-gate.yml",
+    ".steward/verification-policy.yaml",
+    "tests/verification/test_verify_review_state.py",
+    "tests/verification/test_windows_boundary.py"
+  ],
+  "regression_matrix": {
+    "focused": {
+      "exit_code": 0,
+      "log": "C:\\Users\\sever\\AppData\\Local\\Temp\\spangpu-first-push-v3-20261016-pe11xdre\\windows-focused-tests.log",
+      "command": [
+        "C:\\Python314\\python.exe",
+        "-B",
+        "-m",
+        "unittest",
+        "-v",
+        "test_verify_review_state.BridgeTests.test_accepted_material_reopen_invalidates_previous_acceptance",
+        "test_verify_review_state.BridgeTests.test_accepted_reopen_rejects_every_nonbuilder_authority",
+        "test_verify_review_state.BridgeTests.test_accepted_reopen_does_not_grant_builder_upward_authority",
+        "test_verify_review_state.BridgeTests.test_prior_owner_cannot_accept_new_material_digest",
+        "test_verify_review_state.BridgeTests.test_prior_breaker_cannot_authorize_new_material_digest",
+        "test_verify_review_state.BridgeTests.test_initial_baseline_self_token_is_root_builder_evidence_only",
+        "test_verify_review_state.BridgeTests.test_all_zero_base_fails_closed_on_an_ordinary_child_via_cli",
+        "test_verify_review_state.BridgeTests.test_material_change_reopens_ready_state_and_requires_new_breaker",
+        "test_verify_review_state.BridgeTests.test_merge_and_post_merge_states_require_sha_bound_evidence",
+        "test_windows_boundary.WorkflowTriggerTests"
+      ],
+      "cwd": "C:\\Users\\sever\\AppData\\Local\\Temp\\spangpu-first-push-v3-20261016-pe11xdre\\worktree-windows\\tests\\verification",
+      "tail": "test_required_context_and_original_base_sources_are_preserved (test_windows_boundary.WorkflowTriggerTests.test_required_context_and_original_base_sources_are_preserved) ... ok\n\n----------------------------------------------------------------------\nRan 13 tests in 51.120s\n\nOK"
+    },
+    "full": {
+      "exit_code": 0,
+      "log": "C:\\Users\\sever\\AppData\\Local\\Temp\\spangpu-first-push-v3-20261016-pe11xdre\\windows-full-tests.log",
+      "command": [
+        "C:\\Python314\\python.exe",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/verification",
+        "-p",
+        "test_*.py",
+        "-v"
+      ],
+      "cwd": "C:\\Users\\sever\\AppData\\Local\\Temp\\spangpu-first-push-v3-20261016-pe11xdre\\worktree-windows",
+      "tail": "test_required_context_and_original_base_sources_are_preserved (test_windows_boundary.WorkflowTriggerTests.test_required_context_and_original_base_sources_are_preserved) ... ok\n\n----------------------------------------------------------------------\nRan 72 tests in 132.956s\n\nOK (skipped=1)"
+    },
+    "covered": [
+      "first-feature-push exclusion",
+      "pull_request retention",
+      "main push retention",
+      "integrity consistency",
+      "required context",
+      "BASE_SHA sources",
+      "wrong reopen authorities",
+      "no Builder upward transitions",
+      "stale Owner active/inactive",
+      "stale BREAKER active/inactive",
+      "existing ready reopen",
+      "root bootstrap",
+      "all-null ordinary-child rejection",
+      "merged/post-merge SHA and authority",
+      "FBR-WTR-001/002/003",
+      "Docs governance/SOLO_OWNER/F007/RLINK/project-state where applicable"
+    ]
+  },
+  "trusted_validation": {
+    "exit_code": 0,
+    "log": "C:\\Users\\sever\\AppData\\Local\\Temp\\spangpu-first-push-v3-20261016-pe11xdre\\windows-material-committed-trusted.log",
+    "runner_blob": "7309dc1e1d484188d7c7cb3c6cabd92cf4cfd4ac",
+    "validator_blob": "ac52f7c8521d860a57061791dec7a575f09067a4",
+    "digest": "fa7f9004a4f14a0df7f196915a5c04c7c7c178380aaf77a86b71fab6b26b6110"
+  },
+  "non_regression": {
+    "validator_blob_unchanged": "ac52f7c8521d860a57061791dec7a575f09067a4",
+    "trusted_runner_unchanged": true,
+    "authority_matrix_unchanged": true,
+    "old_reports_unchanged": true,
+    "historical_prs_and_runs_preserved": true
+  },
+  "subjects": {
+    "host": {
+      "base": "2882a0c8956b7df2baa446d5b3e844643b2e1f8a",
+      "old_digest": "2a5586bef72567a33ec9c599face4a5635fb3ba331185821f3a7f4bc92e9072a",
+      "material_sha": "ac93e3ee80ef96ffb90c4b11151dd4a8542b407d",
+      "new_digest": "2f379035ffe29afd6c9014aeeb74a8fdb7c7af5e84a367a81867acb51bd5410d"
+    },
+    "docs": {
+      "base": "0ee004ae6d4b7caa96a666275c65f5412a8b6eee",
+      "old_digest": "eb2ac7289be11267160e374745275b8737d85ed971864090fac657257935231f",
+      "material_sha": "71669e576874c797003999091d00a8b1bf132ba6",
+      "new_digest": "d78d044b2557b831507688e8f624d8d42399cab2af71e492907f2bc33462b044"
+    },
+    "platform": {
+      "base": "eea87c9f1b2c27d568e5c32571503feba84cfac6",
+      "old_digest": "caaa93e1ca2897e4dad9cea96afebc1215cec4b0e640b3b2a78ed2291a9b24a9",
+      "material_sha": "3ecf11112b5b0ca25b2a073ce168d4182ed20db8",
+      "new_digest": "e616ab259b21cdd5071c25599f123057edf2aaa430e8611797af2738d69bd576"
+    },
+    "windows": {
+      "base": "2ab28d03fa057920856500b69a2a2dc885f44385",
+      "old_digest": "432c193bc52db30687190b05cb9d5c103e30851933367df58eff3f5b1c8a76e6",
+      "material_sha": "43e408c501f79612c1865bd7ae03f3141d0f6d65",
+      "new_digest": "fa7f9004a4f14a0df7f196915a5c04c7c7c178380aaf77a86b71fab6b26b6110"
+    },
+    "evals": {
+      "base": "a95824c922548df6072ed2f49c60405d8d6953b4",
+      "old_digest": "91c848a00407d394d90402a6b56632faa9466595b7e5345ebff37e817fb2ef9b",
+      "material_sha": "285b616aec193af06c5e3482bc05570349903027",
+      "new_digest": "6d19b478c7c2ce98742965549f881be87ea45a6af609f796fd27ea3ea9872c72"
+    },
+    ".github": {
+      "base": "b13a1444757fbffc08de01476dcc32ec0117de59",
+      "old_digest": "0d7b3c31e71ef0264a8b8fe031085e8adac3626b0f5f84213d1859b2d3f4c524",
+      "material_sha": "c94f35b2cd4adbe605fd5d9b1eae62fd8e619c2c",
+      "new_digest": "f126b0f3eeb69fff5fa5e3cbb92417766339b08446001481ffe2ad687e5d1981"
+    }
+  },
+  "known_limitations": [
+    "Builder evidence is not independent review or Owner Acceptance.",
+    "Native Windows skips Linux-only suitability rejection; exact-head Linux/Windows PR CI is required.",
+    "Actual main-push execution awaits eventual authorized merge; trigger contract and root-bootstrap semantics are covered deterministically.",
+    "No prior failed run or persistence PR is rewritten; their later reconciliation remains separate."
+  ],
+  "ci_status": "PENDING_EXACT_HEAD_PULL_REQUEST_CI",
+  "lifecycle": "INDEPENDENT_REVIEW_PENDING"
+}
