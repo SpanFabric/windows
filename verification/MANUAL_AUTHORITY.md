@@ -201,3 +201,45 @@ Workflow-wide cancellation or hosting unavailability can prevent any terminal
 job from executing; such incomplete runs never establish required successful
 verification. Local regressions execute the actual workflow assertion for
 each result and reject conditional or tolerated assertions.
+
+## Durable lifecycle history — SHARED-FB-001
+
+The validator checks every reachable commit from the one genuine Git root to
+HEAD, not only commits after the supplied risk/base SHA. Both metadata-only and
+material state changes are included. Commits retaining the same status, previous
+status and transition are carry-forward records, not repeated transitions. A
+changed transition must start at the actual predecessor status and be authorized
+by the policy snapshot in that same commit. The live state is one proposed
+successor of HEAD; it cannot conceal a rejected committed predecessor.
+
+Policy schema 1.0 snapshots are interpreted independently. A policy/transition
+update may be atomic in one commit, but later grants or revocations never
+re-authorize or invalidate a previously consumed transition. Policies may select
+a subset of the closed bridge transition/role graph; they cannot grant a different
+role or an unknown edge. Historical snapshots predate the history_validation
+field but are still checked in full, without a trusted-base shortcut. The current
+policy must declare durable-git-dag-v1; unknown policy/history versions fail closed.
+This proves declared transition reachability, not cryptographic human identity
+or retroactive technical acceptance. Current digest/evidence/merge-SHA validation
+remains independently mandatory; old acceptance never covers new material.
+
+All merge parents are validated. A merge is supported only when its state and
+policy blobs exactly match a validated parent of which every other parent is an
+ancestor (an ancestor-parent snapshot adoption, including the existing product
+merges). It does not consume the adopted parent's transition again. Divergent,
+conflict-resolved, octopus/ambiguous or otherwise unsupported reconciliation fails
+closed; it requires a separately reviewed model extension, not a chosen-parent
+guess, a new base, or a subsequent legal-looking state. Ordinary one-parent
+MERGED/POST_MERGE records still use their existing exclusive authorities.
+
+The root may be initial PLANNED or the explicit parentless Builder bootstrap
+contract. No later root or all-zero-base exception is introduced. Shallow history,
+missing required objects/parents/state/policy, non-regular state/policy objects,
+grafts and unknown object formats fail closed. Git replacement objects are never
+used. Complete history is required even for diagnostic digest validation.
+
+Each command is a separate observation; partial or failed attempts remain
+evidence. Restart reruns the same immutable-history checks, with no acceptance
+cache or retry waiver. Changes to validator/policy/tests remain material and must
+receive fresh independent review before Owner Acceptance or integration. Steward
+may replace this implementation only while preserving these explicit boundaries.

@@ -158,6 +158,28 @@ printf 'SPAN_GPU_NATIVE_MSYS_BASH_OK\n'
         gate=self.evidence(digest,'MERGE_HOSTING_GATE','MERGE_HOSTING_GATE','MERGE_STATE','MERGED',sha,sha)
         return owner,gate,sha
 
+    def commit_state(self,label='durable fixture state'):
+        git(self.root,'add','verification/state.yaml')
+        git(self.root,'commit','-qm',label)
+
+    def establish_history(self,target):
+        """Positive fixtures must prove their predecessors, never skip from PLANNED."""
+        chain=[('BUILDING','PLANNED','BUILDER'),
+               ('INDEPENDENT_REVIEW_PENDING','BUILDING','BUILDER'),
+               ('READY_FOR_OWNER_ACCEPTANCE','INDEPENDENT_REVIEW_PENDING','FRESH_BREAKER'),
+               ('ACCEPTED','READY_FOR_OWNER_ACCEPTANCE','OWNER')]
+        for status,previous,authority in chain:
+            digest=self.digest(); ev=[]
+            if status!='BUILDING':
+                kind={'BUILDER':'BUILDER_REPORT','FRESH_BREAKER':'BREAKER_VERDICT','OWNER':'ACCEPTANCE'}[authority]
+                ev=[self.evidence(digest,authority,authority,kind,'BUILDER_GREEN' if authority=='BUILDER' else 'PASS')]
+            self.write_state(status=status,previous_status=previous,
+                transition={'from':previous,'to':status,'authority':authority},
+                review_subject_digest=digest,review_subject_commit=self.head(),evidence=ev)
+            self.commit_state()
+            if status==target:return
+        raise AssertionError('unsupported fixture target '+target)
+
     def test_same_tree_same_digest(self):
         self.assertEqual(self.digest(),self.digest())
 
@@ -200,10 +222,12 @@ printf 'SPAN_GPU_NATIVE_MSYS_BASH_OK\n'
         with self.assertRaises(self.v.VerificationError): self.v.validate()
 
     def test_material_change_reopens_ready_state_and_requires_new_breaker(self):
+        self.establish_history('INDEPENDENT_REVIEW_PENDING')
         old_digest=self.digest()
         old_breaker=self.evidence(old_digest,'FRESH_BREAKER','FRESH_BREAKER','BREAKER_VERDICT','ACCEPTED')
         self.write_state(status='READY_FOR_OWNER_ACCEPTANCE',previous_status='INDEPENDENT_REVIEW_PENDING',transition={'from':'INDEPENDENT_REVIEW_PENDING','to':'READY_FOR_OWNER_ACCEPTANCE','authority':'FRESH_BREAKER'},review_subject_digest=old_digest,review_subject_commit=old_breaker['commit_sha'],evidence=[old_breaker])
         self.v.validate()
+        self.commit_state('durable ready before new material')
         (self.root/'src/code.py').write_text('VALUE = 2\n',encoding='utf-8'); git(self.root,'add','src/code.py')
         new_digest=self.digest(); self.assertNotEqual(old_digest,new_digest)
         old_breaker['active']=False
@@ -241,6 +265,11 @@ printf 'SPAN_GPU_NATIVE_MSYS_BASH_OK\n'
         ev.update({'id':'BOOTSTRAP-BUILDER-REPORT','commit_sha':token,'verdict':'BUILDER_GREEN'})
         self.write_state(status='INDEPENDENT_REVIEW_PENDING',previous_status='BUILDING',transition={'from':'BUILDING','to':'INDEPENDENT_REVIEW_PENDING','authority':'BUILDER'},review_subject_digest=d,review_subject_commit=token,evidence=[ev])
         self.v.validate()
+        # Construct an actual parentless bootstrap root in this disposable fixture.
+        git(self.root,'add','verification/state.yaml')
+        tree=git(self.root,'write-tree').stdout.decode().strip()
+        root=git(self.root,'commit-tree',tree,'-m','explicit bootstrap fixture root').stdout.decode().strip()
+        git(self.root,'update-ref','HEAD',root)
         ev['active']=False
         self.write_state(status='BUILDING',previous_status='INDEPENDENT_REVIEW_PENDING',transition={'from':'INDEPENDENT_REVIEW_PENDING','to':'BUILDING','authority':'BUILDER'},review_subject_digest='',review_subject_commit='',evidence=[ev])
         git(self.root,'add','verification/state.yaml')
@@ -440,11 +469,13 @@ printf 'SPAN_GPU_NATIVE_MSYS_BASH_OK\n'
             with self.assertRaises(self.v.VerificationError,msg=f'{producer}->{role}/{etype}'): self.v.validate()
 
     def test_valid_builder_and_ci_evidence_remain_nonindependent_technical_evidence(self):
+        self.establish_history('BUILDING')
         d=self.digest(); builder=self.builder_evidence(d); ci=self.evidence(d,'CI','CI','CI_RESULT','PASS')
         self.write_state(status='INDEPENDENT_REVIEW_PENDING',previous_status='BUILDING',transition={'from':'BUILDING','to':'INDEPENDENT_REVIEW_PENDING','authority':'BUILDER'},review_subject_digest=d,review_subject_commit=builder['commit_sha'],evidence=[builder,ci])
         self.v.validate()
 
     def test_merge_and_post_merge_states_require_sha_bound_evidence(self):
+        self.establish_history('ACCEPTED')
         d=self.digest(); owner,gate,sha=self.owner_and_merge_evidence(d)
         merged={'status':'MERGED','previous_status':'ACCEPTED','transition':{'from':'ACCEPTED','to':'MERGED','authority':'MERGE_HOSTING_GATE'},'review_subject_digest':d,'review_subject_commit':sha,'resulting_merge_commit_sha':sha}
         self.write_state(**merged,evidence=[owner])
@@ -459,6 +490,7 @@ printf 'SPAN_GPU_NATIVE_MSYS_BASH_OK\n'
         with self.assertRaises(self.v.VerificationError): self.v.validate()
         self.write_state(**merged,evidence=[owner,gate])
         self.v.validate()
+        self.commit_state('durable merged before post-merge proof')
         post={'status':'POST_MERGE_VERIFIED','previous_status':'MERGED','transition':{'from':'MERGED','to':'POST_MERGE_VERIFIED','authority':'POST_MERGE_WORKFLOW'},'review_subject_digest':d,'review_subject_commit':sha,'resulting_merge_commit_sha':sha}
         self.write_state(**post,evidence=[owner])
         with self.assertRaises(self.v.VerificationError): self.v.validate()
@@ -473,11 +505,13 @@ printf 'SPAN_GPU_NATIVE_MSYS_BASH_OK\n'
         with self.assertRaises(self.v.VerificationError): self.v.validate()
 
     def test_accepted_material_reopen_invalidates_previous_acceptance(self):
+        self.establish_history('READY_FOR_OWNER_ACCEPTANCE')
         old_digest=self.digest()
         owner=self.evidence(old_digest,'OWNER','OWNER','ACCEPTANCE','ACCEPTED')
         breaker=self.evidence(old_digest,'FRESH_BREAKER','FRESH_BREAKER','BREAKER_VERDICT','ACCEPTED')
         self.write_state(status='ACCEPTED',previous_status='READY_FOR_OWNER_ACCEPTANCE',transition={'from':'READY_FOR_OWNER_ACCEPTANCE','to':'ACCEPTED','authority':'OWNER'},review_subject_digest=old_digest,review_subject_commit=self.head(),evidence=[owner,breaker])
         self.v.validate()
+        self.commit_state('durable acceptance before new material')
         (self.root/'src/code.py').write_text('VALUE = 2\n',encoding='utf-8')
         git(self.root,'add','src/code.py')
         self.assertNotEqual(old_digest,self.digest())
