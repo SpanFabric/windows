@@ -1,0 +1,14 @@
+{
+  "changed_file": "tests/verification/test_lifecycle_history.py",
+  "new_source_sha256": "d77e182c3feebe75fb3cf33f887d8c3f55fbcd004cd30f60a879c09fde733599",
+  "all_six_identical": true,
+  "other_material_entries_unchanged": true,
+  "protected_invariants": [
+    "validator full-history and shallow handling",
+    "immutable trusted launcher",
+    "closed authority matrix",
+    "first-push PR/main trigger and all-zero rejection"
+  ],
+  "full_local_tests": 634,
+  "native_focused_tests": 3
+}

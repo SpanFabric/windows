@@ -1,0 +1,8 @@
+test_missing_required_parent_after_gc_fails_closed (test_lifecycle_history.LifecycleHistoryTests.test_missing_required_parent_after_gc_fails_closed) ... ok
+test_missing_required_parent_after_repack_fails_closed (test_lifecycle_history.LifecycleHistoryTests.test_missing_required_parent_after_repack_fails_closed) ... ok
+test_missing_required_parent_object_fails_closed (test_lifecycle_history.LifecycleHistoryTests.test_missing_required_parent_object_fails_closed) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 40.727s
+
+OK
