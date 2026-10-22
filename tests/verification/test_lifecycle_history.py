@@ -1,4 +1,5 @@
 """Durable Git-history regressions for SHARED-FB-001; no network or mocks."""
+import hashlib
 import json
 import pathlib
 import unittest
@@ -225,12 +226,100 @@ class LifecycleHistoryTests(unittest.TestCase):
         self.git('commit','-qm','nonregular state snapshot')
         self.record('BUILDING','ACCEPTED','BUILDER');self.check(False)
 
-    def test_missing_required_parent_object_fails_closed(self):
-        self.accepted();object_path=self.root/'.git/objects'/self.base[:2]/self.base[2:]
-        held=object_path.with_suffix('.held');object_path.rename(held)
+    def assert_missing_required_parent_fails_closed(self, storage):
+        # Only disposable fixture refs/objects change; no object-file paths are used.
+        self.git('config','gc.auto','0')
+        self.git('config','maintenance.auto','false')
+        self.accepted()
+        previous=self.b.head()
+        tree=self.git('rev-parse','HEAD^{tree}').stdout.decode().strip()
+        raw=(f'tree {tree}\nparent {previous}\n'
+             'author Bridge Test <test@example.invalid> 1700000000 +0000\n'
+             'committer Bridge Test <test@example.invalid> 1700000000 +0000\n'
+             '\npaired missing-parent fixture\n').encode('ascii')
+        valid_parent=self.git('hash-object','-t','commit','-w','--stdin',input=raw).stdout.decode().strip()
+        tip_raw=raw.replace(f'parent {previous}\n'.encode('ascii'),
+                            f'parent {valid_parent}\n'.encode('ascii'),1)
+        control=self.git('hash-object','-t','commit','-w','--stdin',input=tip_raw).stdout.decode().strip()
+        self.git('update-ref','HEAD',control,previous)
+        if storage == 'gc':
+            self.git('gc','--prune=now')
+        elif storage == 'repack':
+            self.git('repack','-ad')
+            self.git('prune-packed')
+        else:
+            self.assertEqual('loose',storage)
+        counts=dict(line.split(': ',1) for line in
+                    self.git('count-objects','-v').stdout.decode().splitlines())
+        if storage == 'loose':
+            self.assertGreater(int(counts['count']),0)
+        else:
+            self.assertEqual(0,int(counts['count']))
+            self.assertGreater(int(counts['in-pack']),0)
+        self.assertEqual(tip_raw,self.git('cat-file','commit',control).stdout)
+        self.check(True,base=control)
+        self.check(True,trusted=True,base=control)
+
+        # A canonical, nonzero SHA whose absence is proven through Git plumbing.
+        counter=0
+        while True:
+            missing=hashlib.sha1(f'missing-parent-fixture-{counter}'.encode('ascii')).hexdigest()
+            if self.git('cat-file','-e',missing,check=False).returncode != 0:
+                break
+            counter+=1
+        self.assertRegex(missing,r'^[0-9a-f]{40}$')
+        self.assertNotEqual('0'*40,missing)
+        broken_raw=raw.replace(f'parent {previous}\n'.encode('ascii'),
+                               f'parent {missing}\n'.encode('ascii'),1)
+        broken_parent=self.git('hash-object','-t','commit','-w','--stdin',input=broken_raw).stdout.decode().strip()
+        self.assertEqual(broken_raw,self.git('cat-file','commit',broken_parent).stdout)
+        # An existing immediate parent lets BASE_SHA=HEAD pass the ancestry guard;
+        # only the complete history walk encounters the missing grandparent.
+        broken_tip=tip_raw.replace(f'parent {valid_parent}\n'.encode('ascii'),
+                                   f'parent {broken_parent}\n'.encode('ascii'),1)
+        broken=self.git('hash-object','-t','commit','-w','--stdin',input=broken_tip).stdout.decode().strip()
+        self.assertEqual(broken_tip,self.git('cat-file','commit',broken).stdout)
+        self.assertEqual(tree,self.git('rev-parse',broken+'^{tree}').stdout.decode().strip())
+        self.assertNotEqual(0,self.git('cat-file','-e',missing,check=False).returncode)
+        self.git('update-ref','HEAD',broken,control)
+        self.assertEqual(tree,self.git('write-tree').stdout.decode().strip())
+        self.git('merge-base','--is-ancestor',broken,'HEAD')
+        walk=self.git('--no-replace-objects','rev-list','--topo-order','--reverse','--parents','HEAD',check=False)
+        self.assertIn(missing,walk.stderr.decode('utf-8','replace'))
+        if walk.returncode:
+            expected='VERIFICATION_STATE_INVALID: git rev-list --topo-order --reverse --parents HEAD failed:'
+        else:
+            # A GC-written commit graph may report a missing parent on stderr
+            # yet return a partial traversal with exit0. The validator must then
+            # reject the incomplete-root result, not trust that exit status.
+            rows=[line.split() for line in walk.stdout.decode('ascii').splitlines()]
+            self.assertTrue(rows)
+            self.assertFalse(any(len(row)==1 for row in rows))
+            self.assertTrue(any(missing in row[1:] for row in rows))
+            expected='VERIFICATION_STATE_INVALID: Lifecycle history: one complete root is required'
         try:
-            p=self.b.cli('--check','--base',self.b.head());self.assertEqual(2,p.returncode,p.stderr)
-        finally:held.rename(object_path)
+            results=(self.b.cli('--check','--base',broken),
+                     self.b.trusted_cli('--base',broken))
+            for result in results:
+                self.assertEqual(2,result.returncode,result.stdout+result.stderr)
+                self.assertIn(expected,result.stderr)
+                if walk.returncode:
+                    self.assertIn(missing,result.stderr)
+                self.assertNotIn('TRUSTED_PREFLIGHT_REJECTED:',result.stderr)
+        finally:
+            self.git('update-ref','HEAD',control,broken)
+        # Same tree, index, policy and evidence succeed when the parent exists.
+        self.check(True,base=control)
+        self.check(True,trusted=True,base=control)
+
+    def test_missing_required_parent_object_fails_closed(self):
+        self.assert_missing_required_parent_fails_closed('loose')
+
+    def test_missing_required_parent_after_gc_fails_closed(self):
+        self.assert_missing_required_parent_fails_closed('gc')
+
+    def test_missing_required_parent_after_repack_fails_closed(self):
+        self.assert_missing_required_parent_fails_closed('repack')
 
     def test_accepted_root_cannot_replace_real_bootstrap(self):
         self.accepted();tree=self.git('write-tree').stdout.decode().strip()
