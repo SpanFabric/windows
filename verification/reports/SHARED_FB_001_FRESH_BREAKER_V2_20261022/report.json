@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "review_id": "SHARED-FB-001-FRESH-BREAKER-V2-20261022",
+  "producer": "FRESH_BREAKER",
+  "producer_role": "FRESH_BREAKER",
+  "authority_mode": "MANUAL_AUTHORITY",
+  "created_at": "2026-10-22T12:42:44.793036+00:00",
+  "verdict": "FRESH_BREAKER_ACCEPTED",
+  "repository": "SpanFabric/windows",
+  "reviewed_head_sha": "9e89befdb8f2eade4a7800339fe5d4cee96609d5",
+  "material_sha": "d77c5e0fe5661a0affa6be7e19cda2c470edc679",
+  "review_subject_digest": "ba7c9f3389e5255fa765c668a0def6fef626c93820bdae92001f21fbd9797c86",
+  "scope": "Durable lifecycle history reachability, per-commit historical policy, role boundaries, first-push workflow routing and immutable trusted runner consistency across six repositories.",
+  "technical_result": "No reportable findings. Technical observations are attached; Git may normalize text newlines. This manifest hashes the exact staged Git blob bytes; original raw review files remain preserved at the recorded TEMP root.",
+  "authorization_resolution": {
+    "prior_auto_review_rejection": "Preparing IRP-to-READY evidence before metadata-head CI was judged premature; rejected action never executed.",
+    "explicit_owner_authorization": "Owner subsequently explicitly authorized persist-only Fresh Breaker metadata, normal commit/push to existing PR branches, then require successful new exact-head verification-gate/bootstrap-integrity. No Owner Acceptance, merge or material changes.",
+    "execution_order": "review complete -> excluded evidence and IRP-to-READY -> metadata commit/push -> new exact-head CI -> final confirmation",
+    "current_phase": "Authorized metadata prepared; new-head CI is an obligatory subsequent observation and overall completion remains pending until it succeeds."
+  },
+  "review_plan": "Exact heads and digests first, immutable historical reconstruction, independent Git histories, direct and immutable runner, six full relevant suites, actual native Windows/Linux CI, shared bytes, first-push workflow routing.",
+  "global_impact": "Index/digest -> state/evidence -> historical policy -> complete Git DAG -> immutable launcher -> Windows/Linux CI -> Steward.",
+  "what_are_we_missing": "Hidden illegal predecessors, skipped commits, later grants/revocations, stale evidence, shallow/missing history, root exception widening, ambiguous merge topology, external identity.",
+  "boundary_audit": {
+    "source_of_truth": "immutable Git snapshots and complete DAG",
+    "validation_owner": "trusted validator and fail-closed immutable runner",
+    "authorization_owner": "historical per-commit closed role policy; human/hosting identities external MANUAL_AUTHORITY",
+    "version": "schema1.0, durable-git-dag-v1; unsupported fail closed",
+    "concurrency": "each observation tied to exact SHA; no runtime cache",
+    "retry": "same immutable history remains rejection; later legal state cannot conceal failure",
+    "merge": "all parents validated, exact ancestor-parent state/policy adoption or fail closed"
+  },
+  "future_compatibility": "Stable evidence/state ports preserve future Steward; divergent reconciliation intentionally unsupported pending separate reviewed contract.",
+  "adversarial_results": {
+    "cases": 17,
+    "executions": 34,
+    "all_expected_exits": true,
+    "mandatory_matrix": "OWNER/CI/FRESH_BREAKER x metadata/material ACCEPTED reopening, two unrelated commits, legal Builder successor, base at final HEAD; both validators reject",
+    "controls": "Six legal ACCEPTED controls; legal Builder reopen; supported ancestor-parent merge",
+    "negative_cases": "Later policy grant, divergent merge, shallow history; actual heads reject ordinary-child all-zero base"
+  },
+  "tests": {
+    "full_linux_total": 622,
+    "linux_skips": 36,
+    "native_local_platform": "96 tests, OK (skipped=1),676.367s",
+    "six_exact_head_hosted_windows": "Successful full suite and trusted runner all six; actual logs retrieved",
+    "remaining_supplemental_local_windows": "Not relied upon; sequential supplemental run in progress"
+  },
+  "history_result": "261 reachable commits independently reconstructed with each historical policy; declared histories reachable.",
+  "workflow_result": "All six reviewed heads had successful exact-head PR gate/bootstrap jobs and zero push runs. PR/main push retained, feature-push gating absent, ordinary-child all-zero bases rejected.",
+  "shared_consistency": "Validator, runner, policy, three common test files, verification workflow and manual authority contract have identical Git blob identities across six repositories.",
+  "findings": [],
+  "limitations": [
+    "Identity and independence manually asserted; no cryptographic proof.",
+    "External branch hosting controls not newly certified.",
+    "No owner acceptance, merge, UP003, persistence PR, GATE000, or PHASE001 action."
+  ],
+  "unsuccessful_attempts": [
+    "Initial WSL python alias absent; corrected in temporary environment.",
+    "WSL tests run from drvfs inherited100755 policy permissions; preserved failures; native Linux registered TEMP worktrees pass unchanged exact subjects.",
+    "Initial independent digest helper sorted full index records; corrected path sorting in separately rerun v2 harness.",
+    "Corrected harness final shallow assertion expected lifecycle wording, while correct nonzero risk precheck occurs earlier; all17 raw records have expected direct/trusted exits.",
+    "Immutable runner correctly rejected review-generated pycache; temporary generated paths removed; reruns all pass."
+  ],
+  "lifecycle_transition": {
+    "from": "INDEPENDENT_REVIEW_PENDING",
+    "to": "READY_FOR_OWNER_ACCEPTANCE",
+    "authority": "FRESH_BREAKER"
+  },
+  "owner_acceptance": false,
+  "recommended_next_action": "Verify successful CI on the new metadata head, then obtain separate Owner Acceptance.",
+  "artifact_sha256": {
+    "full-linux-suite.log": "9aba0daaadbae641c5a971c93cf37641e5622d131d89fdabe95634662fa1d3f6",
+    "history-inventory.json": "51b7a2cd6f10116bec7a972387c2a77fa7b733ecd598347fa8155ccfc6463138",
+    "independent-attacks.json": "5f6bb259ff4c2a3be52a1509565a087ef30caf208a4e38933e9908d09f88169e",
+    "independent-harness.txt": "178d7e2857bed9e741e3536d6dd485046c6201858be6989283dae8af48155ca0",
+    "independent-history-audit.json": "2ebe742e99ce6b0aebd2280ae488dad3333edf45d2bc9e7b248358c1514265b4",
+    "nonroot-zero-base.log": "ecf4ad9776000961d03d9825ffb880f7ee6e389faef44ceb7d9e81db6cd2e2f7",
+    "original-read-only-review.json": "75f17d54fb61eadbc7363a04d29e0094f2dba284bdce626b090122a1c03292dd",
+    "reviewed-head-github-verification.log": "f78cf3cfa4531aca6073c19360352150ea3c3b105c29b5474d1550e7b9fc755c",
+    "reviewed-head-github.json": "3dc4ac2c9c6c5957805d4a0221e8c24399967f227678ddda9f8abc0556668045",
+    "reviewed-head-trusted.log": "26fec293bf50798aa841017ac44ad00792d7a8bf41e06f2eb9be3853eaa9eb51"
+  },
+  "metadata_preflight_attempt": {
+    "result": "REJECTED_BEFORE_COMMIT",
+    "reason": "Target SHARED-FB-001 OPEN independent-closure-required blocker initially retained; READY validation correctly refused.",
+    "resolution": "Preserved finding/provenance, appended independent exact-subject verification disposition, changed only SHARED-FB-001 status to VERIFIED. No unrelated finding changed."
+  }
+}

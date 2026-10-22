@@ -1,0 +1,69 @@
+import pathlib,subprocess,json,hashlib,os,sys,tempfile,shutil,datetime
+ROOT=pathlib.Path(__file__).parent
+P=ROOT/'platform'
+OUT=ROOT/'independent-adversarial-v2';OUT.mkdir(exist_ok=True)
+SOURCE=(P/'scripts/verify_review_state.py').read_bytes();RUNNER=(P/'scripts/trusted_verify_review_state.sh').read_bytes();POLICY=json.loads((P/'.steward/verification-policy.yaml').read_text())
+BASH=r'C:\Program Files\Git\bin\bash.exe'
+results=[]
+def cmd(repo,*args,check=True):
+ p=subprocess.run(list(args),cwd=repo,capture_output=True,text=True,encoding='utf-8')
+ if check and p.returncode:raise RuntimeError(p.stdout+p.stderr)
+ return p
+def git(repo,*a):return cmd(repo,'git',*a).stdout.strip()
+def write(repo,p,obj):
+ dest=repo/p;dest.parent.mkdir(parents=True,exist_ok=True);dest.write_text(json.dumps(obj,indent=2)+'\n',encoding='utf-8')
+def commit(repo,msg):git(repo,'add','-A');git(repo,'commit','--allow-empty','-qm',msg);return git(repo,'rev-parse','HEAD')
+def digest(repo):
+ h=hashlib.sha256()
+ raw=subprocess.check_output(['git','ls-files','-s','-z'],cwd=repo)
+ for rec in sorted(raw.split(b'\0'),key=lambda x:x.split(b'\t')[-1]):
+  if not rec:continue
+  meta,path=rec.split(b'\t');mode,oid,stage=meta.split()
+  if path==b'verification/state.yaml' or path.startswith(b'verification/reports/'):continue
+  data=subprocess.check_output(['git','cat-file','blob',oid.decode()],cwd=repo)
+  for label,val in [(b'path',path),(b'mode',mode),(b'index_oid',oid),(b'type',b'regular'),(b'length',str(len(data)).encode()),(b'content',data)]:h.update(label+b'\0'+val+b'\0')
+ return h.hexdigest()
+def fixture(name):
+ repo=OUT/name;repo.mkdir();git(repo,'init','-q');git(repo,'config','user.name','Independent Fresh Breaker');git(repo,'config','user.email','breaker@example.invalid')
+ for p,data in [('scripts/verify_review_state.py',SOURCE),('scripts/trusted_verify_review_state.sh',RUNNER),('src/material.txt',b'initial\n')]:
+  dest=repo/p;dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(data)
+ write(repo,'.steward/verification-policy.yaml',POLICY)
+ state={'authority_mode':'MANUAL_AUTHORITY','status':'PLANNED','previous_status':None,'transition':None,'risk':{'class':'R3'},'evidence':[],'blockers':[]}
+ write(repo,'verification/state.yaml',state);base=commit(repo,'independent root PLANNED')
+ return repo,base,state
+
+def record(repo,state,status,authority,material=False):
+ previous=state['status'];state.update(status=status,previous_status=previous,transition={'from':previous,'to':status,'authority':authority})
+ if material:(repo/'src/material.txt').write_text(status+' '+authority+'\n')
+ git(repo,'add','-A');d=digest(repo);sha=git(repo,'rev-parse','HEAD')
+ roles={'INDEPENDENT_REVIEW_PENDING':('BUILDER','BUILDER_REPORT','BUILDER_GREEN'),'READY_FOR_OWNER_ACCEPTANCE':('FRESH_BREAKER','BREAKER_VERDICT','PASS'),'ACCEPTED':('OWNER','ACCEPTANCE','PASS')}
+ ev=[]
+ if status in roles:
+  role,typ,verdict=roles[status];ev=[dict(id='independent-'+status,type=typ,producer=role,role=role,authority='MANUAL_AUTHORITY',commit_sha=sha,review_subject_digest=d,created_at='2026-10-22T12:00:00Z',verdict=verdict,active=True)]
+ state.update(review_subject_digest=d,review_subject_commit=sha,evidence=ev);write(repo,'verification/state.yaml',state);return commit(repo,status+' by '+authority)
+def accepted(repo,state):
+ for status,role in [('BUILDING','BUILDER'),('INDEPENDENT_REVIEW_PENDING','BUILDER'),('READY_FOR_OWNER_ACCEPTANCE','FRESH_BREAKER'),('ACCEPTED','OWNER')]:record(repo,state,status,role)
+def posix(path):
+ env=dict(os.environ,FB_NATIVE=str(path));return subprocess.check_output([BASH,'--noprofile','--norc','-c','cygpath -u -- "$FB_NATIVE"'],env=env,text=True).strip()
+def check(repo,base,label,expected):
+ direct=cmd(repo,sys.executable,'scripts/verify_review_state.py','--check','--base',base,check=False)
+ runner=ROOT/'immutable-runner.sh';runner.write_bytes(subprocess.check_output(['git','cat-file','blob','HEAD:scripts/trusted_verify_review_state.sh'],cwd=repo))
+ trusted=cmd(ROOT,BASH,'--noprofile','--norc',posix(runner),'--repo-root',posix(repo),'--base',base,check=False)
+ row={'case':label,'repo':str(repo),'head':git(repo,'rev-parse','HEAD'),'base':base,'expected':expected,'direct_exit':direct.returncode,'trusted_exit':trusted.returncode,'direct_stdout':direct.stdout,'direct_stderr':direct.stderr,'trusted_stdout':trusted.stdout,'trusted_stderr':trusted.stderr}
+ results.append(row);(OUT/'results.json').write_text(json.dumps(results,indent=2));print(label,direct.returncode,trusted.returncode,flush=True)
+ if expected!=0 and 'Lifecycle history:' not in direct.stderr:raise RuntimeError('Failure masked history check '+label)
+ if (direct.returncode==0)!=(expected==0) or (trusted.returncode==0)!=(expected==0):raise RuntimeError('Unexpected result '+label)
+for role in ['OWNER','CI','FRESH_BREAKER']:
+ for material in [False,True]:
+  label=f'illegal-{role}-material-{material}';r,b,s=fixture(label);accepted(r,s);check(r,b,label+'-accepted-control',0)
+  record(r,s,'BUILDING',role,material)
+  for i in range(2):git(r,'commit','--allow-empty','-qm','unrelated carry forward')
+  record(r,s,'INDEPENDENT_REVIEW_PENDING','BUILDER');check(r,git(r,'rev-parse','HEAD'),label,2)
+r,b,s=fixture('legal-reopen');accepted(r,s);record(r,s,'BUILDING','BUILDER',True);record(r,s,'INDEPENDENT_REVIEW_PENDING','BUILDER');check(r,b,'legal-reopen',0)
+r,b,s=fixture('grant-after-invalid');accepted(r,s);p=json.loads(json.dumps(POLICY));edge=next(x for x in p['transitions'] if x['from']=='ACCEPTED' and x['to']=='BUILDING');p['transitions'].remove(edge);write(r,'.steward/verification-policy.yaml',p);commit(r,'revoke edge');record(r,s,'BUILDING','BUILDER');write(r,'.steward/verification-policy.yaml',POLICY);commit(r,'restore edge too late');record(r,s,'INDEPENDENT_REVIEW_PENDING','BUILDER');check(r,b,'later-grant-does-not-rescue',2)
+r,b,s=fixture('divergent-merge');accepted(r,s);tip=git(r,'rev-parse','HEAD');tree=git(r,'write-tree');a=git(r,'commit-tree',tree,'-p',tip,'-m','left');c=git(r,'commit-tree',tree,'-p',tip,'-m','right');merge=git(r,'commit-tree',tree,'-p',a,'-p',c,'-m','divergent merge');git(r,'update-ref','HEAD',merge);check(r,b,'divergent-merge',2)
+r,b,s=fixture('ancestor-merge');accepted(r,s);tip=git(r,'rev-parse','HEAD');tree=git(r,'write-tree');merge=git(r,'commit-tree',tree,'-p',b,'-p',tip,'-m','ancestor adoption');git(r,'update-ref','HEAD',merge);check(r,b,'ancestor-merge',0)
+(r/'.git/shallow').write_text(merge+'\n');check(r,merge,'shallow-history',2)
+print('INDEPENDENT_ADVERSARIAL_COMPLETE',flush=True)
+
+

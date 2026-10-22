@@ -1,0 +1,2106 @@
+{
+  "created_at": "2026-10-22T12:37:39.534736+00:00",
+  "reviewer_role": "FRESH_BREAKER",
+  "authority_mode": "MANUAL_AUTHORITY",
+  "verdict": "PROOF_NOT_ESTABLISHED",
+  "technical_review_result": "No reportable finding; all required technical observations complete and clean. Authorized persistence is blocked by automatic approval review, so overall task is incomplete.",
+  "review_plan": "Exact heads and digests first, immutable historical reconstruction, independent Git histories, direct and immutable runner, six full relevant suites, actual native Windows/Linux CI, shared bytes, first-push workflow routing.",
+  "global_impact": "Index/digest -> state/evidence -> historical policy -> complete Git DAG -> immutable launcher -> Windows/Linux CI -> Steward.",
+  "what_are_we_missing": "Hidden illegal predecessors, skipped commits, later grants/revocations, stale evidence, shallow/missing history, root exception widening, ambiguous merge topology, external identity.",
+  "adversarial_plan_result": {
+    "cases": 17,
+    "executions": 34,
+    "all_expected_exits": true,
+    "mandatory_matrix": "OWNER/CI/FRESH_BREAKER x metadata/material ACCEPTED reopening, two unrelated commits, legal Builder successor, base at final HEAD; both validators reject",
+    "controls": "Six legal ACCEPTED controls; legal Builder reopen; supported ancestor-parent merge",
+    "negative_cases": "Later policy grant, divergent merge, shallow history; actual heads reject ordinary-child all-zero base"
+  },
+  "boundary_audit": {
+    "source_of_truth": "immutable Git snapshots and complete DAG",
+    "validation_owner": "trusted validator and fail-closed immutable runner",
+    "authorization_owner": "historical per-commit closed role policy; human/hosting identities external MANUAL_AUTHORITY",
+    "version": "schema1.0, durable-git-dag-v1; unsupported fail closed",
+    "concurrency": "each observation tied to exact SHA; no runtime cache",
+    "retry": "same immutable history remains rejection; later legal state cannot conceal failure",
+    "merge": "all parents validated, exact ancestor-parent state/policy adoption or fail closed"
+  },
+  "future_compatibility": "Stable evidence/state ports preserve future Steward; divergent reconciliation intentionally unsupported pending separate reviewed contract.",
+  "subjects": [
+    {
+      "repository": "SpanFabric/platform",
+      "reviewed_head_sha": "153d8a3db6274f29dc8550f4ae01a42e0c9a7597",
+      "material_sha": "b72785fb18b58f929bdd84688bbebeb6dd1b8142",
+      "digest": "d1f947276d98e8e92811f826b2c440d3be09bd88b45506eeba57f3c9f01f06dc",
+      "base_sha": "eea87c9f1b2c27d568e5c32571503feba84cfac6",
+      "branch": "fix/verification-gate-first-push-20261016",
+      "linux_suite": "Ran 96 tests in 28.123s",
+      "linux_skips": 6,
+      "hosted_windows": "Full exact-head suite and immutable trusted runner success; one Linux-only skip",
+      "lifecycle": "INDEPENDENT_REVIEW_PENDING",
+      "ci_runs": [
+        {
+          "event": "pull_request",
+          "run_id": 39774668903,
+          "jobs": {
+            "id": 119810498129,
+            "name": "bootstrap-integrity",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          "html_url": "https://github.com/SpanFabric/platform/actions/runs/39774668903",
+          "name": "Bootstrap integrity",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "153d8a3db6274f29dc8550f4ae01a42e0c9a7597"
+        },
+        {
+          "event": "pull_request",
+          "run_id": 39774668962,
+          "jobs": [
+            {
+              "id": 119810499344,
+              "name": "windows-trusted-runner",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "id": 119813128743,
+              "name": "verification-gate",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ],
+          "html_url": "https://github.com/SpanFabric/platform/actions/runs/39774668962",
+          "name": "Verification gate",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "153d8a3db6274f29dc8550f4ae01a42e0c9a7597"
+        }
+      ]
+    },
+    {
+      "repository": "SpanFabric/windows",
+      "reviewed_head_sha": "9e89befdb8f2eade4a7800339fe5d4cee96609d5",
+      "material_sha": "d77c5e0fe5661a0affa6be7e19cda2c470edc679",
+      "digest": "ba7c9f3389e5255fa765c668a0def6fef626c93820bdae92001f21fbd9797c86",
+      "base_sha": "2ab28d03fa057920856500b69a2a2dc885f44385",
+      "branch": "fix/verification-gate-first-push-20261016",
+      "linux_suite": "Ran 96 tests in 27.190s",
+      "linux_skips": 6,
+      "hosted_windows": "Full exact-head suite and immutable trusted runner success; one Linux-only skip",
+      "lifecycle": "INDEPENDENT_REVIEW_PENDING",
+      "ci_runs": [
+        {
+          "event": "pull_request",
+          "run_id": 39774680531,
+          "jobs": {
+            "id": 119810537622,
+            "name": "bootstrap-integrity",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          "html_url": "https://github.com/SpanFabric/windows/actions/runs/39774680531",
+          "name": "Bootstrap integrity",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "9e89befdb8f2eade4a7800339fe5d4cee96609d5"
+        },
+        {
+          "event": "pull_request",
+          "run_id": 39774680500,
+          "jobs": [
+            {
+              "id": 119810537698,
+              "name": "windows-trusted-runner",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "id": 119812954642,
+              "name": "verification-gate",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ],
+          "html_url": "https://github.com/SpanFabric/windows/actions/runs/39774680500",
+          "name": "Verification gate",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "9e89befdb8f2eade4a7800339fe5d4cee96609d5"
+        }
+      ]
+    },
+    {
+      "repository": "SpanFabric/host",
+      "reviewed_head_sha": "ae7af99cb160d94bb20c9a364441776f01b693e0",
+      "material_sha": "5533d0ea6cb0771618f7f5f9c3cdd44a8c025436",
+      "digest": "9b7e7a40a04c2293ab454d408854cf9ff82051ad3e02f47fed5b8e0dc94a45ad",
+      "base_sha": "2882a0c8956b7df2baa446d5b3e844643b2e1f8a",
+      "branch": "fix/verification-gate-first-push-20261016",
+      "linux_suite": "Ran 96 tests in 30.536s",
+      "linux_skips": 6,
+      "hosted_windows": "Full exact-head suite and immutable trusted runner success; one Linux-only skip",
+      "lifecycle": "INDEPENDENT_REVIEW_PENDING",
+      "ci_runs": [
+        {
+          "event": "pull_request",
+          "run_id": 39774689809,
+          "jobs": {
+            "id": 119810568297,
+            "name": "bootstrap-integrity",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          "html_url": "https://github.com/SpanFabric/host/actions/runs/39774689809",
+          "name": "Bootstrap integrity",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "ae7af99cb160d94bb20c9a364441776f01b693e0"
+        },
+        {
+          "event": "pull_request",
+          "run_id": 39774689616,
+          "jobs": [
+            {
+              "id": 119810568058,
+              "name": "windows-trusted-runner",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "id": 119812185856,
+              "name": "verification-gate",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ],
+          "html_url": "https://github.com/SpanFabric/host/actions/runs/39774689616",
+          "name": "Verification gate",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "ae7af99cb160d94bb20c9a364441776f01b693e0"
+        }
+      ]
+    },
+    {
+      "repository": "SpanFabric/evals",
+      "reviewed_head_sha": "36295a129c99ed07959d0a14773c4856cc7d93c2",
+      "material_sha": "3d706158ca4fa3486d99af0462b0b5653ff1e333",
+      "digest": "af7e63910d24fb507f86d52553adbfb15a7344a1c0dd778e8337bd8c5f5bbded",
+      "base_sha": "a95824c922548df6072ed2f49c60405d8d6953b4",
+      "branch": "fix/verification-gate-first-push-20261016",
+      "linux_suite": "Ran 96 tests in 45.418s",
+      "linux_skips": 6,
+      "hosted_windows": "Full exact-head suite and immutable trusted runner success; one Linux-only skip",
+      "lifecycle": "INDEPENDENT_REVIEW_PENDING",
+      "ci_runs": [
+        {
+          "event": "pull_request",
+          "run_id": 39774699204,
+          "jobs": {
+            "id": 119810600797,
+            "name": "bootstrap-integrity",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          "html_url": "https://github.com/SpanFabric/evals/actions/runs/39774699204",
+          "name": "Bootstrap integrity",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "36295a129c99ed07959d0a14773c4856cc7d93c2"
+        },
+        {
+          "event": "pull_request",
+          "run_id": 39774699195,
+          "jobs": [
+            {
+              "id": 119810600930,
+              "name": "windows-trusted-runner",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "id": 119813027854,
+              "name": "verification-gate",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ],
+          "html_url": "https://github.com/SpanFabric/evals/actions/runs/39774699195",
+          "name": "Verification gate",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "36295a129c99ed07959d0a14773c4856cc7d93c2"
+        }
+      ]
+    },
+    {
+      "repository": "SpanFabric/docs",
+      "reviewed_head_sha": "5b80beaa6fd3783a3241265916801b6875ec05d1",
+      "material_sha": "25fc8f634e896fb7ba08a287cfe7efaa4c1c842b",
+      "digest": "f242168b280d07b70d27d86e6cd940217a713815e5f3f4cbd4c57cebc72e5567",
+      "base_sha": "0ee004ae6d4b7caa96a666275c65f5412a8b6eee",
+      "branch": "fix/verification-gate-first-push-20261016",
+      "linux_suite": "Ran 142 tests in 86.093s",
+      "linux_skips": 6,
+      "hosted_windows": "Full exact-head suite and immutable trusted runner success; one Linux-only skip",
+      "lifecycle": "INDEPENDENT_REVIEW_PENDING",
+      "ci_runs": [
+        {
+          "event": "pull_request",
+          "run_id": 39774710102,
+          "jobs": {
+            "id": 119810638061,
+            "name": "bootstrap-integrity",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          "html_url": "https://github.com/SpanFabric/docs/actions/runs/39774710102",
+          "name": "Bootstrap integrity",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "5b80beaa6fd3783a3241265916801b6875ec05d1"
+        },
+        {
+          "event": "pull_request",
+          "run_id": 39774710212,
+          "jobs": [
+            {
+              "id": 119810638091,
+              "name": "windows-trusted-runner",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "id": 119813851244,
+              "name": "verification-gate",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ],
+          "html_url": "https://github.com/SpanFabric/docs/actions/runs/39774710212",
+          "name": "Verification gate",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "5b80beaa6fd3783a3241265916801b6875ec05d1"
+        }
+      ]
+    },
+    {
+      "repository": "SpanFabric/.github",
+      "reviewed_head_sha": "746f75e4364d7d7db00989506144573ce90cc125",
+      "material_sha": "174b3f711a34ec02351b20a9a508c1fa3fd95d24",
+      "digest": "7cac1cf98c2d03c0313ada58d62e23d5d5647f5497830cf1f64352829f45d5de",
+      "base_sha": "b13a1444757fbffc08de01476dcc32ec0117de59",
+      "branch": "fix/verification-gate-first-push-20261016",
+      "linux_suite": "Ran 96 tests in 35.515s",
+      "linux_skips": 6,
+      "hosted_windows": "Full exact-head suite and immutable trusted runner success; one Linux-only skip",
+      "lifecycle": "INDEPENDENT_REVIEW_PENDING",
+      "ci_runs": [
+        {
+          "event": "pull_request",
+          "run_id": 39774722077,
+          "jobs": [
+            {
+              "id": 119810677521,
+              "name": "windows-trusted-runner",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "id": 119813269426,
+              "name": "verification-gate",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ],
+          "html_url": "https://github.com/SpanFabric/.github/actions/runs/39774722077",
+          "name": "Verification gate",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "746f75e4364d7d7db00989506144573ce90cc125"
+        },
+        {
+          "event": "pull_request",
+          "run_id": 39774722150,
+          "jobs": {
+            "id": 119810677596,
+            "name": "bootstrap-integrity",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          "html_url": "https://github.com/SpanFabric/.github/actions/runs/39774722150",
+          "name": "Steward baseline integrity",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "746f75e4364d7d7db00989506144573ce90cc125"
+        }
+      ]
+    }
+  ],
+  "history": [
+    {
+      "repo": "platform",
+      "commits": 40,
+      "policy_snapshots": 7,
+      "events": [
+        {
+          "sha": "aea1986b0be4671cf1cb61c48308f40448b0311e",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "09ad29f9d6e82f26591743f0630f8a8634e85a0a"
+        },
+        {
+          "sha": "24225cba91dba59fa3c0e60a3e4c0e70bfdb66b1",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "09ad29f9d6e82f26591743f0630f8a8634e85a0a"
+        },
+        {
+          "sha": "e670e9b99dc955ff542efd7845ab715a193d4c8b",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "09ad29f9d6e82f26591743f0630f8a8634e85a0a"
+        },
+        {
+          "sha": "f7c9ac61e524c4f8a97dff1bd088bdecb08dbbaa",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "09ad29f9d6e82f26591743f0630f8a8634e85a0a"
+        },
+        {
+          "sha": "e8afa7917e8db9c9fd713c4ffa967cfc79cc978c",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "09ad29f9d6e82f26591743f0630f8a8634e85a0a"
+        },
+        {
+          "sha": "5537e6946260ab77862a6ab94b3cb0796681aa66",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "c92e1e3ac21fb36682e8b335cfd0d4a602d99c2e"
+        },
+        {
+          "sha": "b2446f16fe989bf7289d1b053a41934c4a8247b4",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "c92e1e3ac21fb36682e8b335cfd0d4a602d99c2e"
+        },
+        {
+          "sha": "bfb8b93419d1e36d101e81857b22e46c5529a532",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "c92e1e3ac21fb36682e8b335cfd0d4a602d99c2e"
+        },
+        {
+          "sha": "ec6308184b56e7cadf42e5b207df79ce0eaf4946",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "c92e1e3ac21fb36682e8b335cfd0d4a602d99c2e"
+        },
+        {
+          "sha": "e625c13d89752254b4422e67be49ef2edadfde8d",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "f59a145af0daa763bf4b7542d336f592d2f35dee"
+        },
+        {
+          "sha": "04c960d55e84927d6d54d14b58079903dff14a48",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "14715541c8927a685391794b6957c6b3fab9703a",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "6e214381a78871ff1c0ec03cb0898e25e33b9915",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BREAKER_FAILED",
+            "authority": "FRESH_BREAKER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "ed15e1cb3d5f6c8fa3f8571ed79595403a58815f",
+          "transition": {
+            "from": "BREAKER_FAILED",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "8ca0224418743b4f360261e7b27d3fae29812f69",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "eeae1dd3bd0c3e6f200d21f34cdca41f0e1d059e",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BREAKER_FAILED",
+            "authority": "FRESH_BREAKER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "c6de7f3e2d4acc791a21e3360574c801e61a65da",
+          "transition": {
+            "from": "BREAKER_FAILED",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "805dd725831782b3a7aa384273a5f3008e06592b",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "c656d27316893b0a82b8e06161b0a1e380ae91ce",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "11e8439413b9ef1b002d3e1e9fc4bedf9ec2f30b",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "863690031fc9a4a937c51c4333bc0f3f099ae15f",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "ed46b9e8d0ef529dc541eb643a42f39d0063aa49",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "735fe3a7d3edcad85d859408a8191f50a8691892",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "READY_FOR_OWNER_ACCEPTANCE",
+            "authority": "FRESH_BREAKER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "455d454a87655258ae31fe433f00d2438fd9d4ad",
+          "transition": {
+            "from": "READY_FOR_OWNER_ACCEPTANCE",
+            "to": "ACCEPTED",
+            "authority": "OWNER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "eea87c9f1b2c27d568e5c32571503feba84cfac6",
+          "merge_parents": [
+            "c37468e09fd1478fc3ae0c044dbbb60cba2569e9",
+            "455d454a87655258ae31fe433f00d2438fd9d4ad"
+          ],
+          "transition": {
+            "from": "READY_FOR_OWNER_ACCEPTANCE",
+            "to": "ACCEPTED",
+            "authority": "OWNER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "3ecf11112b5b0ca25b2a073ce168d4182ed20db8",
+          "transition": {
+            "from": "ACCEPTED",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "99b8646c180c93445a43fd844b6cf4e514b1e611"
+        },
+        {
+          "sha": "12fb4b2d07cd813beb51b7da061841bcae293790",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "99b8646c180c93445a43fd844b6cf4e514b1e611"
+        },
+        {
+          "sha": "b72785fb18b58f929bdd84688bbebeb6dd1b8142",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "72fe8d3ceb452ce942686f96a87639b3f309c57d"
+        },
+        {
+          "sha": "153d8a3db6274f29dc8550f4ae01a42e0c9a7597",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "72fe8d3ceb452ce942686f96a87639b3f309c57d"
+        }
+      ],
+      "result": "DECLARED_HISTORY_REACHABLE"
+    },
+    {
+      "repo": "windows",
+      "commits": 40,
+      "policy_snapshots": 7,
+      "events": [
+        {
+          "sha": "04e1a5b0f003c1b4986b6263e703262ec1772166",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "09ad29f9d6e82f26591743f0630f8a8634e85a0a"
+        },
+        {
+          "sha": "ffe72cbf69b8d52fd93eaea33783dd74213b4c97",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "09ad29f9d6e82f26591743f0630f8a8634e85a0a"
+        },
+        {
+          "sha": "a33bf8a3a909ac9e08025836135741753ddb07da",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "09ad29f9d6e82f26591743f0630f8a8634e85a0a"
+        },
+        {
+          "sha": "0b37ba57a53bd95e3c89eb7b8976bc1f0d8da8e7",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "09ad29f9d6e82f26591743f0630f8a8634e85a0a"
+        },
+        {
+          "sha": "55c95d9b022c4fb3d0b2e355b5cd730091b3ccd0",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "09ad29f9d6e82f26591743f0630f8a8634e85a0a"
+        },
+        {
+          "sha": "ef636e4d04e966d78a9a0daacdecdc2d6bc8f3d7",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "c92e1e3ac21fb36682e8b335cfd0d4a602d99c2e"
+        },
+        {
+          "sha": "1e2e0308ae04ac9fa44bb36c77d4edcb48f4a2cc",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "c92e1e3ac21fb36682e8b335cfd0d4a602d99c2e"
+        },
+        {
+          "sha": "4d801f4768e3501eb5699980196a41970547f7e6",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "c92e1e3ac21fb36682e8b335cfd0d4a602d99c2e"
+        },
+        {
+          "sha": "d44bb3ecb00bd0504fe7b6f0641e22f5f1f5a610",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "c92e1e3ac21fb36682e8b335cfd0d4a602d99c2e"
+        },
+        {
+          "sha": "93d9caaf236eb515bd67015040100c7ba4ae0efd",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "f59a145af0daa763bf4b7542d336f592d2f35dee"
+        },
+        {
+          "sha": "574b270b2e008935bfa217387aa1f8f43e9931e9",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "bf101e0d45df26efb82cbd08726bc022e8df2d8c",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "590501ba3d9a619b510340f5915df087292a08c7",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BREAKER_FAILED",
+            "authority": "FRESH_BREAKER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "8a23409f76ad1b72407e58129c804afaaaf86a88",
+          "transition": {
+            "from": "BREAKER_FAILED",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "d81c37056579c0fff35b3487eb0b161638963efb",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "6ac5820884daaf5eba5d11ddf855488b40ffbd71",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BREAKER_FAILED",
+            "authority": "FRESH_BREAKER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "b7e5309505e1a84747a19851901e7c87f5a5fcb6",
+          "transition": {
+            "from": "BREAKER_FAILED",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "4c61771b447716d3cf4d369a8125352ee06018c3",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "08be876ea934dde4d8a443e9d23cd8d1807f8aff",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "7849ec71953145fb7f223ad4f52b0a892a20eb58",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "79503ad2b5ceaa8e06032f09586e7c4d667b91d1",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "e84409965faf2014e1aae61075f0ddbe31733e76",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "956e419032ecb350c573d42bca63c9139c4a87c8",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "READY_FOR_OWNER_ACCEPTANCE",
+            "authority": "FRESH_BREAKER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "a41e1e049529f3f238fabaf7c85d08f36ac6aa73",
+          "transition": {
+            "from": "READY_FOR_OWNER_ACCEPTANCE",
+            "to": "ACCEPTED",
+            "authority": "OWNER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "2ab28d03fa057920856500b69a2a2dc885f44385",
+          "merge_parents": [
+            "e3fd92a90238da183fc1ff8ff568301fcb18dd1f",
+            "a41e1e049529f3f238fabaf7c85d08f36ac6aa73"
+          ],
+          "transition": {
+            "from": "READY_FOR_OWNER_ACCEPTANCE",
+            "to": "ACCEPTED",
+            "authority": "OWNER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "43e408c501f79612c1865bd7ae03f3141d0f6d65",
+          "transition": {
+            "from": "ACCEPTED",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "99b8646c180c93445a43fd844b6cf4e514b1e611"
+        },
+        {
+          "sha": "83c6de7ae1406c103a35daa69d6e8c8bf8f48eaa",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "99b8646c180c93445a43fd844b6cf4e514b1e611"
+        },
+        {
+          "sha": "d77c5e0fe5661a0affa6be7e19cda2c470edc679",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "72fe8d3ceb452ce942686f96a87639b3f309c57d"
+        },
+        {
+          "sha": "9e89befdb8f2eade4a7800339fe5d4cee96609d5",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "72fe8d3ceb452ce942686f96a87639b3f309c57d"
+        }
+      ],
+      "result": "DECLARED_HISTORY_REACHABLE"
+    },
+    {
+      "repo": "host",
+      "commits": 40,
+      "policy_snapshots": 7,
+      "events": [
+        {
+          "sha": "86bacd89c11fb778aef24a9fa95b323bf36b65ad",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "09ad29f9d6e82f26591743f0630f8a8634e85a0a"
+        },
+        {
+          "sha": "4d46e787789fb53092b87f483d2acd2cd714a1c0",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "09ad29f9d6e82f26591743f0630f8a8634e85a0a"
+        },
+        {
+          "sha": "80c994bb8a7b5f181e7a3c59fe32c2708ee3738a",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "09ad29f9d6e82f26591743f0630f8a8634e85a0a"
+        },
+        {
+          "sha": "1b1fbe05706af08ddca289d2e6eb12e98a960047",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "09ad29f9d6e82f26591743f0630f8a8634e85a0a"
+        },
+        {
+          "sha": "2acf7ced63a4c0ba04d918a5eeefb7a75e5be150",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "09ad29f9d6e82f26591743f0630f8a8634e85a0a"
+        },
+        {
+          "sha": "75472fdb4c543a83ee6232012886303e74ac4f02",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "c92e1e3ac21fb36682e8b335cfd0d4a602d99c2e"
+        },
+        {
+          "sha": "1aaf654b0ef1b4fbb02e47cac4a21daea8e63619",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "c92e1e3ac21fb36682e8b335cfd0d4a602d99c2e"
+        },
+        {
+          "sha": "c761068c345514e4aa95a37aa6d11fa6541ad429",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "c92e1e3ac21fb36682e8b335cfd0d4a602d99c2e"
+        },
+        {
+          "sha": "0675d9fca7daea7feb460287a6fe64e4ee6ef427",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "c92e1e3ac21fb36682e8b335cfd0d4a602d99c2e"
+        },
+        {
+          "sha": "74c187738ca523e051871c41dad68765df82cba0",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "f59a145af0daa763bf4b7542d336f592d2f35dee"
+        },
+        {
+          "sha": "2717d083688e80d8a94e0b0be79fba9deb28361d",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "be34b359006525bb569346e18ab1033ceee83514",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "545b2c9cdf929a4293307983b801a6e79eba93a3",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BREAKER_FAILED",
+            "authority": "FRESH_BREAKER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "132677c7a427114fd99f0601138f39a7742b1899",
+          "transition": {
+            "from": "BREAKER_FAILED",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "7a6b0b96871d26e5300242b7a1dd8e0e97622362",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "c8e62cb916d0449941b7210df3da7d2f2b2f4d22",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BREAKER_FAILED",
+            "authority": "FRESH_BREAKER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "7e130c12a79380643c78deda7578eb1f37e3eebc",
+          "transition": {
+            "from": "BREAKER_FAILED",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "04cc732561cba9f757707d4fddf2a47fae162093",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "8add746bb7b1f2e50b796a4a575756d54fb67ef7",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "e85cf66bf3261a12eecc708fac5529a6d1ab8aac",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "85414abc3aa20d2459a5f147c090db9578a0d236",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "3da96bc1dd844228126e39c4c2f353b5254d03c0",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "f0d97078c82f64ded7ae1bde3d738fd1e78fa924",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "READY_FOR_OWNER_ACCEPTANCE",
+            "authority": "FRESH_BREAKER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "19bf28ebfb94f6fae594066a17036b8facee5ea6",
+          "transition": {
+            "from": "READY_FOR_OWNER_ACCEPTANCE",
+            "to": "ACCEPTED",
+            "authority": "OWNER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "2882a0c8956b7df2baa446d5b3e844643b2e1f8a",
+          "merge_parents": [
+            "6426f89d5aee024cfda8a6f7035b49c267188990",
+            "19bf28ebfb94f6fae594066a17036b8facee5ea6"
+          ],
+          "transition": {
+            "from": "READY_FOR_OWNER_ACCEPTANCE",
+            "to": "ACCEPTED",
+            "authority": "OWNER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "ac93e3ee80ef96ffb90c4b11151dd4a8542b407d",
+          "transition": {
+            "from": "ACCEPTED",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "99b8646c180c93445a43fd844b6cf4e514b1e611"
+        },
+        {
+          "sha": "1155c885a7abeeea8ce847ec1c7774f34029b9eb",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "99b8646c180c93445a43fd844b6cf4e514b1e611"
+        },
+        {
+          "sha": "5533d0ea6cb0771618f7f5f9c3cdd44a8c025436",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "72fe8d3ceb452ce942686f96a87639b3f309c57d"
+        },
+        {
+          "sha": "ae7af99cb160d94bb20c9a364441776f01b693e0",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "72fe8d3ceb452ce942686f96a87639b3f309c57d"
+        }
+      ],
+      "result": "DECLARED_HISTORY_REACHABLE"
+    },
+    {
+      "repo": "evals",
+      "commits": 40,
+      "policy_snapshots": 7,
+      "events": [
+        {
+          "sha": "7a986e6cbbdbd98da6a3235ad0cc92bef90e4098",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "09ad29f9d6e82f26591743f0630f8a8634e85a0a"
+        },
+        {
+          "sha": "e30939cda1db4f39d40e475ebcd93bf677f2a189",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "09ad29f9d6e82f26591743f0630f8a8634e85a0a"
+        },
+        {
+          "sha": "61f959a9a79694a31cf2e5fddffaadae0041ec9d",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "09ad29f9d6e82f26591743f0630f8a8634e85a0a"
+        },
+        {
+          "sha": "dd202e16f16198e48ca2af3ff785b88171f90531",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "09ad29f9d6e82f26591743f0630f8a8634e85a0a"
+        },
+        {
+          "sha": "0aa24be409c4e171ae547255be0424129b0fa46b",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "09ad29f9d6e82f26591743f0630f8a8634e85a0a"
+        },
+        {
+          "sha": "3e8c19f96cdb5cfe0eae8af8fefdc38a97d4bd0d",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "c92e1e3ac21fb36682e8b335cfd0d4a602d99c2e"
+        },
+        {
+          "sha": "8454c1ec6bd266ef64f856e92e1820533a538211",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "c92e1e3ac21fb36682e8b335cfd0d4a602d99c2e"
+        },
+        {
+          "sha": "edfbe262531421d1865770325179ba2ed72605a3",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "c92e1e3ac21fb36682e8b335cfd0d4a602d99c2e"
+        },
+        {
+          "sha": "d7a22a8c82725037f7da5fa14cd9437dc5c12b24",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "c92e1e3ac21fb36682e8b335cfd0d4a602d99c2e"
+        },
+        {
+          "sha": "a33176c1420ff6273c7ddf683eee7b3c650072cc",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "f59a145af0daa763bf4b7542d336f592d2f35dee"
+        },
+        {
+          "sha": "457fd42664c56dbc6ad4f7f8ab0f333d18c1d2f4",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "cf977cd24ddbabef89085150c1460c110538baf6",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "55d91424dbd5059af94bf51b18210374613ae0e2",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BREAKER_FAILED",
+            "authority": "FRESH_BREAKER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "98dd52b81ecc2fa3667f0bef8b115d50c7609526",
+          "transition": {
+            "from": "BREAKER_FAILED",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "4f7483c923530d2b696f5d575bcece1d11eca13f",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "1e4ab8a6efb5d67cc2b41b57454a7a9749bb1383",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BREAKER_FAILED",
+            "authority": "FRESH_BREAKER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "a08e07d90a3015417fde30e520ee1120c03ecd10",
+          "transition": {
+            "from": "BREAKER_FAILED",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "e9dc9a358c7ada0ac395d97c21ba71ea14515ea5",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "2479ffd553a67f1395d174ba1aa50ae09058c1b1",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "ac66bdc87739e0f015aa2b4c0746d192b974caec",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "10f54a09cd850d61e719cfc98042bf1fada52c69",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "84edd52ea5fa6f49b8fa4de37786e4e9a4e3f8d2",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "8703170eddf09207ee5ec9eef50520da58815141",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "READY_FOR_OWNER_ACCEPTANCE",
+            "authority": "FRESH_BREAKER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "2dde2bece9720fec1a7b639813638b23725c577b",
+          "transition": {
+            "from": "READY_FOR_OWNER_ACCEPTANCE",
+            "to": "ACCEPTED",
+            "authority": "OWNER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "a95824c922548df6072ed2f49c60405d8d6953b4",
+          "merge_parents": [
+            "24ab8eff02a740bff35d8de0e4411085c4c2eae5",
+            "2dde2bece9720fec1a7b639813638b23725c577b"
+          ],
+          "transition": {
+            "from": "READY_FOR_OWNER_ACCEPTANCE",
+            "to": "ACCEPTED",
+            "authority": "OWNER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "285b616aec193af06c5e3482bc05570349903027",
+          "transition": {
+            "from": "ACCEPTED",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "99b8646c180c93445a43fd844b6cf4e514b1e611"
+        },
+        {
+          "sha": "aed0ed4c90ae4a8eb28c9ce775f93ef2c63c4170",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "99b8646c180c93445a43fd844b6cf4e514b1e611"
+        },
+        {
+          "sha": "3d706158ca4fa3486d99af0462b0b5653ff1e333",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "72fe8d3ceb452ce942686f96a87639b3f309c57d"
+        },
+        {
+          "sha": "36295a129c99ed07959d0a14773c4856cc7d93c2",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "72fe8d3ceb452ce942686f96a87639b3f309c57d"
+        }
+      ],
+      "result": "DECLARED_HISTORY_REACHABLE"
+    },
+    {
+      "repo": "docs",
+      "commits": 60,
+      "policy_snapshots": 7,
+      "events": [
+        {
+          "sha": "c51703f98edd83d7773df1fad54c06c3a1de1416",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "09ad29f9d6e82f26591743f0630f8a8634e85a0a"
+        },
+        {
+          "sha": "7b8df8d228ca9d8fe2d8d990ebe64c68482d3107",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "09ad29f9d6e82f26591743f0630f8a8634e85a0a"
+        },
+        {
+          "sha": "e37045049f816047ed89532954725541e88b4334",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "09ad29f9d6e82f26591743f0630f8a8634e85a0a"
+        },
+        {
+          "sha": "aa55c23fbab093f01fae51c93f24c51c8a35e2a5",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "09ad29f9d6e82f26591743f0630f8a8634e85a0a"
+        },
+        {
+          "sha": "10b3e7865145b3eac180c0c2b2b87840fb2761c5",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "09ad29f9d6e82f26591743f0630f8a8634e85a0a"
+        },
+        {
+          "sha": "e208384433b137cb364e7ab64a589cd2becff058",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "c92e1e3ac21fb36682e8b335cfd0d4a602d99c2e"
+        },
+        {
+          "sha": "167f3a570114ca89dc65173c8f3a764005cf3e63",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "c92e1e3ac21fb36682e8b335cfd0d4a602d99c2e"
+        },
+        {
+          "sha": "57ab246dc7089fa9ae2af5ce03930865914fcc4d",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "c92e1e3ac21fb36682e8b335cfd0d4a602d99c2e"
+        },
+        {
+          "sha": "cabc174010e341c5be8f6edfbef457517e8380e1",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "c92e1e3ac21fb36682e8b335cfd0d4a602d99c2e"
+        },
+        {
+          "sha": "9dc18d85a1c6d7d3499a13ad168f2b46affef077",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "f59a145af0daa763bf4b7542d336f592d2f35dee"
+        },
+        {
+          "sha": "df160a2384da222be4f0a7875ed70b6713daa0dd",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "f59a145af0daa763bf4b7542d336f592d2f35dee"
+        },
+        {
+          "sha": "db3277a8ff28b3ce6e794ed7897369868d871c49",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "f59a145af0daa763bf4b7542d336f592d2f35dee"
+        },
+        {
+          "sha": "5c3840c26a8e358bca03b92033cc487456f36d1a",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "f59a145af0daa763bf4b7542d336f592d2f35dee"
+        },
+        {
+          "sha": "98277277b74f4e29223b3a109c86c65ba1111783",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "f59a145af0daa763bf4b7542d336f592d2f35dee"
+        },
+        {
+          "sha": "d7358c3518f0b89f1d9289a926a84e3b3d812392",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "f59a145af0daa763bf4b7542d336f592d2f35dee"
+        },
+        {
+          "sha": "324778aca19aa8eb0201a4c9f1e027a8c3eefdc1",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "f59a145af0daa763bf4b7542d336f592d2f35dee"
+        },
+        {
+          "sha": "1b5338b4de887da83ee0a55ea2a3f089a8a3750e",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "f59a145af0daa763bf4b7542d336f592d2f35dee"
+        },
+        {
+          "sha": "a5fd688ab8b846b346db3b32aa7f76c34b455324",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "f59a145af0daa763bf4b7542d336f592d2f35dee"
+        },
+        {
+          "sha": "9ab066993f6684586708c67fc58ab0c2b85562c9",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "READY_FOR_OWNER_ACCEPTANCE",
+            "authority": "FRESH_BREAKER"
+          },
+          "policy_oid": "f59a145af0daa763bf4b7542d336f592d2f35dee"
+        },
+        {
+          "sha": "5eebafd863abea78a2fc8a0f2e96485f1da2eaa2",
+          "transition": {
+            "from": "READY_FOR_OWNER_ACCEPTANCE",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "c69d74286e77d96b6ed6bdcde38fde69a3148b32",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "a35b9d329e5064c3e4f6b0ce3ba7d88baf031cb6",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BREAKER_FAILED",
+            "authority": "FRESH_BREAKER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "1795995a54ef045df1738d1a40608ecdc1dcbbc0",
+          "transition": {
+            "from": "BREAKER_FAILED",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "9ce34a6d4eecd8d0bc70f70670492256e806ffe5",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "385bdaba4cdb54046bb8230bcb020e61880f129c",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BREAKER_FAILED",
+            "authority": "FRESH_BREAKER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "33e51577537aacf7013a05bccf23f357f5abc6ed",
+          "transition": {
+            "from": "BREAKER_FAILED",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "7a7a2807326db612c021bdc590d606a3d1d7caa4",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "8846c1127e953e609bb3683d2a24716e05f6d72b",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "05a26283ce96701003a7dad6566c6addce52ad41",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "982e66d2c08f986431607f89c02e18d0397b29ac",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "40ea9b8fe60d5589d645fef7a4ee00eaeeedcf27",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "574fc0576c679b86f6e14645d75abfd3951a3d1c",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "READY_FOR_OWNER_ACCEPTANCE",
+            "authority": "FRESH_BREAKER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "d1bd4d060d82cccf55ebc574f03f650513d4590e",
+          "transition": {
+            "from": "READY_FOR_OWNER_ACCEPTANCE",
+            "to": "ACCEPTED",
+            "authority": "OWNER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "0ee004ae6d4b7caa96a666275c65f5412a8b6eee",
+          "merge_parents": [
+            "b622dd3d21cc1cebdf07d7de344ece1a32fb34bd",
+            "d1bd4d060d82cccf55ebc574f03f650513d4590e"
+          ],
+          "transition": {
+            "from": "READY_FOR_OWNER_ACCEPTANCE",
+            "to": "ACCEPTED",
+            "authority": "OWNER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "71669e576874c797003999091d00a8b1bf132ba6",
+          "transition": {
+            "from": "ACCEPTED",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "99b8646c180c93445a43fd844b6cf4e514b1e611"
+        },
+        {
+          "sha": "f67425b7cca718af2267c0d97b907363cdd3f3b6",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "99b8646c180c93445a43fd844b6cf4e514b1e611"
+        },
+        {
+          "sha": "25fc8f634e896fb7ba08a287cfe7efaa4c1c842b",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "72fe8d3ceb452ce942686f96a87639b3f309c57d"
+        },
+        {
+          "sha": "5b80beaa6fd3783a3241265916801b6875ec05d1",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "72fe8d3ceb452ce942686f96a87639b3f309c57d"
+        }
+      ],
+      "result": "DECLARED_HISTORY_REACHABLE"
+    },
+    {
+      "repo": ".github",
+      "commits": 41,
+      "policy_snapshots": 7,
+      "events": [
+        {
+          "sha": "c8bd930c0984715ac075b89a53972f5779a19f73",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "09ad29f9d6e82f26591743f0630f8a8634e85a0a"
+        },
+        {
+          "sha": "0adf53a72ebae57da8d185fe3b4ca60da1157bb5",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "09ad29f9d6e82f26591743f0630f8a8634e85a0a"
+        },
+        {
+          "sha": "7b4e73e9bd2f140c9e085978b3a2a7a063fa0a87",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "09ad29f9d6e82f26591743f0630f8a8634e85a0a"
+        },
+        {
+          "sha": "f2016b57152723a753c973a6d1d2165682c5d4cc",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "09ad29f9d6e82f26591743f0630f8a8634e85a0a"
+        },
+        {
+          "sha": "2a0e206432201a42b748f9ba6575b603588a78a2",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "09ad29f9d6e82f26591743f0630f8a8634e85a0a"
+        },
+        {
+          "sha": "218c2415ebde4a8c7d15cc71f82c4a08d86ae7b2",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "c92e1e3ac21fb36682e8b335cfd0d4a602d99c2e"
+        },
+        {
+          "sha": "b21aea9260b7f387244de4a7995acd167faf159a",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "c92e1e3ac21fb36682e8b335cfd0d4a602d99c2e"
+        },
+        {
+          "sha": "a72c47899295fe35522ae039e168a025adc1b257",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "c92e1e3ac21fb36682e8b335cfd0d4a602d99c2e"
+        },
+        {
+          "sha": "e72006758b59a4a7ab663863ed8f76db73f06e3f",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "c92e1e3ac21fb36682e8b335cfd0d4a602d99c2e"
+        },
+        {
+          "sha": "89031b9f7a6efe479886b5e627a9cc35c6934fb4",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "f59a145af0daa763bf4b7542d336f592d2f35dee"
+        },
+        {
+          "sha": "ca14508cb97a4d67b128614c1a3d7fce95f48e78",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "cedf0d240daff98ef6e243782326b9119825e940",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "a6dc32a2733eb6db87c1f6b49ba55643e790ebeb",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BREAKER_FAILED",
+            "authority": "FRESH_BREAKER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "b32c93576b734664efd96fbbd58f2dd3e3a55ffc",
+          "transition": {
+            "from": "BREAKER_FAILED",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "ba450a9ea810b8305cd624f7840e4131bce82fd8",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "e893cdb4529d85eb3b5f9fa7142755b9b2941f68",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BREAKER_FAILED",
+            "authority": "FRESH_BREAKER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "5326b37de6587e6fbf3bce565b70cdb818ae2131",
+          "transition": {
+            "from": "BREAKER_FAILED",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "8243bf62b3fb4ac63adc2e627284183ebd5d4b7c",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "93b87e79efd1089b2714bbf42df5b610df204f50",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "2be69a8b90df19527d2e4e339cf263898fb2725a",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "3a399ed9f9d34dffa66c1c6f2a975ca519960c19",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "b278e2bbd6fea271abb054ad31bb8c8f4b8b69a5",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "ba396117f1ed1c258a61caf5de25583135def257",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "READY_FOR_OWNER_ACCEPTANCE",
+            "authority": "FRESH_BREAKER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "c53ae698dac4d55e227e33deb1ac9cebf03df9e0",
+          "transition": {
+            "from": "READY_FOR_OWNER_ACCEPTANCE",
+            "to": "ACCEPTED",
+            "authority": "OWNER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "b13a1444757fbffc08de01476dcc32ec0117de59",
+          "merge_parents": [
+            "33b283803016646af8ab8fba0334dacad1e37067",
+            "c53ae698dac4d55e227e33deb1ac9cebf03df9e0"
+          ],
+          "transition": {
+            "from": "READY_FOR_OWNER_ACCEPTANCE",
+            "to": "ACCEPTED",
+            "authority": "OWNER"
+          },
+          "policy_oid": "de196978af8f8832d529d2eac17ef497ae51c624"
+        },
+        {
+          "sha": "c94f35b2cd4adbe605fd5d9b1eae62fd8e619c2c",
+          "transition": {
+            "from": "ACCEPTED",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "99b8646c180c93445a43fd844b6cf4e514b1e611"
+        },
+        {
+          "sha": "9227467b2dbb44560522f1756a8aa7d07d97e533",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "99b8646c180c93445a43fd844b6cf4e514b1e611"
+        },
+        {
+          "sha": "174b3f711a34ec02351b20a9a508c1fa3fd95d24",
+          "transition": {
+            "from": "INDEPENDENT_REVIEW_PENDING",
+            "to": "BUILDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "72fe8d3ceb452ce942686f96a87639b3f309c57d"
+        },
+        {
+          "sha": "746f75e4364d7d7db00989506144573ce90cc125",
+          "transition": {
+            "from": "BUILDING",
+            "to": "INDEPENDENT_REVIEW_PENDING",
+            "authority": "BUILDER"
+          },
+          "policy_oid": "72fe8d3ceb452ce942686f96a87639b3f309c57d"
+        }
+      ],
+      "result": "DECLARED_HISTORY_REACHABLE"
+    }
+  ],
+  "tests": {
+    "full_linux_total": 622,
+    "linux_skips": 36,
+    "native_local_platform": "96 tests, OK (skipped=1),676.367s",
+    "six_exact_head_hosted_windows": "Successful full suite and trusted runner all six; actual logs retrieved",
+    "remaining_supplemental_local_windows": "Not relied upon; sequential supplemental run in progress"
+  },
+  "findings": [],
+  "persistence": {
+    "performed": false,
+    "lifecycle_advanced": false,
+    "reason": "Automatic approval review rejected IRP-to-READY Fresh Breaker metadata preparation as premature before metadata-head CI. No rejected command executed; no workaround attempted.",
+    "request": "Owner clarification/approval required for review->metadata commit/push->new exact-head CI ordering."
+  },
+  "attempts": [
+    "Initial WSL python alias absent; corrected in temporary environment.",
+    "WSL tests run from drvfs inherited100755 policy permissions; preserved failures; native Linux registered TEMP worktrees pass unchanged exact subjects.",
+    "Initial independent digest helper sorted full index records; corrected path sorting in separately rerun v2 harness.",
+    "Corrected harness final shallow assertion expected lifecycle wording, while correct nonzero risk precheck occurs earlier; all17 raw records have expected direct/trusted exits.",
+    "Immutable runner correctly rejected review-generated pycache; temporary generated paths removed; reruns all pass."
+  ],
+  "limitations": [
+    "Identity and independence manually asserted; no cryptographic proof.",
+    "External branch hosting controls not newly certified.",
+    "No owner acceptance, merge, UP003, persistence PR, GATE000, or PHASE001 action."
+  ],
+  "recommended_next_action": "Resolve explicit auto-review persistence approval boundary; then append immutable Fresh Breaker records, transition IRP to READY, commit/push excluded metadata and verify new exact-head CI; owner acceptance remains separate.",
+  "artifact_sha256": {
+    "docs-github.json": "f06dff259f406cbfe000961c5a4fb1a011fd250f6af7c0307b535cc47ea3d6f6",
+    "docs-historical-failures.json": "4eb5fc9e68cea147dba24c2aba6e259f0b768e4b0890d3415c033930fcc6b774",
+    "evals-github.json": "08b682bca87d4f65bbc58012b08ef808b2f955b8633dc41ccd56e8756395c48c",
+    "evals-historical-failures.json": "09ade7d824529766c265863e61702cdc3d5c143449c7a203d6a70f338008864c",
+    "github-github.json": "e2cf7a6755cb404308fddde672d80e15d2f51a4f12dc62c8e7d926a3c87a0dc9",
+    "github-historical-failures.json": "3703a5360813c3251240cd1adff939119fd47c67dc4280ba1be9c68e2cbe3849",
+    "host-github.json": "051cb6e58b13de81dda87be6a28e24a6c31358a8790092250c9b02a12b5b0635",
+    "host-historical-failures.json": "b75fde679f69983ed0cef394bc4d4fe72361a68e4abd451cfd663ec43b5487f4",
+    "independent-history-audit.json": "1140ccae12b211af40a2319c31b289d8ef49ac80bbf438c9d6ef5ad7d2d61566",
+    "independent-history-inventory.json": "114081b907abb44cc330c76b31114124f9768dd0b602cf24373926c69dfddb07",
+    "platform-github.json": "0d6264dde6eb906775e256deda80271bb4ea0aed330fe5c06e73f8c161c7cae2",
+    "platform-historical-failures.json": "92c6e76ed43ddcbf319f67f837ca8e67b0ad36c081087a2bbc7278f1397b0ad9",
+    "windows-github.json": "6ed760f523af7313be1226576ccfd43a45ea19b84ec7f32a04c878b234d695eb",
+    "windows-historical-failures.json": "45f9ca5ba383d58712e617bc23f3f99a54514e63cfc9698230b2d916cc797926"
+  }
+}
