@@ -1,0 +1,42 @@
+{
+  "scripts/verify_review_state.py": {
+    "platform": "7ee4d94b50e2ed14fd2dd123df34c024a3e56e0c77c9e8c07afbc09d3f7fdc02",
+    "windows": "7ee4d94b50e2ed14fd2dd123df34c024a3e56e0c77c9e8c07afbc09d3f7fdc02",
+    "host": "7ee4d94b50e2ed14fd2dd123df34c024a3e56e0c77c9e8c07afbc09d3f7fdc02",
+    "evals": "7ee4d94b50e2ed14fd2dd123df34c024a3e56e0c77c9e8c07afbc09d3f7fdc02",
+    "docs": "7ee4d94b50e2ed14fd2dd123df34c024a3e56e0c77c9e8c07afbc09d3f7fdc02",
+    "orggithub": "7ee4d94b50e2ed14fd2dd123df34c024a3e56e0c77c9e8c07afbc09d3f7fdc02"
+  },
+  ".steward/verification-policy.yaml": {
+    "platform": "3fc3522ffc66a88c71adeffafc4e640468d1897c48baf7b145f59725d46727a7",
+    "windows": "3fc3522ffc66a88c71adeffafc4e640468d1897c48baf7b145f59725d46727a7",
+    "host": "3fc3522ffc66a88c71adeffafc4e640468d1897c48baf7b145f59725d46727a7",
+    "evals": "3fc3522ffc66a88c71adeffafc4e640468d1897c48baf7b145f59725d46727a7",
+    "docs": "3fc3522ffc66a88c71adeffafc4e640468d1897c48baf7b145f59725d46727a7",
+    "orggithub": "3fc3522ffc66a88c71adeffafc4e640468d1897c48baf7b145f59725d46727a7"
+  },
+  "verification/MANUAL_AUTHORITY.md": {
+    "platform": "516c16950b687600e523449a2935b2d369df12ab80efc34089889613ec545ae3",
+    "windows": "516c16950b687600e523449a2935b2d369df12ab80efc34089889613ec545ae3",
+    "host": "516c16950b687600e523449a2935b2d369df12ab80efc34089889613ec545ae3",
+    "evals": "516c16950b687600e523449a2935b2d369df12ab80efc34089889613ec545ae3",
+    "docs": "516c16950b687600e523449a2935b2d369df12ab80efc34089889613ec545ae3",
+    "orggithub": "516c16950b687600e523449a2935b2d369df12ab80efc34089889613ec545ae3"
+  },
+  "tests/verification/test_verify_review_state.py": {
+    "platform": "4e93685a8e37cf2c289960b222ef617a6f59fbb08d825354229eedd5cfb34e0d",
+    "windows": "4e93685a8e37cf2c289960b222ef617a6f59fbb08d825354229eedd5cfb34e0d",
+    "host": "4e93685a8e37cf2c289960b222ef617a6f59fbb08d825354229eedd5cfb34e0d",
+    "evals": "4e93685a8e37cf2c289960b222ef617a6f59fbb08d825354229eedd5cfb34e0d",
+    "docs": "4e93685a8e37cf2c289960b222ef617a6f59fbb08d825354229eedd5cfb34e0d",
+    "orggithub": "4e93685a8e37cf2c289960b222ef617a6f59fbb08d825354229eedd5cfb34e0d"
+  },
+  "tests/verification/test_lifecycle_history.py": {
+    "platform": "fc4e66dd65fc4453e9ea590b19b832fa0ce5a0ec8c7f8ddd694af4a36086af87",
+    "windows": "fc4e66dd65fc4453e9ea590b19b832fa0ce5a0ec8c7f8ddd694af4a36086af87",
+    "host": "fc4e66dd65fc4453e9ea590b19b832fa0ce5a0ec8c7f8ddd694af4a36086af87",
+    "evals": "fc4e66dd65fc4453e9ea590b19b832fa0ce5a0ec8c7f8ddd694af4a36086af87",
+    "docs": "fc4e66dd65fc4453e9ea590b19b832fa0ce5a0ec8c7f8ddd694af4a36086af87",
+    "orggithub": "fc4e66dd65fc4453e9ea590b19b832fa0ce5a0ec8c7f8ddd694af4a36086af87"
+  }
+}

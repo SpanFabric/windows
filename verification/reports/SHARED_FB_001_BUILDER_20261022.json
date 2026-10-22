@@ -1,0 +1,307 @@
+{
+  "id": "SHARED-FB-001-BUILDER-WINDOWS-20261022",
+  "type": "BUILDER_REPORT",
+  "producer": "BUILDER",
+  "role": "BUILDER",
+  "authority": "MANUAL_AUTHORITY",
+  "commit_sha": "d77c5e0fe5661a0affa6be7e19cda2c470edc679",
+  "review_subject_digest": "ba7c9f3389e5255fa765c668a0def6fef626c93820bdae92001f21fbd9797c86",
+  "created_at": "2026-10-22T11:55:31.464898Z",
+  "verdict": "BUILDER_GREEN",
+  "active": true,
+  "lifecycle": "INDEPENDENT_REVIEW_PENDING",
+  "finding_input": "Owner-confirmed SHARED-FB-001; independent shared-remediation review, not reused acceptance",
+  "root_cause": "Only the final state transition was checked; base history established risk/ancestry but not reachability. A later legal event concealed a committed illegal reopen.",
+  "chosen_history_model": {
+    "model": "durable-git-dag-v1",
+    "policy_versions": "per-commit-snapshot",
+    "merges": "ancestor-parent-snapshot",
+    "live_state": "head-successor"
+  },
+  "policy_version_semantics": "Commit-local snapshots, atomic prospective grant, no later grant/revocation reinterprets consumed events; closed graph cannot be widened by policy",
+  "historical_scope": "All reachable durable state/policy records and current proposed successor; current full evidence/digest checks remain independently mandatory. This is declared-role reachability, not cryptographic identity or retroactive technical acceptance.",
+  "merge_limit": "Only two-parent ancestor-parent exact state/policy adoption supported. Divergent reconciliation requires separately reviewed model extension; current merge and synthetic PR topologies are checked, not inferred.",
+  "material_paths": [
+    "scripts/verify_review_state.py",
+    ".steward/verification-policy.yaml",
+    "verification/MANUAL_AUTHORITY.md",
+    "tests/verification/test_verify_review_state.py",
+    "tests/verification/test_lifecycle_history.py"
+  ],
+  "tests": {
+    "full_suite": {
+      "count": 96,
+      "exit_code": 0,
+      "seconds": 381.43819260000055,
+      "skips": 1,
+      "skip_reason": "Unix-host rejection checked separately under WSL"
+    },
+    "unix_specific_check": {
+      "count": 1,
+      "exit_code": 0
+    },
+    "history_methods": 24,
+    "trusted_material": {
+      "exit_code": 0
+    },
+    "direct_material": {
+      "exit_code": 0,
+      "authority": "NON_AUTHORITATIVE_DEFENSE_IN_DEPTH"
+    },
+    "git_diff_check": {
+      "exit_code": 0
+    }
+  },
+  "builder_assumption_challenge": [
+    "Wrong OWNER/CI/FRESH_BREAKER reopen hidden by later legal transition rejected, including metadata-only/material and --base HEAD variants",
+    "Unrelated commits do not cut off required state history",
+    "Atomic policy grants apply at that commit; later grants do not legalize old events; revocations do not invalidate consumed events",
+    "Every merge parent checked; only exact two-parent ancestor snapshot adoption allowed; divergent/novel/octopus merges fail closed",
+    "Missing/shallow/grafted/replaced/ambiguous/unknown-version histories cannot provide a bypass",
+    "Root PLANNED and explicit parentless bootstrap retained; fake accepted root and child null base rejected",
+    "Old Owner/Breaker evidence stays inactive and cannot satisfy new digest",
+    "Deliberately removing the history entrypoint in an isolated mutant restores the bypass; guard is necessary",
+    "First-push workflow and Windows prerequisite unchanged; canonical dirty worktrees and parked evidence untouched"
+  ],
+  "raw_artifacts": [
+    {
+      "path": "verification/reports/SHARED_FB_001_20261022/assumption-challenge.json",
+      "sha256": "8102eb00aad677382a6fff50d978deb496d9410ba009e014248d197b8769d3d4",
+      "size": 1328
+    },
+    {
+      "path": "verification/reports/SHARED_FB_001_20261022/direct-material.log",
+      "sha256": "969640816133829622711df8bbc9e79d227711cc89b829414a81e91b34fb6244",
+      "size": 110
+    },
+    {
+      "path": "verification/reports/SHARED_FB_001_20261022/local-tests.log",
+      "sha256": "bd352f161b37d8f7b3e9f16bcc91089b531e5a91491b70530467d007f64b7681",
+      "size": 15149
+    },
+    {
+      "path": "verification/reports/SHARED_FB_001_20261022/shared-consistency.json",
+      "sha256": "aabbf0096dc812770e0ad944e10336e98a33f75773a0459a0eba823b17aa7cc1",
+      "size": 2712
+    },
+    {
+      "path": "verification/reports/SHARED_FB_001_20261022/trusted-material.log",
+      "sha256": "26fec293bf50798aa841017ac44ad00792d7a8bf41e06f2eb9be3853eaa9eb51",
+      "size": 318
+    },
+    {
+      "path": "verification/reports/SHARED_FB_001_20261022/unix-test.log",
+      "sha256": "d7677dcaabd24000d26c22cbcee9b6b7f0178aad95979e126017cb9e0cb5c5b3",
+      "size": 253
+    }
+  ],
+  "cross_repo_change": {
+    "active_phase": "PHASE-000 verification remediation under explicit Owner mandate; no phase/gate advancement",
+    "repositories_and_owners": "All six existing shared bridge repos; no product implementation ownership changed",
+    "boundary_contract_ids": [
+      "SHARED-FB-001",
+      "Manual Verification Bridge v1",
+      "durable-git-dag-v1"
+    ],
+    "canonical_schema_version_change": {
+      "policy_schema": "1.0",
+      "history_validation": {
+        "model": "durable-git-dag-v1",
+        "policy_versions": "per-commit-snapshot",
+        "merges": "ancestor-parent-snapshot",
+        "live_state": "head-successor"
+      }
+    },
+    "producer_guarantees_consumer_assumptions": [
+      {
+        "boundary": "Git objects -> full durable DAG",
+        "producer": "Immutable Git commits/trees/blobs, no replacements",
+        "consumer": "Complete single-root parent closure",
+        "truth": "Git objects, independent of supplied risk base",
+        "validation_owner": "Validator + Builder regressions / later Fresh Breaker",
+        "authority_owner": "Committed policy roles, MANUAL_AUTHORITY",
+        "failure": "Missing/shallow/grafted/unknown format fails closed; preserve attempt"
+      },
+      {
+        "boundary": "Policy snapshot -> transition authority",
+        "producer": "Policy at the same commit, closed role graph",
+        "consumer": "A changed transition starts at actual predecessor status",
+        "truth": "Each immutable policy/state snapshot",
+        "validation_owner": "History interpreter",
+        "authority_owner": "Owner-governed policy; Builder cannot expand role graph",
+        "failure": "Illegal old event remains illegal after later policy changes"
+      },
+      {
+        "boundary": "Skipped commits -> lifecycle chain",
+        "producer": "All reachable commits, including policy-only and metadata-only",
+        "consumer": "Carry-forward projection is not a new event",
+        "truth": "Topological full-history traversal",
+        "validation_owner": "History regressions and trusted validator",
+        "authority_owner": "No implicit actor for unrelated commits",
+        "failure": "Cannot skip rejected predecessor by changing base or restarting"
+      },
+      {
+        "boundary": "Merge topology -> authoritative snapshot",
+        "producer": "Every parent independently validated",
+        "consumer": "Exact state/policy adoption from parent dominating other parent",
+        "truth": "Parent object IDs, snapshot OIDs, ancestry",
+        "validation_owner": "History validator",
+        "authority_owner": "No inferred merge reconciliation authority",
+        "failure": "Divergent/ambiguous/novel/octopus snapshots fail closed"
+      },
+      {
+        "boundary": "HEAD -> live proposed state",
+        "producer": "Validated committed HEAD lifecycle",
+        "consumer": "One legal next event or retained projection",
+        "truth": "HEAD snapshot + current reviewed policy/state",
+        "validation_owner": "Full current validator plus history check",
+        "authority_owner": "Closed transition role",
+        "failure": "Live metadata cannot erase an illegal committed event"
+      },
+      {
+        "boundary": "Root -> bootstrap",
+        "producer": "One real complete parentless root",
+        "consumer": "PLANNED or explicit Builder-only bootstrap token",
+        "truth": "Graph and root policy/state",
+        "validation_owner": "Root/shallow/missing-object tests",
+        "authority_owner": "Builder bootstrap only, no Owner/merge authority",
+        "failure": "No arbitrary accepted checkpoint, no nonroot all-zero base"
+      },
+      {
+        "boundary": "New material -> evidence -> review",
+        "producer": "New SHA and index/tree digest",
+        "consumer": "Only current Builder evidence active; future independent review required",
+        "truth": "Material commit/digest and excluded report records",
+        "validation_owner": "Current authority/digest validator and future Fresh Breaker",
+        "authority_owner": "Builder ceiling INDEPENDENT_REVIEW_PENDING",
+        "failure": "Material delta invalidates old acceptance; never promote on Builder green"
+      },
+      {
+        "boundary": "GitHub event -> required context",
+        "producer": "Existing PR + main-only push workflow",
+        "consumer": "No feature-push duplicate; exact Windows prerequisite success",
+        "truth": "Unchanged committed workflow and exact-head CI",
+        "validation_owner": "Workflow/Windows regressions + GitHub run inspection",
+        "authority_owner": "Hosting controls and Owner, no bypass",
+        "failure": "Non-success fails gate; no CI rerun/delete or altered historical evidence"
+      },
+      {
+        "boundary": "Bridge -> future Steward / post-merge",
+        "producer": "Versioned explicit history semantics and exact subjects",
+        "consumer": "Must not treat current content validity as history proof",
+        "truth": "Policy/manual/record identities",
+        "validation_owner": "Independent integration review",
+        "authority_owner": "Owner/Fresh Breaker/merge/post-merge remain separate",
+        "failure": "Unsupported histories blocked; new bounded remediation, no retroactive authority"
+      }
+    ],
+    "compatibility_sequencing": "Identical five material files across six existing PRs. Immutable historic policies interpreted at each event. No trusted-base cutoff or retroactive grants. Unsupported divergent history fails closed. No partial batch acceptance.",
+    "ci_hardware_plan": "Full native suites + Unix-specific WSL check, actual immutable runner/direct validator, exact-head PR contexts, no feature push run. No GPU hardware claim.",
+    "rollback": "Preserve Git/evidence history; use a newly reviewed bounded remediation subject. No reset/rebase/amend/force push or old acceptance restoration.",
+    "fresh_breaker_scope": "Independently reconstruct full durable DAG, policy versions, role/stale evidence, root/merge semantics, regression inputs, exact CI/head and canonical preservation."
+  },
+  "batch_material_subjects": {
+    "platform": {
+      "repository": "platform",
+      "material_sha": "b72785fb18b58f929bdd84688bbebeb6dd1b8142",
+      "digest": "d1f947276d98e8e92811f826b2c440d3be09bd88b45506eeba57f3c9f01f06dc",
+      "base": "eea87c9f1b2c27d568e5c32571503feba84cfac6",
+      "checks": {
+        "trusted-material": 0,
+        "direct-material": 0,
+        "trusted-final": 0,
+        "direct-final": 0,
+        "windows-final": 0
+      },
+      "suite": {
+        "repository": "platform",
+        "exit_code": 0,
+        "seconds": 380.272933799999
+      },
+      "head": "153d8a3db6274f29dc8550f4ae01a42e0c9a7597"
+    },
+    "windows": {
+      "repository": "windows",
+      "material_sha": "d77c5e0fe5661a0affa6be7e19cda2c470edc679",
+      "digest": "ba7c9f3389e5255fa765c668a0def6fef626c93820bdae92001f21fbd9797c86",
+      "base": "2ab28d03fa057920856500b69a2a2dc885f44385",
+      "checks": {
+        "trusted-material": 0,
+        "direct-material": 0
+      },
+      "suite": {
+        "repository": "windows",
+        "exit_code": 0,
+        "seconds": 381.43819260000055
+      }
+    },
+    "host": {
+      "repository": "host",
+      "material_sha": "5533d0ea6cb0771618f7f5f9c3cdd44a8c025436",
+      "digest": "9b7e7a40a04c2293ab454d408854cf9ff82051ad3e02f47fed5b8e0dc94a45ad",
+      "base": "2882a0c8956b7df2baa446d5b3e844643b2e1f8a",
+      "checks": {
+        "trusted-material": 0,
+        "direct-material": 0
+      },
+      "suite": {
+        "repository": "host",
+        "exit_code": 0,
+        "seconds": 381.23886400000083
+      }
+    },
+    "evals": {
+      "repository": "evals",
+      "material_sha": "3d706158ca4fa3486d99af0462b0b5653ff1e333",
+      "digest": "af7e63910d24fb507f86d52553adbfb15a7344a1c0dd778e8337bd8c5f5bbded",
+      "base": "a95824c922548df6072ed2f49c60405d8d6953b4",
+      "checks": {
+        "trusted-material": 0,
+        "direct-material": 0
+      },
+      "suite": {
+        "repository": "evals",
+        "exit_code": 0,
+        "seconds": 417.0432851000005
+      }
+    },
+    "docs": {
+      "repository": "docs",
+      "material_sha": "25fc8f634e896fb7ba08a287cfe7efaa4c1c842b",
+      "digest": "f242168b280d07b70d27d86e6cd940217a713815e5f3f4cbd4c57cebc72e5567",
+      "base": "0ee004ae6d4b7caa96a666275c65f5412a8b6eee",
+      "checks": {
+        "trusted-material": 0,
+        "direct-material": 0
+      },
+      "suite": {
+        "repository": "docs",
+        "exit_code": 0,
+        "seconds": 505.67310539999926
+      }
+    },
+    "orggithub": {
+      "repository": "orggithub",
+      "material_sha": "174b3f711a34ec02351b20a9a508c1fa3fd95d24",
+      "digest": "7cac1cf98c2d03c0313ada58d62e23d5d5647f5497830cf1f64352829f45d5de",
+      "base": "b13a1444757fbffc08de01476dcc32ec0117de59",
+      "checks": {
+        "trusted-material": 0,
+        "direct-material": 0
+      },
+      "suite": {
+        "repository": "orggithub",
+        "exit_code": 0,
+        "seconds": 416.0336264000016
+      }
+    }
+  },
+  "limitations": [
+    "MANUAL_AUTHORITY does not cryptographically identify a human role",
+    "Conservative merge model explicitly blocks unsupported divergent reconciliation",
+    "Complete history required; no historical-policy or accepted-base grandfathering",
+    "No Fresh Breaker, Owner Acceptance, merge/post-merge verification or gate/phase promotion performed",
+    "Exact-head CI and push absence are recorded in the final external batch handoff after publication; no old CI reused"
+  ],
+  "recommended_next_action": "Fresh independent Breaker at exact updated PR heads after successful CI; do not self-accept."
+}

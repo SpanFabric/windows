@@ -1,0 +1,21 @@
+{
+  "direct": {
+    "exit_code": 2,
+    "stdout": "",
+    "stderr": "VERIFICATION_STATE_INVALID: Lifecycle history: unauthorized durable transition at b5476737e7c59d9a9ce62e74226445dd6d82c42c: {'from': 'ACCEPTED', 'to': 'BUILDING', 'authority': 'OWNER'}\n"
+  },
+  "trusted": {
+    "exit_code": 2,
+    "stdout": "",
+    "stderr": "VERIFICATION_STATE_INVALID: Lifecycle history: unauthorized durable transition at b5476737e7c59d9a9ce62e74226445dd6d82c42c: {'from': 'ACCEPTED', 'to': 'BUILDING', 'authority': 'OWNER'}\n"
+  },
+  "guard_removal_mutant": {
+    "exit_code": 0,
+    "stdout": "REVIEW_SUBJECT_SHA256=91b9a477da1b8a28feb244aa359fa7bdd7f7408b7370ca66499e9ace47ad8eca\nMATERIAL_FILE_COUNT=7\nTRUSTED_RUNNER_GIT_OBJECT=7309dc1e1d484188d7c7cb3c6cabd92cf4cfd4ac\nTRUSTED_VALIDATOR_GIT_OBJECT=bafc1f7aaf4d1dc1b73cea1677cb55afaf32c93a\nTRUSTED_VALIDATOR_COPY_OBJECT=bafc1f7aaf4d1dc1b73cea1677cb55afaf32c93a\n",
+    "stderr": ""
+  },
+  "base": "76c07cfa3207e9132f2594ee3a0a466bcdffc103",
+  "invalid_commit": "b5476737e7c59d9a9ce62e74226445dd6d82c42c",
+  "hidden_history_commit": "b7df979dd2be0f3b1ef123dfec3d22663ca59dec",
+  "interpretation": "The checked regression rejects the original durable chain. Deliberately removing only the history entrypoint in an isolated fixture restores the bypass; no product code was mutated."
+}

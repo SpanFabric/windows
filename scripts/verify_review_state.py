@@ -23,6 +23,27 @@ EXPECTED_EVIDENCE_MATRIX = {
 MERGE_SHA_FIELD = 'resulting_merge_commit_sha'
 POST_MERGE_SUCCESS_VERDICTS = {'PASS', 'POST_MERGE_VERIFIED'}
 POST_MERGE_FAILURE_VERDICTS = {'FAIL', 'FAILED', 'ERROR', 'MERGE_VERIFICATION_FAILED'}
+HISTORY_CONTRACT = {
+    'model': 'durable-git-dag-v1',
+    'policy_versions': 'per-commit-snapshot',
+    'merges': 'ancestor-parent-snapshot',
+    'live_state': 'head-successor',
+}
+TRANSITION_AUTHORITIES = {
+    ('PLANNED', 'BUILDING'): 'BUILDER',
+    ('BUILDING', 'INDEPENDENT_REVIEW_PENDING'): 'BUILDER',
+    ('INDEPENDENT_REVIEW_PENDING', 'BUILDING'): 'BUILDER',
+    ('INDEPENDENT_REVIEW_PENDING', 'BREAKER_FAILED'): 'FRESH_BREAKER',
+    ('INDEPENDENT_REVIEW_PENDING', 'READY_FOR_OWNER_ACCEPTANCE'): 'FRESH_BREAKER',
+    ('BREAKER_FAILED', 'BUILDING'): 'BUILDER',
+    ('READY_FOR_OWNER_ACCEPTANCE', 'BUILDING'): 'BUILDER',
+    ('READY_FOR_OWNER_ACCEPTANCE', 'ACCEPTED'): 'OWNER',
+    ('ACCEPTED', 'BUILDING'): 'BUILDER',
+    ('ACCEPTED', 'MERGED'): 'MERGE_HOSTING_GATE',
+    ('MERGED', 'POST_MERGE_VERIFIED'): 'POST_MERGE_WORKFLOW',
+    ('MERGED', 'MERGE_VERIFICATION_FAILED'): 'POST_MERGE_WORKFLOW',
+    ('MERGE_VERIFICATION_FAILED', 'BUILDING'): 'BUILDER',
+}
 
 class VerificationError(Exception):
     pass
@@ -47,14 +68,14 @@ def run_git(*args: str, check: bool=True) -> subprocess.CompletedProcess[bytes]:
     # The trusted runner may execute this copy as a sandbox identity distinct
     # from the checkout owner. Trust only the explicit repository root, never
     # a wildcard, so Git can still inspect its own index and object database.
-    p=subprocess.run(['git','-c',f'safe.directory={ROOT}',*args], cwd=ROOT, capture_output=True)
+    p=subprocess.run(['git','--no-replace-objects','-c',f'safe.directory={ROOT}',*args], cwd=ROOT, capture_output=True)
     if check and p.returncode != 0:
         raise VerificationError(f"git {' '.join(args)} failed: {p.stderr.decode('utf-8','replace').strip()}")
     return p
 
 def load_json_yaml(path: pathlib.Path) -> Any:
     try:
-        return json.loads(path.read_text(encoding='utf-8'))
+        return json.loads(path.read_text(encoding='utf-8'),object_pairs_hook=history_json_pairs)
     except Exception as e:
         raise VerificationError(f'{path.relative_to(ROOT)} must be JSON-compatible YAML: {e}') from e
 
@@ -335,6 +356,184 @@ def validate_merge_boundary(status: str, state: dict[str,Any], active_current: l
     elif not verdicts.intersection(POST_MERGE_FAILURE_VERDICTS):
         errors.append('MERGE_VERIFICATION_FAILED requires failed POST_MERGE_WORKFLOW evidence for the same resulting merge SHA')
 
+def history_policy(policy: dict[str,Any], where: str) -> None:
+    """Versioned policy snapshots can restrict, never widen the closed role graph."""
+    if not isinstance(policy,dict) or policy.get('schema_version') != '1.0':
+        raise VerificationError(f'Lifecycle history: unsupported policy version at {where}')
+    if 'history_validation' in policy and policy['history_validation'] != HISTORY_CONTRACT:
+        raise VerificationError(f'Lifecycle history: unsupported history contract at {where}')
+    known={state for edge in TRANSITION_AUTHORITIES for state in edge}
+    state_names=policy.get('states')
+    if not isinstance(state_names,list) or not all(isinstance(s,str) for s in state_names) or set(state_names) != known:
+        raise VerificationError(f'Lifecycle history: unsupported state set at {where}')
+    seen=set()
+    transitions=policy.get('transitions')
+    if not isinstance(transitions,list):
+        raise VerificationError(f'Lifecycle history: missing transition policy at {where}')
+    for rule in transitions:
+        if not isinstance(rule,dict):
+            raise VerificationError(f'Lifecycle history: malformed transition policy at {where}')
+        if not isinstance(rule.get('from'),str) or not isinstance(rule.get('to'),str):
+            raise VerificationError(f'Lifecycle history: malformed transition endpoints at {where}')
+        edge=(rule.get('from'),rule.get('to'))
+        if edge in seen or edge not in TRANSITION_AUTHORITIES or rule.get('authorities') != [TRANSITION_AUTHORITIES[edge]]:
+            raise VerificationError(f'Lifecycle history: transition authority drift at {where}: {edge}')
+        seen.add(edge)
+
+def history_projection(state: dict[str,Any], where: str) -> tuple[Any,...]:
+    if not isinstance(state,dict) or state.get('authority_mode') != 'MANUAL_AUTHORITY':
+        raise VerificationError(f'Lifecycle history: malformed state at {where}')
+    status=state.get('status'); previous=state.get('previous_status'); transition=state.get('transition')
+    if not isinstance(status,str) or status not in {value for edge in TRANSITION_AUTHORITIES for value in edge}:
+        raise VerificationError(f'Lifecycle history: unknown state at {where}')
+    if transition is None:
+        if status != 'PLANNED' or previous is not None:
+            raise VerificationError(f'Lifecycle history: missing transition at {where}')
+        return (status,None,None)
+    if not isinstance(transition,dict) or set(transition) != {'from','to','authority'}:
+        raise VerificationError(f'Lifecycle history: malformed transition at {where}')
+    if transition['from'] != previous or transition['to'] != status:
+        raise VerificationError(f'Lifecycle history: transition endpoints mismatch at {where}')
+    return (status,previous,transition['from'],transition['to'],transition['authority'])
+
+def history_step(parent: dict[str,Any], state: dict[str,Any], policy: dict[str,Any], where: str) -> None:
+    current=history_projection(state,where)
+    if current == history_projection(parent,where+' predecessor'):
+        # Reports/digests can change without re-consuming the retained transition.
+        return
+    transition=state.get('transition') or {}
+    if transition.get('from') != parent.get('status'):
+        raise VerificationError(f'Lifecycle history: unreachable predecessor at {where}: '
+                                f'{parent.get("status")} -> {state.get("previous_status")}')
+    if not any(rule == {'from':transition.get('from'),'to':transition.get('to'),
+                        'authorities':[transition.get('authority')]} for rule in policy['transitions']):
+        raise VerificationError(f'Lifecycle history: unauthorized durable transition at {where}: {transition}')
+
+def history_root(state: dict[str,Any], policy: dict[str,Any], where: str) -> None:
+    if history_projection(state,where) == ('PLANNED',None,None):
+        return
+    bootstrap=policy.get('initial_baseline_bootstrap',{})
+    token='INITIAL_BASELINE_BOOTSTRAP_SELF'
+    expected={'from':'BUILDING','to':'INDEPENDENT_REVIEW_PENDING','authority':'BUILDER'}
+    if (bootstrap.get('enabled') is True
+        and bootstrap.get('self_commit_token') == token
+        and bootstrap.get('permitted_role') == 'BUILDER'
+        and bootstrap.get('permitted_type') == 'BUILDER_REPORT'
+        and bootstrap.get('permitted_status') == 'INDEPENDENT_REVIEW_PENDING'
+        and bootstrap.get('permitted_transition') == expected
+        and state.get('transition') == expected
+        and state.get('review_subject_commit') == token
+        and any(ev.get('active',True) and ev.get('producer') == ev.get('role') == 'BUILDER'
+                and ev.get('type') == 'BUILDER_REPORT' and ev.get('commit_sha') == token
+                and ev.get('authority') == 'MANUAL_AUTHORITY' for ev in state.get('evidence',[]))):
+        return
+    raise VerificationError(f'Lifecycle history: root is neither PLANNED nor explicit root bootstrap at {where}')
+
+def history_objects(queries: list[str]) -> list[tuple[str,str,bytes]]:
+    """Batch immutable objects, avoiding per-blob process startup on native Windows."""
+    p=subprocess.run(['git','--no-replace-objects','-c',f'safe.directory={ROOT}','cat-file','--batch'],
+                     cwd=ROOT,input=('\n'.join(queries)+'\n').encode('ascii'),capture_output=True)
+    if p.returncode:
+        raise VerificationError('Lifecycle history: required objects unavailable: '+p.stderr.decode('utf-8','replace'))
+    result=[]; offset=0
+    for query in queries:
+        end=p.stdout.find(b'\n',offset)
+        fields=p.stdout[offset:end].split(); offset=end+1
+        if end < 0 or len(fields)!=3 or not fields[2].isdigit():
+            raise VerificationError(f'Lifecycle history: missing/invalid object {query}')
+        size=int(fields[2]); data=p.stdout[offset:offset+size]; offset+=size
+        if len(data)!=size or p.stdout[offset:offset+1]!=b'\n':
+            raise VerificationError(f'Lifecycle history: incomplete object {query}')
+        offset+=1; result.append((fields[0].decode('ascii'),fields[1].decode('ascii'),data))
+    if offset != len(p.stdout):
+        raise VerificationError('Lifecycle history: unexpected object batch data')
+    return result
+
+def history_tree_entry(data: bytes, name: bytes) -> tuple[str,str]|None:
+    offset=0; result=None; seen=set()
+    while offset < len(data):
+        end=data.find(b'\0',offset)
+        if end<0 or end+21>len(data):
+            raise VerificationError('Lifecycle history: malformed SHA-1 tree')
+        mode,entry=data[offset:end].split(b' ',1)
+        if entry in seen:
+            raise VerificationError('Lifecycle history: duplicate tree entry')
+        seen.add(entry)
+        oid=data[end+1:end+21].hex(); offset=end+21
+        if entry == name:
+            result=mode.decode('ascii'),oid
+    return result
+
+def history_json_pairs(pairs: list[tuple[str,Any]]) -> dict[str,Any]:
+    result={}
+    for key,value in pairs:
+        if key in result:
+            raise ValueError(f'duplicate JSON field {key}')
+        result[key]=value
+    return result
+
+def validate_lifecycle_history(policy: dict[str,Any], state: dict[str,Any]) -> None:
+    """Check every reachable durable state, independent of caller-selected base.
+
+    Policy is effective atomically at its own commit, never retroactively.
+    A merge may only adopt an exact parent snapshot if every other parent is
+    its ancestor. Divergent reconciliation has no implicit authority.
+    """
+    history_policy(policy,'live policy')
+    if policy.get('history_validation') != HISTORY_CONTRACT:
+        raise VerificationError('Lifecycle history: current policy must declare durable-git-dag-v1')
+    if repository_is_shallow():
+        raise VerificationError('Lifecycle history: shallow history cannot establish reachability')
+    graft_path=run_git('rev-parse','--git-path','info/grafts').stdout.decode().strip()
+    graft=pathlib.Path(graft_path)
+    if not graft.is_absolute(): graft=ROOT/graft
+    if graft.exists() and graft.read_bytes().strip():
+        raise VerificationError('Lifecycle history: grafted history is not authoritative')
+    if run_git('rev-parse','--show-object-format').stdout.strip() != b'sha1':
+        raise VerificationError('Lifecycle history: unsupported Git object format')
+    rows=[line.split() for line in run_git('rev-list','--topo-order','--reverse','--parents','HEAD').stdout.decode('ascii').splitlines()]
+    if not rows or sum(len(row)==1 for row in rows)!=1:
+        raise VerificationError('Lifecycle history: one complete root is required')
+    paths=('verification/state.yaml','.steward/verification-policy.yaml','verification','.steward')
+    objects=history_objects([f'{row[0]}:{path}' for row in rows for path in paths])
+    validated={}; json_cache={}
+    for index,row in enumerate(rows):
+        sha,*parents=row
+        if any(parent not in validated for parent in parents):
+            raise VerificationError(f'Lifecycle history: missing parent of {sha}')
+        so,po,st,pt=objects[index*4:index*4+4]
+        if (so[1]!='blob' or po[1]!='blob' or st[1]!='tree' or pt[1]!='tree'
+            or history_tree_entry(st[2],b'state.yaml') != ('100644',so[0])
+            or history_tree_entry(pt[2],b'verification-policy.yaml') != ('100644',po[0])):
+            raise VerificationError(f'Lifecycle history: state/policy must be regular Git blobs at {sha}')
+        for oid,kind,data in (so,po):
+            if oid not in json_cache:
+                try: json_cache[oid]=json.loads(data.decode('utf-8'),object_pairs_hook=history_json_pairs)
+                except (UnicodeError,ValueError) as exc:
+                    raise VerificationError(f'Lifecycle history: invalid JSON snapshot at {sha}') from exc
+        snapshot=json_cache[so[0]]; rules=json_cache[po[0]]
+        history_policy(rules,sha); history_projection(snapshot,sha)
+        if not parents:
+            history_root(snapshot,rules,sha)
+        elif len(parents)==1:
+            history_step(validated[parents[0]][0],snapshot,rules,sha)
+        elif len(parents)==2:
+            selected=[parent for parent in parents
+                      if validated[parent][1:] == (so[0],po[0])
+                      and all(other==parent or run_git('merge-base','--is-ancestor',other,parent,check=False).returncode==0
+                              for other in parents)]
+            if len(selected)!=1:
+                raise VerificationError(f'Lifecycle history: unsupported/ambiguous merge topology at {sha}')
+        else:
+            raise VerificationError(f'Lifecycle history: unsupported octopus merge topology at {sha}')
+        validated[sha]=(snapshot,so[0],po[0])
+    # Uncommitted excluded state is a single proposed successor, not a new root
+    # or an excuse to omit committed intermediate transitions.
+    if len(rows)==1 and allowed_initial_baseline_null_base(policy,state):
+        history_root(state,policy,'live root bootstrap')
+    else:
+        history_step(validated[rows[-1][0]][0],state,policy,'live state')
+
 def validate(base: str|None=None) -> tuple[str,list[str]]:
     unstaged=unstaged_material_paths()
     if unstaged:
@@ -353,12 +552,22 @@ def validate(base: str|None=None) -> tuple[str,list[str]]:
 
     transition=state.get('transition')
     previous=state.get('previous_status')
+    try:
+        head_state=json.loads(run_git('cat-file','blob','HEAD:verification/state.yaml').stdout.decode('utf-8'))
+    except (UnicodeError,ValueError) as exc:
+        raise VerificationError('Lifecycle history: invalid HEAD state') from exc
+    if not isinstance(head_state,dict):
+        raise VerificationError('Lifecycle history: HEAD state must be an object')
+    retained=(status,previous,transition)==tuple(head_state.get(key) for key in ('status','previous_status','transition'))
     if transition:
         frm=transition.get('from'); to=transition.get('to'); authority=transition.get('authority')
         if frm != previous or to != status: errors.append('transition from/to must match previous_status/status')
         allowed=[t for t in policy.get('transitions',[]) if t.get('from')==frm and t.get('to')==to]
-        if not allowed: errors.append(f'Invalid state transition {frm!r} -> {to!r}')
-        elif authority not in set(allowed[0].get('authorities',[])): errors.append(f'Authority {authority!r} cannot perform transition {frm}->{to}')
+        # A retained event was consumed under its historical policy; history
+        # validation below proves that. A new live event uses current policy.
+        if not retained:
+            if not allowed: errors.append(f'Invalid state transition {frm!r} -> {to!r}')
+            elif authority not in set(allowed[0].get('authorities',[])): errors.append(f'Authority {authority!r} cannot perform transition {frm}->{to}')
     elif previous is not None:
         errors.append('previous_status requires a transition record')
     elif status != 'PLANNED':
@@ -426,6 +635,7 @@ def validate(base: str|None=None) -> tuple[str,list[str]]:
     validate_merge_boundary(status,state,active_current,errors)
 
     if errors: raise VerificationError('\n'.join(errors))
+    validate_lifecycle_history(policy,state)
     return digest,material
 
 def main() -> int:

@@ -1,0 +1,6 @@
+test_real_non_windows_bash_fails_native_suitability (test_windows_boundary.WindowsBoundaryTests.test_real_non_windows_bash_fails_native_suitability) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.003s
+
+OK

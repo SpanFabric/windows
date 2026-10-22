@@ -16,37 +16,53 @@
   "evidence_authorization": {
     "BUILDER": {
       "role": "BUILDER",
-      "types": ["BUILDER_REPORT", "REMEDIATION"],
+      "types": [
+        "BUILDER_REPORT",
+        "REMEDIATION"
+      ],
       "authority": "MANUAL_AUTHORITY"
     },
     "CI": {
       "role": "CI",
-      "types": ["CI_RESULT"],
+      "types": [
+        "CI_RESULT"
+      ],
       "authority": "MANUAL_AUTHORITY"
     },
     "FRESH_BREAKER": {
       "role": "FRESH_BREAKER",
-      "types": ["BREAKER_REPORT", "BREAKER_VERDICT"],
+      "types": [
+        "BREAKER_REPORT",
+        "BREAKER_VERDICT"
+      ],
       "authority": "MANUAL_AUTHORITY"
     },
     "SPECIALIST": {
       "role": "SPECIALIST",
-      "types": ["SPECIALIST_VERDICT"],
+      "types": [
+        "SPECIALIST_VERDICT"
+      ],
       "authority": "MANUAL_AUTHORITY"
     },
     "OWNER": {
       "role": "OWNER",
-      "types": ["ACCEPTANCE"],
+      "types": [
+        "ACCEPTANCE"
+      ],
       "authority": "MANUAL_AUTHORITY"
     },
     "MERGE_HOSTING_GATE": {
       "role": "MERGE_HOSTING_GATE",
-      "types": ["MERGE_STATE"],
+      "types": [
+        "MERGE_STATE"
+      ],
       "authority": "MANUAL_AUTHORITY"
     },
     "POST_MERGE_WORKFLOW": {
       "role": "POST_MERGE_WORKFLOW",
-      "types": ["POST_MERGE_VERIFICATION"],
+      "types": [
+        "POST_MERGE_VERIFICATION"
+      ],
       "authority": "MANUAL_AUTHORITY"
     }
   },
@@ -105,6 +121,13 @@
       "to": "ACCEPTED",
       "authorities": [
         "OWNER"
+      ]
+    },
+    {
+      "from": "ACCEPTED",
+      "to": "BUILDING",
+      "authorities": [
+        "BUILDER"
       ]
     },
     {
@@ -241,5 +264,11 @@
     "A material change before Owner Acceptance reopens READY_FOR_OWNER_ACCEPTANCE to BUILDING only through BUILDER; retained prior Fresh BREAKER evidence is historical and cannot satisfy the new material subject.",
     "Authoritative local and CI checks materialize scripts/trusted_verify_review_state.sh and scripts/verify_review_state.py from a Git commit object before repository Python runs. Direct working-tree execution of the validator is advisory defense in depth only.",
     "An omitted base is None and is reserved for non-authoritative digest diagnostics; authoritative --check requires an explicit canonical base SHA. Explicit empty or whitespace base values are invalid."
-  ]
+  ],
+  "history_validation": {
+    "model": "durable-git-dag-v1",
+    "policy_versions": "per-commit-snapshot",
+    "merges": "ancestor-parent-snapshot",
+    "live_state": "head-successor"
+  }
 }

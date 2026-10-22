@@ -323,5 +323,68 @@ class WindowsBoundaryTests(unittest.TestCase):
                 self.helper().bash_path(self.helper().bash(), value)
 
 
+
+def main_and_pr_trigger(document):
+    """Read the deliberately restricted event contract; reject filters/extra events."""
+    match = re.search(r'(?ms)^on:\n(.*?)(?=^\S|\Z)', document)
+    if not match:
+        raise AssertionError('workflow events missing')
+    events = re.fullmatch(
+        r'  pull_request:\n  push:\n    branches:(?: \[([^\]\n]+)\]\n|\n      - ([^\n]+)\n)',
+        match.group(1),
+    )
+    if not events or (events.group(1) or events.group(2)) != 'main':
+        raise AssertionError('require unfiltered pull_request and main-only push')
+    return {'pull_request': True, 'push': ('main',)}
+
+
+class WorkflowTriggerTests(unittest.TestCase):
+    def source(self):
+        return (REPO / '.github/workflows/verification-gate.yml').read_text(encoding='utf-8')
+
+    def test_pr_heads_and_main_push_are_in_scope_feature_first_push_is_not(self):
+        events = main_and_pr_trigger(self.source())
+        self.assertTrue(events['pull_request'])
+        for branch, expected in (('main', True), ('feature/new-product', False),
+                                 ('verification/persist-merge-state-20261016', False),
+                                 ('fix/verification-gate-first-push-20261016', False)):
+            with self.subTest(branch=branch):
+                self.assertEqual(expected, branch in events['push'])
+
+    def test_integrity_event_boundary_matches_verification_gate(self):
+        workflow_dir = REPO / '.github/workflows'
+        integrity = [p for p in (workflow_dir / 'bootstrap-integrity.yml',
+                                 workflow_dir / 'steward-baseline.yml') if p.is_file()]
+        self.assertEqual(1, len(integrity))
+        self.assertEqual(main_and_pr_trigger(self.source()),
+                         main_and_pr_trigger(integrity[0].read_text(encoding='utf-8')))
+
+    def test_contract_rejects_broad_missing_or_filtered_events(self):
+        source = self.source()
+        variants = [
+            source.replace('    branches:\n      - main\n', ''),
+            source.replace('  pull_request:\n', ''),
+            source.replace('      - main\n', '      - feature/*\n'),
+            source.replace('  pull_request:\n', "  pull_request:\n    paths: ['src/**']\n"),
+            source.replace('    branches:\n      - main\n', '    branches:\n      - main\n      - feature/*\n'),
+        ]
+        for document in variants:
+            with self.subTest(document=document):
+                self.assertNotEqual(source, document)
+                with self.assertRaises(AssertionError):
+                    main_and_pr_trigger(document)
+
+    def test_required_context_and_original_base_sources_are_preserved(self):
+        source = self.source()
+        self.assertEqual(['windows-trusted-runner', 'verification-gate'],
+                         re.findall(r'^  ([\w-]+):$', source.split('jobs:\n', 1)[1], re.M))
+        expected = '${{ github.event.pull_request.base.sha || github.event.before }}'
+        for name in ('windows-trusted-runner', 'verification-gate'):
+            with self.subTest(job=name):
+                self.assertEqual([expected], re.findall(r'^\s+BASE_SHA: (.+)$', job(source, name), re.M))
+        assertion_program(source)
+        self.assertNotIn('continue-on-error:', job(source, 'windows-trusted-runner'))
+
+
 if __name__ == "__main__":
     unittest.main()
