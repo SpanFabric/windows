@@ -1,0 +1,222 @@
+{
+  "schema": "independent-review-archive-selection/v1",
+  "producer": "FRESH_BREAKER",
+  "review_id": "MISSING-PARENT-FIXTURE-FRESH-BREAKER-20261022",
+  "destination": {
+    "storage_box": "674903",
+    "logical_archive": "Projekte/SpanGPU/platform/Evidence/archive",
+    "reader_relative_archive": "SpanGPU/platform/Evidence/archive",
+    "writer_scope": "/Projekte/SpanGPU/",
+    "reader_root": "/",
+    "source": "D:/Projekte/SpanGPU/platform/.steward/archive-binding.json"
+  },
+  "upload_executed": false,
+  "classification": "SAFE_PROJECT_EVIDENCE_SELECTED_BY_PRODUCER; not independent privacy proof",
+  "files": [
+    {
+      "path": ".github-native.log",
+      "size": 15572,
+      "sha256": "c6979089753edb6233a27768604bfb49cdcf86d326c18a7ee7ebbccf62e8b77a"
+    },
+    {
+      "path": ".github-unix-configured.log",
+      "size": 15671,
+      "sha256": "06d17b6af2b25881bcec7b7d25fa0e041bdd8a15c905d61b14b789f7ebcbe12b"
+    },
+    {
+      "path": ".github-unix.log",
+      "size": 57219,
+      "sha256": "aeae07ef460a824bdd07a8cfdad90caa452cfc6c2f379e562bce6a58a00acfb2"
+    },
+    {
+      "path": "adjacent-attacks.log",
+      "size": 59,
+      "sha256": "f3a278cbb796363a0bf8667fbb1a08a62997998e1b1e34984cf363210331a90f"
+    },
+    {
+      "path": "adjacent-attacks.py.txt",
+      "size": 1556,
+      "sha256": "b4f1966c1b8fa18f18652e0097009f2a8d3595f50a4d34aab746558e700e60f6"
+    },
+    {
+      "path": "archive-status.json",
+      "size": 1796,
+      "sha256": "fbd6cb1144342980512227e4d842520d209b968afd6e7ba076f9dc57d4daf6ae"
+    },
+    {
+      "path": "bind-subjects.log",
+      "size": 44,
+      "sha256": "c91e2085e9a40303d8b752b643887039c1116a7f3f732ee03dd0d245a8ed5d28"
+    },
+    {
+      "path": "bind-subjects.py.txt",
+      "size": 2863,
+      "sha256": "19a0afa6c1846b8a4e3588417ee6005fe7c4c8868743f6c1e23f112e10a8bf76"
+    },
+    {
+      "path": "capture-ci-scope.log",
+      "size": 60,
+      "sha256": "fad53a8d06c19b6dd8a94f516f4c80a0169a1e7ba7abc469b149a54dd846a0d3"
+    },
+    {
+      "path": "capture-ci-scope.py.txt",
+      "size": 2016,
+      "sha256": "e029e772455d3403bf7961dfb2503d1d87edf02eba8282cab343512b9a233ccb"
+    },
+    {
+      "path": "docs-native.log",
+      "size": 24521,
+      "sha256": "82c8da5593d2a89340c1e9ede8f2565e06e0a0ae6286000fe29efa3596f37d04"
+    },
+    {
+      "path": "docs-unix-configured.log",
+      "size": 24575,
+      "sha256": "a987906eeb05f73e77a248c656ea724d297ddde37823f3eacc81c149e45e2796"
+    },
+    {
+      "path": "docs-unix.log",
+      "size": 65895,
+      "sha256": "6474569b72f76b96f37e23ef76809432908c5fc782eca1dd9c6554386c2ae673"
+    },
+    {
+      "path": "evals-native.log",
+      "size": 15572,
+      "sha256": "f6eb8030fd9f425f974e98c098b6d41fe8e28bf8489c420bb017a5571c894923"
+    },
+    {
+      "path": "evals-unix-configured.log",
+      "size": 15671,
+      "sha256": "71910ff411b394c1ede3710b941f662e4c5a702a81f8995d846d0a11518fe967"
+    },
+    {
+      "path": "evals-unix.log",
+      "size": 57067,
+      "sha256": "0f54f4dfb03b254a406307536a5d542c40f30dccc0868e96cdd01b5bf8cc7ab9"
+    },
+    {
+      "path": "fully-packed-attack-v2.log",
+      "size": 139,
+      "sha256": "5217dee79a69c921693361c08416c44c1bc638a5d59812b50314903e8065ee9f"
+    },
+    {
+      "path": "fully-packed-attack-v2.py.txt",
+      "size": 2230,
+      "sha256": "46559c1e09c22bfbcc2990dd08771a76412aa57ea85e1d92ef75002738f90844"
+    },
+    {
+      "path": "fully-packed-attack.log",
+      "size": 1065,
+      "sha256": "857216fc89d34fff777b15ad00ed8264a7b90e735be9a67cfdf5ed00fb1782d7"
+    },
+    {
+      "path": "fully-packed-attack.py.txt",
+      "size": 2232,
+      "sha256": "0c7f5e69e7f5d3d584ee1d0b9050f5d5efd0a36d4575f419a9a4cb26aa948a27"
+    },
+    {
+      "path": "fully-packed-malformed.json",
+      "size": 1111,
+      "sha256": "ed672c5b1ba4dfdf28f0881ef40d6c0c13dd7be5d3a22edbcd57e496ebaae0dc"
+    },
+    {
+      "path": "history-audit.log",
+      "size": 124,
+      "sha256": "b9b27471fcc6313ba93350cc2d13d9d4ebb45f786bb6c0ffbb82578e7e343149"
+    },
+    {
+      "path": "history-audit.py.txt",
+      "size": 3035,
+      "sha256": "83d00399101f94b7353c42b0efc6e9587f91465612659c0f99cc84bede76b337"
+    },
+    {
+      "path": "host-native.log",
+      "size": 15572,
+      "sha256": "52790c6c77eb6433b89a089a62a6a816c132ea263a44ac6eee092f9b8e0efc16"
+    },
+    {
+      "path": "host-unix-configured.log",
+      "size": 15671,
+      "sha256": "b4c4c1efad32134fba150197d35cfd8fd6a90a6ad9ecde5af33ad3e9f06b057e"
+    },
+    {
+      "path": "host-unix.log",
+      "size": 56991,
+      "sha256": "e9ec21cf8baa260d5b1301dd3baf6a98ee8eb29b5af1dbc7ee032f7a4529a34f"
+    },
+    {
+      "path": "independent-adjacent-attacks.json",
+      "size": 3442,
+      "sha256": "b4db316d0e631ff4a9a8d3c22d3fea2e14a6363788f20e8b57e4c358fbfb5889"
+    },
+    {
+      "path": "independent-attacks.log",
+      "size": 88,
+      "sha256": "f8a29b06b0df31308040906eb7b6efc5e2cc2c523c3f0f274960a5d58e322eb8"
+    },
+    {
+      "path": "independent-attacks.py.txt",
+      "size": 2835,
+      "sha256": "cf37a7fd6f1a3da37d4b7f32b4c0a87c851c5e6a70e8142222720024a2d9ee17"
+    },
+    {
+      "path": "independent-history-audit.json",
+      "size": 46949,
+      "sha256": "92b3d9e027fc9065d04fc4c2ef304ba6193dfa94bd7a3e06bc7aa7ab4a858fed"
+    },
+    {
+      "path": "independent-missing-parent.json",
+      "size": 12551,
+      "sha256": "2b75a3dc130b274d7f6e22cd1a1a4c13a2cd2a4ff68a3494549a3d5f5ea877f0"
+    },
+    {
+      "path": "independent-shared-equivalence.json",
+      "size": 3303,
+      "sha256": "9707af98a688811baf0985f022d6eb44e5e46683abccebc882e4a11f4c426dab"
+    },
+    {
+      "path": "independent-subject-bindings.json",
+      "size": 74402,
+      "sha256": "6a39dbc09146b087c94981487843c97f444ae477a211029f148ebb1ebabbc6de"
+    },
+    {
+      "path": "platform-native.log",
+      "size": 15572,
+      "sha256": "2f4fd9ff4f6a08b0788fdd423177b8de5ac089bb970798c9379aa10e9b50ed70"
+    },
+    {
+      "path": "platform-unix-configured.log",
+      "size": 15671,
+      "sha256": "ecb4c9e4143d5b28a6752fd600b4bc44a0022b00f694ff134bee05634b3a4e9c"
+    },
+    {
+      "path": "platform-unix-native-fs.log",
+      "size": 40008,
+      "sha256": "5f05f2434e8a64ed7ca1f67d2b9e8d659690602348808e9ad74c3620594287f6"
+    },
+    {
+      "path": "platform-unix.log",
+      "size": 57295,
+      "sha256": "1ef795016a10b0442eb8393f146da80e28fa3befa4cea03158d7d27ae59e5d9f"
+    },
+    {
+      "path": "reviewed-head-actions.json",
+      "size": 412355,
+      "sha256": "0267e79b97a1d26f0498e38944ee629cf5c61abe18b723edd6dd02d572c7ff89"
+    },
+    {
+      "path": "windows-native.log",
+      "size": 15572,
+      "sha256": "194846351c8de85b62359fdfbcae47b15e1950a5f6c5c0424a65f7b77a302887"
+    },
+    {
+      "path": "windows-unix-configured.log",
+      "size": 15671,
+      "sha256": "3e83858f69c19b68afda72a04903d6cb58a8ed4088243d2c71b796cd9369e19e"
+    },
+    {
+      "path": "windows-unix.log",
+      "size": 57219,
+      "sha256": "4902066f410d174a7a29a7267ff38e38c92c3f2d9ef0a42e6f71b4df9d40a93f"
+    }
+  ]
+}

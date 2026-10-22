@@ -3,12 +3,12 @@
   "bridge_version": "manual-verification-bridge-v1",
   "repository": "windows",
   "authority_mode": "MANUAL_AUTHORITY",
-  "status": "INDEPENDENT_REVIEW_PENDING",
-  "previous_status": "BUILDING",
+  "status": "READY_FOR_OWNER_ACCEPTANCE",
+  "previous_status": "INDEPENDENT_REVIEW_PENDING",
   "transition": {
-    "from": "BUILDING",
-    "to": "INDEPENDENT_REVIEW_PENDING",
-    "authority": "BUILDER"
+    "from": "INDEPENDENT_REVIEW_PENDING",
+    "to": "READY_FOR_OWNER_ACCEPTANCE",
+    "authority": "FRESH_BREAKER"
   },
   "risk": {
     "class": "R2",
@@ -273,6 +273,19 @@
       "verdict": "BUILDER_GREEN",
       "active": true,
       "report_path": "verification/reports/MISSING_PARENT_FIXTURE_BUILDER_20261022.json"
+    },
+    {
+      "id": "MISSING-PARENT-FIXTURE-FRESH-BREAKER-WINDOWS-20261022",
+      "producer": "FRESH_BREAKER",
+      "role": "FRESH_BREAKER",
+      "authority": "MANUAL_AUTHORITY",
+      "commit_sha": "38b9695b82570b4ba50b529492baf50cac755390",
+      "review_subject_digest": "99e8b432958a0d930fd5394f6052f19410da6f84ce412df1161fed9b88688cb2",
+      "created_at": "2026-10-22T18:01:48.815770+00:00",
+      "type": "BREAKER_REPORT",
+      "verdict": "PASS",
+      "active": true,
+      "report_path": "verification/reports/MISSING_PARENT_FIXTURE_FRESH_BREAKER_20261022/report.json"
     }
   ],
   "remediation_inputs": [
@@ -401,13 +414,23 @@
       "id": "MISSING-PARENT-FIXTURE-001",
       "severity": "HIGH",
       "confirmed": true,
-      "status": "OPEN",
+      "status": "VERIFIED",
       "builder_disposition": "REMEDIATED_PENDING_FRESH_BREAKER",
       "summary": "Post-merge .github run39800181504 failed in missing-parent fixture setup because it assumed a loose object filesystem path; shared test must be storage-layout independent.",
       "historical_failed_run": "https://github.com/SpanFabric/.github/actions/runs/39800181504",
       "builder_material_sha": "38b9695b82570b4ba50b529492baf50cac755390",
       "builder_review_subject_digest": "99e8b432958a0d930fd5394f6052f19410da6f84ce412df1161fed9b88688cb2",
-      "builder_report_path": "verification/reports/MISSING_PARENT_FIXTURE_BUILDER_20261022.json"
+      "builder_report_path": "verification/reports/MISSING_PARENT_FIXTURE_BUILDER_20261022.json",
+      "verification": {
+        "review_id": "MISSING-PARENT-FIXTURE-FRESH-BREAKER-20261022",
+        "evidence_id": "MISSING-PARENT-FIXTURE-FRESH-BREAKER-WINDOWS-20261022",
+        "report_path": "verification/reports/MISSING_PARENT_FIXTURE_FRESH_BREAKER_20261022/report.json",
+        "material_sha": "38b9695b82570b4ba50b529492baf50cac755390",
+        "review_subject_digest": "99e8b432958a0d930fd5394f6052f19410da6f84ce412df1161fed9b88688cb2",
+        "verdict": "FRESH_BREAKER_ACCEPTED",
+        "authority": "FRESH_BREAKER",
+        "reason": "Independently verified actual malformed-history direct/immutable rejection and packed/loose controls with complete six-repository suites."
+      }
     }
   ],
   "initial_baseline_bootstrap": {
