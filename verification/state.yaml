@@ -3,12 +3,12 @@
   "bridge_version": "manual-verification-bridge-v1",
   "repository": "windows",
   "authority_mode": "MANUAL_AUTHORITY",
-  "status": "READY_FOR_OWNER_ACCEPTANCE",
-  "previous_status": "INDEPENDENT_REVIEW_PENDING",
+  "status": "ACCEPTED",
+  "previous_status": "READY_FOR_OWNER_ACCEPTANCE",
   "transition": {
-    "from": "INDEPENDENT_REVIEW_PENDING",
-    "to": "READY_FOR_OWNER_ACCEPTANCE",
-    "authority": "FRESH_BREAKER"
+    "from": "READY_FOR_OWNER_ACCEPTANCE",
+    "to": "ACCEPTED",
+    "authority": "OWNER"
   },
   "risk": {
     "class": "R2",
@@ -246,6 +246,20 @@
       "verdict": "PASS",
       "active": true,
       "report_path": "verification/reports/SHARED_FB_001_FRESH_BREAKER_V2_20261022/report.json"
+    },
+    {
+      "id": "OWNER-ACCEPTANCE-SHARED-FB-001-WINDOWS-20261022",
+      "type": "ACCEPTANCE",
+      "producer": "OWNER",
+      "role": "OWNER",
+      "authority": "MANUAL_AUTHORITY",
+      "owner": "severinafrancic",
+      "commit_sha": "d77c5e0fe5661a0affa6be7e19cda2c470edc679",
+      "review_subject_digest": "ba7c9f3389e5255fa765c668a0def6fef626c93820bdae92001f21fbd9797c86",
+      "created_at": "2026-10-22T13:38:08.987901+00:00",
+      "verdict": "ACCEPTED",
+      "active": true,
+      "report_path": "verification/reports/OWNER_ACCEPTANCE_SHARED_FB_001_20261022.json"
     }
   ],
   "remediation_inputs": [
