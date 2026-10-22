@@ -1,0 +1,185 @@
+{
+  "schema_version": "1.0",
+  "id": "MISSING-PARENT-FIXTURE-FRESH-BREAKER-WINDOWS-20261022",
+  "type": "BREAKER_REPORT",
+  "producer": "FRESH_BREAKER",
+  "role": "FRESH_BREAKER",
+  "authority": "MANUAL_AUTHORITY",
+  "created_at": "2026-10-22T18:01:48.815770+00:00",
+  "verdict": "FRESH_BREAKER_ACCEPTED",
+  "repository": "SpanFabric/windows",
+  "commit_sha": "38b9695b82570b4ba50b529492baf50cac755390",
+  "reviewed_metadata_head": "b8936471e6c009aaae9d37365e08be637f11410d",
+  "base_sha": "f260f7e7a950d46f6efbc08a576e2383e94cfb24",
+  "review_subject_digest": "99e8b432958a0d930fd5394f6052f19410da6f84ce412df1161fed9b88688cb2",
+  "review_plan": "Bind immutable heads/bases and Git-derived material digests; reconstruct requirements and every durable lifecycle snapshot; review shared fixture and real validation/workflow consumers; execute native/Unix suites plus independently constructed adversarial raw Git histories.",
+  "global_impact": "All six repositories share identical changed fixture bytes. Only tests/verification/test_lifecycle_history.py changes materially from each canonical PR base; validators, trusted runner, policy, workflows, docs governance and product runtime remain unchanged by this remediation.",
+  "what_are_we_missing": [
+    "An existing packed parent is not an absent parent merely because a loose object path does not exist.",
+    "Git commit graph acceleration can return exit0 with a missing-object diagnostic and partial ancestry.",
+    "A validator rejection before full-history traversal does not prove the missing-parent invariant.",
+    "Invalid intermediate state cannot be erased by a later valid-looking tip, accepted root, replace ref, shallow boundary or caller-selected base."
+  ],
+  "adversarial_plan": "Create independent raw malformed linear and merge-side histories; prove absent canonical object and available base guard; direct and immutable runner must reject intended ancestry defect. Exercise loose/gc/repack, commitGraph on/off, fully packed malformed commits, before/after valid controls, hidden authority and stale state attacks.",
+  "boundary_audit": {
+    "producer": "Git object database and durable state/policy snapshots",
+    "consumer": "Direct validator and HEAD-materialized immutable Trusted Runner",
+    "source_of_truth": "Exact immutable Git objects; complete original DAG; per-commit policy",
+    "validation": "Canonical SHA/base/digest/preflight separated from full-history reachability",
+    "authorization": "Closed producer/role/type/authority matrix; Fresh Breaker technical readiness only",
+    "storage": "No loose .git/objects/<oid> filesystem dependency; Git plumbing only",
+    "failure": "Missing ancestry rejects; nonzero and exit0 partial-walk outcomes both rejected",
+    "recovery": "Disposable fixture refs restored; valid direct/immutable controls pass with malformed objects retained unreachable",
+    "persistence": "Only excluded report files and state; prior Builder/Owner/Breaker records remain historical and inactive as applicable; no Owner/merge/gate authority",
+    "identity_limit": "Fresh independent agent context established by dispatch; MANUAL_AUTHORITY identity is not cryptographically proven"
+  },
+  "future_compatibility": "Stable durable-git-dag-v1, fixed evidence matrix, material digest, explicit state ports and trusted launcher preserved for future Project Steward composition.",
+  "implementation_review": {
+    "tautology": "Fixture constructs actual malformed Git objects independently of validator result. Expected error selects only among two pre-existing full-history failures based on independent Git walk proof; generic nonzero is never sufficient.",
+    "packed_authenticity": "Committed regression packs valid control history before corruption, proving assumed parent is packed. Supplemental independent attack packs malformed commits themselves, prunes all loose packed copies through Git, proves loose count0 and absent required ancestor.",
+    "real_runner": "Fixture trusted_cli materializes runner from HEAD. Additionally independently materialized exact real-subject runners passed across six repositories.",
+    "restore": "Valid paired history passes direct+immutable before/after. Separate fully packed corruption restores a packed valid history and passes.",
+    "scope": "No validator, policy, workflow, product, migration, UP-003, Gate or phase remediation performed."
+  },
+  "subjects": {
+    "platform": {
+      "head": "0182376898b479e741be6030bad70a085cd9cce0",
+      "base": "459cc37e358cd68887491e6fcb58a0b98e01678f",
+      "material_sha": "afabb588eebeba81f61c259c8b55783e9f8558f4",
+      "digest": "6ea1cfe40e38ff88e86988a3e4125e1eea9e9a659a9744f15b4c2eccd7924ab4",
+      "fixture_sha256": "d77e182c3feebe75fb3cf33f887d8c3f55fbcd004cd30f60a879c09fde733599"
+    },
+    "windows": {
+      "head": "b8936471e6c009aaae9d37365e08be637f11410d",
+      "base": "f260f7e7a950d46f6efbc08a576e2383e94cfb24",
+      "material_sha": "38b9695b82570b4ba50b529492baf50cac755390",
+      "digest": "99e8b432958a0d930fd5394f6052f19410da6f84ce412df1161fed9b88688cb2",
+      "fixture_sha256": "d77e182c3feebe75fb3cf33f887d8c3f55fbcd004cd30f60a879c09fde733599"
+    },
+    "host": {
+      "head": "4f1f84dbdfffa32fb6c089adbcc6e1a52b016b07",
+      "base": "e98e1559e2eca94910a2618097a457b147a51793",
+      "material_sha": "69e20f0249bbcfa235025abc0fe3650665e7da7d",
+      "digest": "1ba241f1dc6ca8025f17adbdeccb7d492350d3cd1662b43c67b916d29efcdfe4",
+      "fixture_sha256": "d77e182c3feebe75fb3cf33f887d8c3f55fbcd004cd30f60a879c09fde733599"
+    },
+    "evals": {
+      "head": "22bf009ae1c32fb966bf98a87fa1c496f40a3e70",
+      "base": "eb03a96418af56eb8d7d7d85bee5b577262d32c7",
+      "material_sha": "d049ea0a32bea04835311f03594bd1b41c86fe69",
+      "digest": "da67a1981f6493cf9f403648ea8e53e504b8b1112b42cffc181fa0466fbc6488",
+      "fixture_sha256": "d77e182c3feebe75fb3cf33f887d8c3f55fbcd004cd30f60a879c09fde733599"
+    },
+    "docs": {
+      "head": "8f4719f876947ac14b2f756ed9ff63911a30109b",
+      "base": "c5df5c2118799821f2f36678b79a98fbcbab665b",
+      "material_sha": "45e0bfef2823364c518be04eafc13700c47c0f8e",
+      "digest": "4544582dc6a85e919ea446cccc99dd09afcf0fea8fdac5c97b67600611709fce",
+      "fixture_sha256": "d77e182c3feebe75fb3cf33f887d8c3f55fbcd004cd30f60a879c09fde733599"
+    },
+    ".github": {
+      "head": "e324f2f2e59a1c1748255c579652fb0d4360330d",
+      "base": "5068eb341e90f05b45144f7cde0fa53466052a0b",
+      "material_sha": "d64de9d700a1d961ae6184921f582f1f74d61d53",
+      "digest": "3c0a241f473aae11d7f0b2755565fc1a1fb7699305ce5696c5c097e44c523f75",
+      "fixture_sha256": "d77e182c3feebe75fb3cf33f887d8c3f55fbcd004cd30f60a879c09fde733599"
+    }
+  },
+  "tests": {
+    "native_windows": {
+      "total": 634,
+      "expected_skips": 6,
+      "result": "PASS",
+      "this_repository_tests": 98,
+      "this_repository_skips": 1
+    },
+    "unix": {
+      "total": 634,
+      "expected_skips": 36,
+      "result": "PASS",
+      "this_repository_tests": 98,
+      "this_repository_skips": 6,
+      "runtime": "WSL Python3.12.3, genuine registered Linux /tmp worktrees, temporary python alias to python3"
+    },
+    "independent_missing_parent_pairs": 12,
+    "independent_fully_packed_pairs": 1,
+    "independent_adjacent_pairs": 6,
+    "all_pairs": "direct validator plus immutable HEAD runner",
+    "actual_six_subjects_direct_and_immutable": "PASS",
+    "independent_complete_dag_policy_timelines": "PASS: 45/45/45/45/65/46 commits",
+    "shared_six_way_byte_equivalence": "PASS",
+    "reviewed_head_github_actions": "18 exact-head completed/success checks; actual github-actions app/run mapping; 12 pull_request runs; no feature-push Verification gate"
+  },
+  "preserved_failed_attempts": [
+    {
+      "attempt": "Unix suites from Windows-mounted worktrees",
+      "result": "Each six: 36 failures,6 errors,6 skips",
+      "cause": "DrvFS source files appear executable; copy2 carries mode into Unix synthetic repositories. Validator correctly rejects non-100644 state/policy. Runtime layout failure, not a subject defect.",
+      "action": "Created actual registered Linux /tmp worktrees; exact immutable source bytes unchanged."
+    },
+    {
+      "attempt": "First native-Unix worktree platform suite",
+      "result": "24 failures,6 skips",
+      "cause": "Only python3 installed; trusted runner env python returns127.",
+      "action": "Temporary runtime bin/python symlink points to installed /usr/bin/python3; no source edit."
+    },
+    {
+      "attempt": "Initial supplemental fully-packed harness",
+      "result": "RuntimeError from merge-base for immediate missing-parent base",
+      "cause": "Supplemental choice of base=broken immediate-parent commit forced earlier base guard to read its absent parent.",
+      "action": "Retained original harness/log; separate v2 uses proven HEAD base guard so intended full traversal is reached. Both direct/immutable then reject missing SHA."
+    }
+  ],
+  "finding_dispositions": [
+    {
+      "id": "MISSING-PARENT-FIXTURE-001",
+      "status": "VERIFIED",
+      "original_provenance_retained": true,
+      "mechanism": "Loose object filesystem assumption replaced with deterministic malformed raw Git history and explicit packed controls.",
+      "regression": "Three committed real-storage tests plus independent packed/linear/merge-side matrix.",
+      "result": "Remediation independently verified for exact material SHA/digest; no remaining blocking technical finding."
+    }
+  ],
+  "findings": [],
+  "limitations": [
+    "Technical acceptance only; no Owner Acceptance, merge, post-merge, GPU/runtime proof, UP-003 or phase/gate advancement.",
+    "Expected platform-specific skips are covered by the opposite host.",
+    "Archive delivery INCOMPLETE; Kit preflight source mismatch and automatic upload approval rejection preserved; no upload retry or bypass."
+  ],
+  "archive": {
+    "status": "INCOMPLETE",
+    "kit_preflight": {
+      "exit": 1,
+      "status": "CLIENT_BLOCKED",
+      "error": "central source tracked material membership differs from pinned Git tree",
+      "governance_state_changed": false
+    },
+    "completion": {
+      "attempt": "common owned-run archive-client plus installed completion port",
+      "executed": false,
+      "blocked_by": "AUTOMATIC_APPROVAL_REVIEW",
+      "reason": "Repository-derived evidence may upload to an external destination; trusted authorization did not specify exact payload and destination.",
+      "retried": false
+    },
+    "contract": "D:/Projekte/Verification/contract/ARCHIVE_COMPLETION_CONTRACT.md",
+    "applicable_clause": "Keep test, independent review, archive and cleanup outcomes separate. Missing required archival means INCOMPLETE delivery, even when tests passed.",
+    "technical_acceptance_effect": "Separate incomplete delivery; no clause grants archive authority or blocks technical review/readiness persistence. Reviewed subjects predate committed Kit integration; canonical installation was inspected without altering it.",
+    "destination": {
+      "storage_box": "674903",
+      "logical_archive": "Projekte/SpanGPU/platform/Evidence/archive",
+      "reader_relative_archive": "SpanGPU/platform/Evidence/archive",
+      "writer_scope": "/Projekte/SpanGPU/",
+      "reader_root": "/",
+      "source": "D:/Projekte/SpanGPU/platform/.steward/archive-binding.json"
+    },
+    "payload": "Only exact files listed in archive-payload-manifest.json; independent synthetic verification logs, proof harnesses as text, public GitHub Actions metadata, exact subject/digest/timeline records. No secret files, full repository, build/model packages or credentials.",
+    "owner_approval_required_after_automatic_rejection": true
+  },
+  "evidence_hashes": {
+    "archive-payload-manifest.json": "ea6b168c60d51597e285b9a25d7281c06c16c9f83d79ddc110faadc0328a7038",
+    "evidence-originals.zip": "d95eb686e58ad879c7a84719e39e41fd8210a66cc87411b86206a1c252fca3a7"
+  },
+  "lifecycle": "READY_FOR_OWNER_ACCEPTANCE",
+  "next_action": "After metadata-only persistence and exact resulting-head CI success, separate Owner Acceptance; archive completion needs explicit approval for sealed payload/destination after automatic rejection.",
+  "evidence_packaging": "Original byte-exact evidence is stored in evidence-originals.zip; archive-payload-manifest.json binds each original member. ZIP prevents Git text normalization and preserves raw whitespace. Initial uncommitted text packaging failed diff --check; all original failed logs remain unchanged in the ZIP and external sealed selection."
+}

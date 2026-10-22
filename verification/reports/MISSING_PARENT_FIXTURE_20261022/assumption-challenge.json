@@ -1,0 +1,32 @@
+{
+  "old_packed_bug": "REPRODUCED_FileNotFoundError",
+  "three_real_storage_cases": [
+    "loose",
+    "gc: loose_count0 and in_pack>0",
+    "repack+prune-packed: loose_count0 and in_pack>0"
+  ],
+  "causal_controls": "Valid paired tip passes direct/trusted before and after ref-only corruption; malformed unreachable objects retained for final positive control",
+  "negative_execution": "Direct and immutable runner each exit2; base ancestry guard is separately proven successful; full Git walk proves exact missing SHA. Runtime rejection must match either failing rev-list or proven incomplete-root diagnostic, never generic failure.",
+  "gc_acceleration": {
+    "environment": "git2.55.0.windows.3",
+    "storage": "manual git gc --prune=now",
+    "observed_with_commit_graph": {
+      "merge_base_head_head_exit": 0,
+      "rev_list_exit": 0,
+      "rev_list_stderr": "error: Could not read bb31ad2d9e9e336c8cacd55140edd0e159dd32d9",
+      "rev_list_root_count": 0,
+      "missing_parent_oid": "bb31ad2d9e9e336c8cacd55140edd0e159dd32d9",
+      "cat_file_missing_exit": 1
+    },
+    "observed_with_core_commitGraph_false": {
+      "merge_base_head_head_exit": 0,
+      "rev_list_exit": 128,
+      "rev_list_stderr_contains_missing_oid": true
+    },
+    "test_contract": "Independent Git proof determines the exact history rejection expected; no generic nonzero/error fallback and no production-validator change."
+  },
+  "no_loose_file_manipulation": true,
+  "no_runtime_changes": true,
+  "active_old_acceptance_reuse": false,
+  "known_limit": "These are fixture/history checks, not GPU or product proof; Builder has no independent/Owner authority."
+}
