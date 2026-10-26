@@ -3,12 +3,12 @@
   "bridge_version": "manual-verification-bridge-v1",
   "repository": "windows",
   "authority_mode": "MANUAL_AUTHORITY",
-  "status": "MERGED",
-  "previous_status": "ACCEPTED",
+  "status": "POST_MERGE_VERIFIED",
+  "previous_status": "MERGED",
   "transition": {
-    "from": "ACCEPTED",
-    "to": "MERGED",
-    "authority": "MERGE_HOSTING_GATE"
+    "from": "MERGED",
+    "to": "POST_MERGE_VERIFIED",
+    "authority": "POST_MERGE_WORKFLOW"
   },
   "risk": {
     "class": "R2",
@@ -314,6 +314,20 @@
       "review_subject_digest": "99e8b432958a0d930fd5394f6052f19410da6f84ce412df1161fed9b88688cb2",
       "active": true,
       "report_path": "verification/reports/MERGE_STATE_MISSING_PARENT_FIXTURE_20261026.json"
+    },
+    {
+      "id": "POST_MERGE_VERIFICATION-MISSING-PARENT-FIXTURE-WINDOWS-20261026",
+      "type": "POST_MERGE_VERIFICATION",
+      "producer": "POST_MERGE_WORKFLOW",
+      "role": "POST_MERGE_WORKFLOW",
+      "authority": "MANUAL_AUTHORITY",
+      "created_at": "2026-10-26T08:01:16.386725+00:00",
+      "verdict": "PASS",
+      "commit_sha": "da9cfadd60c44db89fd974d420240b9403d0739d",
+      "merge_commit_sha": "da9cfadd60c44db89fd974d420240b9403d0739d",
+      "review_subject_digest": "99e8b432958a0d930fd5394f6052f19410da6f84ce412df1161fed9b88688cb2",
+      "active": true,
+      "report_path": "verification/reports/POST_MERGE_VERIFICATION_MISSING_PARENT_FIXTURE_20261026.json"
     }
   ],
   "remediation_inputs": [
