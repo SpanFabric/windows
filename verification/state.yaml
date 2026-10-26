@@ -12,10 +12,10 @@
   },
   "risk": {
     "class": "R2",
-    "reason": "SHARED-FB-001 durable lifecycle reachability remediation; previous evidence historical."
+    "reason": "Shared missing-parent regression fixture remediation; runtime validator/policy/workflows unchanged."
   },
-  "review_subject_digest": "ba7c9f3389e5255fa765c668a0def6fef626c93820bdae92001f21fbd9797c86",
-  "review_subject_commit": "d77c5e0fe5661a0affa6be7e19cda2c470edc679",
+  "review_subject_digest": "99e8b432958a0d930fd5394f6052f19410da6f84ce412df1161fed9b88688cb2",
+  "review_subject_commit": "38b9695b82570b4ba50b529492baf50cac755390",
   "evidence": [
     {
       "id": "INITIAL-BASELINE-BOOTSTRAP-BUILDER-20260902",
@@ -231,7 +231,7 @@
       "review_subject_digest": "ba7c9f3389e5255fa765c668a0def6fef626c93820bdae92001f21fbd9797c86",
       "created_at": "2026-10-22T11:55:31.464898Z",
       "verdict": "BUILDER_GREEN",
-      "active": true,
+      "active": false,
       "report_path": "verification/reports/SHARED_FB_001_BUILDER_20261022.json"
     },
     {
@@ -244,7 +244,7 @@
       "review_subject_digest": "ba7c9f3389e5255fa765c668a0def6fef626c93820bdae92001f21fbd9797c86",
       "created_at": "2026-10-22T12:42:44.793036+00:00",
       "verdict": "PASS",
-      "active": true,
+      "active": false,
       "report_path": "verification/reports/SHARED_FB_001_FRESH_BREAKER_V2_20261022/report.json"
     },
     {
@@ -258,8 +258,48 @@
       "review_subject_digest": "ba7c9f3389e5255fa765c668a0def6fef626c93820bdae92001f21fbd9797c86",
       "created_at": "2026-10-22T13:38:08.987901+00:00",
       "verdict": "ACCEPTED",
-      "active": true,
+      "active": false,
       "report_path": "verification/reports/OWNER_ACCEPTANCE_SHARED_FB_001_20261022.json"
+    },
+    {
+      "id": "MISSING-PARENT-FIXTURE-BUILDER-WINDOWS-20261022",
+      "type": "BUILDER_REPORT",
+      "producer": "BUILDER",
+      "role": "BUILDER",
+      "authority": "MANUAL_AUTHORITY",
+      "commit_sha": "38b9695b82570b4ba50b529492baf50cac755390",
+      "review_subject_digest": "99e8b432958a0d930fd5394f6052f19410da6f84ce412df1161fed9b88688cb2",
+      "created_at": "2026-10-22T16:06:56.638953+00:00",
+      "verdict": "BUILDER_GREEN",
+      "active": true,
+      "report_path": "verification/reports/MISSING_PARENT_FIXTURE_BUILDER_20261022.json"
+    },
+    {
+      "id": "MISSING-PARENT-FIXTURE-FRESH-BREAKER-WINDOWS-20261022",
+      "producer": "FRESH_BREAKER",
+      "role": "FRESH_BREAKER",
+      "authority": "MANUAL_AUTHORITY",
+      "commit_sha": "38b9695b82570b4ba50b529492baf50cac755390",
+      "review_subject_digest": "99e8b432958a0d930fd5394f6052f19410da6f84ce412df1161fed9b88688cb2",
+      "created_at": "2026-10-22T18:01:48.815770+00:00",
+      "type": "BREAKER_REPORT",
+      "verdict": "PASS",
+      "active": true,
+      "report_path": "verification/reports/MISSING_PARENT_FIXTURE_FRESH_BREAKER_20261022/report.json"
+    },
+    {
+      "id": "OWNER-ACCEPTANCE-MISSING-PARENT-FIXTURE-WINDOWS-20261026",
+      "type": "ACCEPTANCE",
+      "producer": "OWNER",
+      "role": "OWNER",
+      "authority": "MANUAL_AUTHORITY",
+      "owner": "severinafrancic",
+      "commit_sha": "38b9695b82570b4ba50b529492baf50cac755390",
+      "review_subject_digest": "99e8b432958a0d930fd5394f6052f19410da6f84ce412df1161fed9b88688cb2",
+      "created_at": "2026-10-26T03:02:34.844794+00:00",
+      "verdict": "ACCEPTED",
+      "active": true,
+      "report_path": "verification/reports/OWNER_ACCEPTANCE_MISSING_PARENT_FIXTURE_20261026.json"
     }
   ],
   "remediation_inputs": [
@@ -382,6 +422,28 @@
         "verdict": "FRESH_BREAKER_ACCEPTED",
         "authority": "FRESH_BREAKER",
         "reason": "Independent durable Git-history bypass matrix, historical-policy reconstruction, immutable trusted runner and full relevant suites passed for exact material subject."
+      }
+    },
+    {
+      "id": "MISSING-PARENT-FIXTURE-001",
+      "severity": "HIGH",
+      "confirmed": true,
+      "status": "VERIFIED",
+      "builder_disposition": "REMEDIATED_PENDING_FRESH_BREAKER",
+      "summary": "Post-merge .github run39800181504 failed in missing-parent fixture setup because it assumed a loose object filesystem path; shared test must be storage-layout independent.",
+      "historical_failed_run": "https://github.com/SpanFabric/.github/actions/runs/39800181504",
+      "builder_material_sha": "38b9695b82570b4ba50b529492baf50cac755390",
+      "builder_review_subject_digest": "99e8b432958a0d930fd5394f6052f19410da6f84ce412df1161fed9b88688cb2",
+      "builder_report_path": "verification/reports/MISSING_PARENT_FIXTURE_BUILDER_20261022.json",
+      "verification": {
+        "review_id": "MISSING-PARENT-FIXTURE-FRESH-BREAKER-20261022",
+        "evidence_id": "MISSING-PARENT-FIXTURE-FRESH-BREAKER-WINDOWS-20261022",
+        "report_path": "verification/reports/MISSING_PARENT_FIXTURE_FRESH_BREAKER_20261022/report.json",
+        "material_sha": "38b9695b82570b4ba50b529492baf50cac755390",
+        "review_subject_digest": "99e8b432958a0d930fd5394f6052f19410da6f84ce412df1161fed9b88688cb2",
+        "verdict": "FRESH_BREAKER_ACCEPTED",
+        "authority": "FRESH_BREAKER",
+        "reason": "Independently verified actual malformed-history direct/immutable rejection and packed/loose controls with complete six-repository suites."
       }
     }
   ],
